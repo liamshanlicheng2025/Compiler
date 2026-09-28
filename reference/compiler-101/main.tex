@@ -1,0 +1,56 @@
+\documentclass[lang=cn,newtx,10pt,scheme=chinese]{elegantbook}
+
+\title{计算机系统课程设计（编译器）指导手册}
+\subtitle{ACM班}
+
+\author{}
+\institute{ACM班编译器助教组}
+\date{2024/09/05}
+\version{0.10.1}
+% \bioinfo{自定义}{信息}
+
+% \extrainfo{注意：本模板自 2023 年 1 月 1 日开始，不再更新和维护！}
+
+\setcounter{tocdepth}{3}
+
+% \logo{logo-blue.png}
+\cover{cover.jpg}
+
+
+
+% 本文档命令
+\usepackage{array}
+\usepackage{ulem}
+\newcommand{\ccr}[1]{\makecell{{\color{#1}\rule{1cm}{1cm}}}}
+
+% 修改标题页的橙色带
+\definecolor{customcolor}{RGB}{32,178,170}
+\colorlet{coverlinecolor}{customcolor}
+\usepackage{cprotect}
+
+\addbibresource[location=local]{reference.bib} % 参考文献，不要删除
+
+\begin{document}
+
+\maketitle
+
+\frontmatter
+
+\tableofcontents
+
+\mainmatter
+
+\input{0-overview}
+
+\input{10-semantic}
+
+\input{20-codegen}
+
+\input{30-optimize}
+
+\printbibliography[heading=bibintoc, title=\ebibname]
+\appendix
+
+\input{appendix}
+
+\end{document}
