@@ -133,7 +133,7 @@ OUTER_BLOCK_DOC:
 
 BLOCK_COMMENT_OR_DOC: ( BLOCK_COMMENT | INNER_BLOCK_DOC | OUTER_BLOCK_DOC) -> channel (HIDDEN);
 
-SHEBANG: {this.SOF()}? '\ufeff'? '#!' ~[\r\n]* -> channel(HIDDEN);
+SHEBANG: {this->SOF()}? '\ufeff'? '#!' ~[\r\n]* -> channel(HIDDEN);
 
 // whitespace https://doc.rust-lang.org/reference/whitespace.html
 WHITESPACE : [\p{Zs}]          -> channel(HIDDEN);
@@ -181,9 +181,9 @@ OCT_LITERAL: '0o' '_'* OCT_DIGIT (OCT_DIGIT | '_')*;
 BIN_LITERAL: '0b' '_'* [01] [01_]*;
 
 FLOAT_LITERAL:
-    {this.FloatLiteralPossible()}?
+    {this->FloatLiteralPossible()}?
     (
-        DEC_LITERAL '.' {this.FloatDotPossible()}?
+        DEC_LITERAL '.' {this->FloatDotPossible()}?
         | DEC_LITERAL ( '.' DEC_LITERAL)? FLOAT_EXPONENT? FLOAT_SUFFIX?
     )
 ;

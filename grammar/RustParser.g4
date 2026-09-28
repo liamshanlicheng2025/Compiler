@@ -1190,9 +1190,9 @@ macroPunctuationToken
     ;
 
 shl
-    : LT {this.NextLT()}? LT
+    : LT {this->NextLT()}? LT
     ;
 
 shr
-    : GT {this.NextGT()}? GT
+    : GT {this->NextGT()}? GT
     ;
