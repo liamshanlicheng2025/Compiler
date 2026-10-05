@@ -48,8 +48,15 @@ set(GENERATED_SRCS
     ${GENERATED_DIR}/RustParserVisitor.cpp
 )
 
-add_executable(compiler src/main.cpp grammar/cpp/RustLexerBase.cpp grammar/cpp/RustParserBase.cpp ${GENERATED_SRCS})
-target_include_directories(compiler PRIVATE ${GENERATED_DIR} ${CMAKE_SOURCE_DIR}/grammar/cpp ${ANTLR4_RUNTIME}/include/antlr4-runtime)
+add_executable(compiler
+    src/main.cpp
+    src/ast/ast.cpp
+    src/ast/ast_printer.cpp
+    src/builder/ast_builder.cpp
+    grammar/cpp/RustLexerBase.cpp
+    grammar/cpp/RustParserBase.cpp
+    ${GENERATED_SRCS})
+target_include_directories(compiler PRIVATE ${CMAKE_SOURCE_DIR}/src ${GENERATED_DIR} ${CMAKE_SOURCE_DIR}/grammar/cpp ${ANTLR4_RUNTIME}/include/antlr4-runtime)
 # The grammars-v4 g4 files declare superClass base classes but don't emit
 # the corresponding #include for the C++ target; force-include them.
 target_compile_options(compiler PRIVATE "SHELL:-include RustLexerBase.h" "SHELL:-include RustParserBase.h")
