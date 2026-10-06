@@ -20,4 +20,9 @@ void ReturnExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
 void BreakExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void ContinueExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
 void CallExpr::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
+void StructDef::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void ImplBlock::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void StructLiteralExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
+void FieldExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void MethodCallExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void MacroStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }

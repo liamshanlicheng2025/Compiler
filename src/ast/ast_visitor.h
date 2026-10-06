@@ -24,6 +24,11 @@ class ReturnExpr;
 class BreakExpr;
 class ContinueExpr;
 class CallExpr;
+class StructDef;
+class ImplBlock;
+class StructLiteralExpr;
+class FieldExpr;
+class MethodCallExpr;
 class MacroStmt;
 
 class ASTVisitor {
@@ -46,5 +51,10 @@ public:
     virtual void visit(BreakExpr& node) = 0;
     virtual void visit(ContinueExpr& node) = 0;
     virtual void visit(CallExpr& node) = 0;
+    virtual void visit(StructDef& node) = 0;
+    virtual void visit(ImplBlock& node) = 0;
+    virtual void visit(StructLiteralExpr& node) = 0;
+    virtual void visit(FieldExpr& node) = 0;
+    virtual void visit(MethodCallExpr& node) = 0;
     virtual void visit(MacroStmt& node) = 0;
 };

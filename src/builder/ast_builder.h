@@ -49,4 +49,11 @@ public:
 
     // ---- 第 3 波：函数完整化 ----
     std::any visitCallExpression(RustParser::CallExpressionContext* ctx) override;
+
+    // ---- 第 4 波：复合类型 ----
+    std::any visitStructStruct(RustParser::StructStructContext* ctx) override;
+    std::any visitInherentImpl(RustParser::InherentImplContext* ctx) override;
+    std::any visitStructExpression_(RustParser::StructExpression_Context* ctx) override;
+    std::any visitFieldExpression(RustParser::FieldExpressionContext* ctx) override;
+    std::any visitMethodCallExpression(RustParser::MethodCallExpressionContext* ctx) override;
 };

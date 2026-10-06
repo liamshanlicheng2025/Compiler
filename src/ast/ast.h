@@ -174,6 +174,49 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
+// ---- 第 4 波：复合类型 ----
+
+// struct 定义：struct Point { x: i32, y: i32 }
+class StructDef : public Item {
+public:
+    std::string name;
+    std::vector<Param> fields;   // 字段复用 Param（也是"名字+类型"）
+    void accept(ASTVisitor& visitor) override;
+};
+
+// impl 块：impl Point { fn new(...) ... fn norm2(&self) ... }
+class ImplBlock : public Item {
+public:
+    std::string typeName;                // impl 目标类型名
+    std::vector<Function*> methods;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 结构体字面量：Point { x: 1, y: 2 }
+class StructLiteralExpr : public Expr {
+public:
+    std::string name;                              // 结构体名
+    std::vector<std::pair<std::string, Expr*>> fields;  // (字段名, 初值) 保持声明顺序
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 字段访问：p.x
+class FieldExpr : public Expr {
+public:
+    Expr* object = nullptr;
+    std::string field;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 方法调用：p.shift(3)
+class MethodCallExpr : public Expr {
+public:
+    Expr* receiver = nullptr;            // 点号左边的对象
+    std::string method;
+    std::vector<Expr*> args;             // 不含 self
+    void accept(ASTVisitor& visitor) override;
+};
+
 class MacroStmt : public Stmt {
 public:
     std::string name;

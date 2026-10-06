@@ -37,6 +37,11 @@ public:
     void visit(BreakExpr& node) override;
     void visit(ContinueExpr& node) override;
     void visit(CallExpr& node) override;
+    void visit(StructDef& node) override;
+    void visit(ImplBlock& node) override;
+    void visit(StructLiteralExpr& node) override;
+    void visit(FieldExpr& node) override;
+    void visit(MethodCallExpr& node) override;
     void visit(MacroStmt& node) override;
 
 private:

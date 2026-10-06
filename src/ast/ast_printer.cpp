@@ -142,3 +142,50 @@ void ASTPrinter::visit(CallExpr& node) {
 void ASTPrinter::visit(MacroStmt& node) {
     line("MacroStmt " + node.name + "(" + node.argsText + ")");
 }
+
+void ASTPrinter::visit(StructDef& node) {
+    std::string s = "StructDef " + node.name + " {";
+    for (size_t i = 0; i < node.fields.size(); ++i) {
+        if (i) s += ", ";
+        s += node.fields[i].name + ": " + node.fields[i].typeName;
+    }
+    line(s + "}");
+}
+
+void ASTPrinter::visit(ImplBlock& node) {
+    line("ImplBlock " + node.typeName);
+    ++indent_;
+    for (auto* m : node.methods) {
+        if (m) m->accept(*this);
+    }
+    --indent_;
+}
+
+void ASTPrinter::visit(StructLiteralExpr& node) {
+    line("StructLiteral " + node.name);
+    ++indent_;
+    for (auto& [fname, value] : node.fields) {
+        line(fname + ":");
+        ++indent_;
+        if (value) value->accept(*this);
+        --indent_;
+    }
+    --indent_;
+}
+
+void ASTPrinter::visit(FieldExpr& node) {
+    line("FieldExpr ." + node.field);
+    ++indent_;
+    if (node.object) node.object->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(MethodCallExpr& node) {
+    line("MethodCall ." + node.method);
+    ++indent_;
+    if (node.receiver) node.receiver->accept(*this);
+    for (auto* arg : node.args) {
+        if (arg) arg->accept(*this);
+    }
+    --indent_;
+}
