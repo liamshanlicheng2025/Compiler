@@ -11,3 +11,11 @@ void LetStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }
 void ExprStmt::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
 void Literal::accept(ASTVisitor& visitor)    { visitor.visit(*this); }
 void BinaryExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
+void PathExpr::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
+void UnaryExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void IfExpr::accept(ASTVisitor& visitor)     { visitor.visit(*this); }
+void WhileExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void LoopExpr::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
+void ReturnExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
+void BreakExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void ContinueExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }

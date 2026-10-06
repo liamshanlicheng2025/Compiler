@@ -28,6 +28,14 @@ public:
     void visit(ExprStmt& node) override;
     void visit(Literal& node) override;
     void visit(BinaryExpr& node) override;
+    void visit(PathExpr& node) override;
+    void visit(UnaryExpr& node) override;
+    void visit(IfExpr& node) override;
+    void visit(WhileExpr& node) override;
+    void visit(LoopExpr& node) override;
+    void visit(ReturnExpr& node) override;
+    void visit(BreakExpr& node) override;
+    void visit(ContinueExpr& node) override;
 
 private:
     std::ostream& out_;

@@ -15,6 +15,14 @@ class LetStmt;
 class ExprStmt;
 class Literal;
 class BinaryExpr;
+class PathExpr;
+class UnaryExpr;
+class IfExpr;
+class WhileExpr;
+class LoopExpr;
+class ReturnExpr;
+class BreakExpr;
+class ContinueExpr;
 
 class ASTVisitor {
 public:
@@ -27,4 +35,12 @@ public:
     virtual void visit(ExprStmt& node) = 0;
     virtual void visit(Literal& node) = 0;
     virtual void visit(BinaryExpr& node) = 0;
+    virtual void visit(PathExpr& node) = 0;
+    virtual void visit(UnaryExpr& node) = 0;
+    virtual void visit(IfExpr& node) = 0;
+    virtual void visit(WhileExpr& node) = 0;
+    virtual void visit(LoopExpr& node) = 0;
+    virtual void visit(ReturnExpr& node) = 0;
+    virtual void visit(BreakExpr& node) = 0;
+    virtual void visit(ContinueExpr& node) = 0;
 };

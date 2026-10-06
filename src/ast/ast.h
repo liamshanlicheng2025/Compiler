@@ -88,10 +88,78 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 之后扩展时加的节点（提示，先别实现）----
-// IfExpr      : cond, thenBlock, elseBlock(可空)
-// WhileExpr   : cond, body
-// ReturnStmt  : value(可空)
-// CallExpr    : callee, args
-// StructDef   : name, fields      —— 属于 Item
-// PathExpr    : 变量/函数名引用   —— 很快就需要，x + 1 里的 x 就是它
+// ---- 第 1 波：表达式补全 ----
+// 比较（==、<、>……）和赋值（=、+=……）不需要新节点：
+// 复用 BinaryExpr，op 存运算符字符串即可
+
+// 变量/路径引用：x、foo、Point::new
+class PathExpr : public Expr {
+public:
+    std::string name;          // 先只支持单段（变量名）；
+                               // 多段路径（Point::new）做 impl 时再拆段
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 一元运算：-x、!x、*p（解引用）
+class UnaryExpr : public Expr {
+public:
+    std::string op;            // "-", "!", "*"
+    Expr* operand = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// ---- 第 2 波：控制流 ----
+// 注意：Rust 里 if/while/loop/return/break/continue 都是表达式（Expr），
+// 不是语句。它们出现在"语句位置"时由外层规则包装，
+// 你在 visitExpressionStatement 里决定怎么包（提示见 ast_builder.cpp）。
+
+// if 表达式
+class IfExpr : public Expr {
+public:
+    Expr* cond = nullptr;
+    Block* thenBlock = nullptr;
+    Block* elseBlock = nullptr;  // 可空；else if 链 = elseBlock 里包一个
+                                 // 只含一条 ExprStmt(IfExpr) 的 Block
+    void accept(ASTVisitor& visitor) override;
+};
+
+// while 循环
+class WhileExpr : public Expr {
+public:
+    Expr* cond = nullptr;
+    Block* body = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// loop 无限循环
+class LoopExpr : public Expr {
+public:
+    Block* body = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// return / break / continue
+class ReturnExpr : public Expr {
+public:
+    Expr* value = nullptr;       // 可空：裸 `return;`
+    void accept(ASTVisitor& visitor) override;
+};
+
+class BreakExpr : public Expr {
+public:
+    Expr* value = nullptr;       // 可空：`break;`；带值 break 之后再说
+    void accept(ASTVisitor& visitor) override;
+};
+
+class ContinueExpr : public Expr {
+public:
+    void accept(ASTVisitor& visitor) override;
+};
+
+// ---- 第 3 波及之后（提示，先别实现）----
+// Function 节点扩展：参数列表（名字+类型）、返回类型
+// CallExpr    : callee(Expr*), args(vector<Expr*>)   —— 函数调用
+// Block 扩展  : 尾部表达式 tailExpr（statements 规则里那个落单的 expression?）
+// StructDef   : name, fields                          —— 属于 Item
+// ImplBlock   : typeName, methods(vector<Function*>)  —— 属于 Item
+// FieldExpr / MethodCallExpr / ArrayExpr / IndexExpr

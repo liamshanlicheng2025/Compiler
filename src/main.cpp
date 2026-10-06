@@ -9,11 +9,20 @@
 #include "ast/ast_printer.h"
 
 int main(int argc, char** argv) {
-    if (argc < 2) {
-        std::cerr << "usage: " << argv[0] << " <file.rs>" << std::endl;
+    // 用法: ./compiler <file.rs> [--tree]
+    //   --tree  只打印 ANTLR 解析树（扩展 AST 时的调试工具）
+    bool showParseTree = false;
+    std::string inputFile;
+    for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--tree") showParseTree = true;
+        else inputFile = arg;
+    }
+    if (inputFile.empty()) {
+        std::cerr << "usage: " << argv[0] << " <file.rs> [--tree]" << std::endl;
         return 1;
     }
-    std::ifstream stream(argv[1]);
+    std::ifstream stream(inputFile);
     if (!stream) {
         std::cerr << "cannot open file: " << argv[1] << std::endl;
         return 1;
@@ -25,6 +34,11 @@ int main(int argc, char** argv) {
     antlr4::CommonTokenStream tokens(&lexer);
     RustParser parser(&tokens);
     RustParser::CrateContext* tree = parser.crate();
+
+    if (showParseTree) {
+        std::cout << tree->toStringTree(&parser) << std::endl;
+        return 0;
+    }
 
     // ---- 阶段 2：构建 AST（你当前的工作重心）----
     AstBuilder builder;

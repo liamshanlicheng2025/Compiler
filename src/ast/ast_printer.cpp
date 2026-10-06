@@ -67,3 +67,56 @@ void ASTPrinter::visit(BinaryExpr& node) {
     if (node.rhs) node.rhs->accept(*this);
     --indent_;
 }
+
+void ASTPrinter::visit(PathExpr& node) {
+    line("PathExpr " + node.name);
+}
+
+void ASTPrinter::visit(UnaryExpr& node) {
+    line("UnaryExpr " + node.op);
+    ++indent_;
+    if (node.operand) node.operand->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(IfExpr& node) {
+    line("IfExpr");
+    ++indent_;
+    if (node.cond) node.cond->accept(*this);
+    if (node.thenBlock) node.thenBlock->accept(*this);
+    if (node.elseBlock) node.elseBlock->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(WhileExpr& node) {
+    line("WhileExpr");
+    ++indent_;
+    if (node.cond) node.cond->accept(*this);
+    if (node.body) node.body->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(LoopExpr& node) {
+    line("LoopExpr");
+    ++indent_;
+    if (node.body) node.body->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(ReturnExpr& node) {
+    line("ReturnExpr");
+    ++indent_;
+    if (node.value) node.value->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(BreakExpr& node) {
+    line("BreakExpr");
+    ++indent_;
+    if (node.value) node.value->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(ContinueExpr& node) {
+    line("ContinueExpr");
+}

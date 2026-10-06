@@ -29,9 +29,18 @@ public:
     std::any visitLiteralExpression(RustParser::LiteralExpressionContext* ctx) override;
     std::any visitArithmeticOrLogicalExpression(RustParser::ArithmeticOrLogicalExpressionContext* ctx) override;
 
-    // ---- 之后扩展时在这里加（对照解析树里出现的规则名）----
-    // std::any visitIfExpression(...) override;
-    // std::any visitWhileExpression(...) override;
-    // std::any visitPathExpression_(...) override;   // 变量引用，很快就需要
-    // ...
+    // ---- 第 1 波：表达式补全 ----
+    std::any visitPathExpression_(RustParser::PathExpression_Context* ctx) override;
+    std::any visitNegationExpression(RustParser::NegationExpressionContext* ctx) override;
+    std::any visitComparisonExpression(RustParser::ComparisonExpressionContext* ctx) override;
+    std::any visitAssignmentExpression(RustParser::AssignmentExpressionContext* ctx) override;
+    std::any visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) override;
+
+    // ---- 第 2 波：控制流 ----
+    std::any visitIfExpression(RustParser::IfExpressionContext* ctx) override;
+    std::any visitPredicateLoopExpression(RustParser::PredicateLoopExpressionContext* ctx) override;
+    std::any visitInfiniteLoopExpression(RustParser::InfiniteLoopExpressionContext* ctx) override;
+    std::any visitReturnExpression(RustParser::ReturnExpressionContext* ctx) override;
+    std::any visitBreakExpression(RustParser::BreakExpressionContext* ctx) override;
+    std::any visitContinueExpression(RustParser::ContinueExpressionContext* ctx) override;
 };

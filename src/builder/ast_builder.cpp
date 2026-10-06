@@ -23,7 +23,13 @@ std::any AstBuilder::visitCrate(RustParser::CrateContext* ctx) {
     //   遍历 ctx->item()，对每个 item 调 visit()，
     //     结果 any_cast<Item*> 后 push 进 node->items
     //   return node;
-    return static_cast<Crate*>(nullptr);  // TODO(你)
+    auto* node = new Crate();
+    for (auto* itemCtx : ctx -> item()){
+        auto result = visit(itemCtx);
+        Item* resultItem = std::any_cast<Item*>(result);
+        node -> items.push_back(resultItem);
+    }
+    return node;
 }
 
 std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
@@ -33,7 +39,10 @@ std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
     //   node->body = any_cast<Block*>( visit(ctx->blockExpression()) )
     //   return node;
     // 注意：参数和返回类型先跳过，之后再加
-    return static_cast<Function*>(nullptr);  // TODO(你)
+    auto* node = new Function();
+    node -> name = ctx -> identifier() -> getText();
+    node -> body = std::any_cast<Block*>(visit(ctx -> blockExpression()));
+    return static_cast<Item*>(node);
 }
 
 std::any AstBuilder::visitBlockExpression(RustParser::BlockExpressionContext* ctx) {
@@ -42,7 +51,15 @@ std::any AstBuilder::visitBlockExpression(RustParser::BlockExpressionContext* ct
     //   解析树里 block 的语句藏在 statements 规则下面，
     //   找到它之后遍历其中的每个 statement，visit + any_cast<Stmt*>
     //   return node;
-    return static_cast<Block*>(nullptr);  // TODO(你)
+    auto* node = new Block();
+    if (ctx -> statements()){
+        for (auto* stmt : ctx -> statements() -> statement()){
+            auto result = visit(stmt);
+            Stmt* resultStmt = std::any_cast<Stmt*>(result);
+            node -> statements.push_back(resultStmt);
+        }
+    }
+    return node;
 }
 
 std::any AstBuilder::visitLetStatement(RustParser::LetStatementContext* ctx) {
@@ -57,7 +74,11 @@ std::any AstBuilder::visitLetStatement(RustParser::LetStatementContext* ctx) {
     //   类型：ctx->type_() 可能为空；非空时先 ->getText() 存字符串
     //   初值：ctx->expression() 可能为空；非空时 visit + any_cast<Expr*>
     //   return node;
-    return static_cast<LetStmt*>(nullptr);  // TODO(你)
+    auto* node = new LetStmt();
+    node -> name = ctx -> patternNoTopAlt() -> patternWithoutRange() -> identifierPattern() -> identifier() -> getText();
+    if (ctx ->type_()) node -> typeName = ctx -> type_() -> getText();
+    if (ctx -> expression()) node -> init = std::any_cast<Expr*>(visit(ctx -> expression()));
+    return static_cast<Stmt*>(node);
 }
 
 std::any AstBuilder::visitLiteralExpression(RustParser::LiteralExpressionContext* ctx) {
@@ -65,7 +86,9 @@ std::any AstBuilder::visitLiteralExpression(RustParser::LiteralExpressionContext
     //   auto* node = new Literal();
     //   node->text = ctx->getText();
     //   return node;
-    return static_cast<Literal*>(nullptr);  // TODO(你)
+    auto* node = new Literal();
+    node -> text = ctx -> getText();
+    return static_cast<Expr*>(node);
 }
 
 std::any AstBuilder::visitArithmeticOrLogicalExpression(
@@ -78,5 +101,118 @@ std::any AstBuilder::visitArithmeticOrLogicalExpression(
     //   逐个判断 ctx->STAR()、ctx->PLUS() …… 哪个非空，
     //   非空的那个 ->getText() 就是运算符
     //   return node;
-    return static_cast<BinaryExpr*>(nullptr);  // TODO(你)
+    auto* node = new BinaryExpr();
+    node -> lhs = std::any_cast<Expr*>(visit(ctx -> expression(0)));
+    node -> rhs = std::any_cast<Expr*>(visit(ctx -> expression(1)));
+    if (ctx -> STAR()) node -> op = "*";
+    if (ctx -> PLUS()) node -> op = "+";
+    if (ctx -> MINUS()) node -> op = "-";
+    if (ctx -> SLASH()) node -> op = "/";
+    if (ctx -> PERCENT()) node -> op = "%";
+    if (ctx -> shl()) node -> op = "<<";
+    if (ctx -> shr()) node -> op = ">>";
+    if (ctx -> AND()) node -> op = "&";
+    if (ctx -> OR()) node -> op = "|";
+    if (ctx -> CARET()) node -> op = "^";
+    return static_cast<Expr*>(node);
+}
+
+// ============================================================
+// 第 1 波：表达式补全
+// ============================================================
+
+std::any AstBuilder::visitPathExpression_(RustParser::PathExpression_Context* ctx) {
+    // 伪代码：
+    //   auto* node = new PathExpr();
+    //   穿透链路：pathExpression → pathInExpression → pathExprSegment(0)
+    //             → pathIdentSegment → identifier
+    //   先只取第一段：pathExprSegment(0) 的文本（多段 :: 路径之后处理）
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitNegationExpression(RustParser::NegationExpressionContext* ctx) {
+    // 伪代码：
+    //   auto* node = new UnaryExpr();
+    //   op: 判断 ctx->MINUS() / ctx->NOT() 哪个非空
+    //   operand: visit(ctx->expression())
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitComparisonExpression(RustParser::ComparisonExpressionContext* ctx) {
+    // 伪代码：复用 BinaryExpr
+    //   lhs / rhs 同 Arithmetic 的取法
+    //   op: ctx->comparisonOperator()->getText()  （运算符在子规则里，一步拿到）
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitAssignmentExpression(RustParser::AssignmentExpressionContext* ctx) {
+    // 伪代码：复用 BinaryExpr，op 存 "="
+    //   注意 g4 里这条是 expression EQ expression，左右取法同 Arithmetic
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) {
+    // 伪代码：
+    //   auto* node = new ExprStmt();
+    //   这个规则有两个分支：expression SEMI ｜ expressionWithBlock SEMI?
+    //   取 ctx->expression() 或 ctx->expressionWithBlock()（判空），
+    //   visit 之后 any_cast<Expr*> 包进 ExprStmt
+    //   return static_cast<Stmt*>(node);
+    // 提示：if/while/loop 走的是 expressionWithBlock 分支，
+    // 它们 visit 完返回的也是 Expr*，同样用 ExprStmt 包
+    return static_cast<Stmt*>(nullptr);  // TODO(你)
+}
+
+// ============================================================
+// 第 2 波：控制流
+// ============================================================
+
+std::any AstBuilder::visitIfExpression(RustParser::IfExpressionContext* ctx) {
+    // 伪代码：
+    //   auto* node = new IfExpr();
+    //   cond:      visit(ctx->expression())
+    //   thenBlock: visit(ctx->blockExpression(0))
+    //   else:      ctx->KW_ELSE() 非空才有 else 分支；
+    //              else 后面可能是 blockExpression(1)，也可能是嵌套的
+    //              ifExpression（else if 链）——嵌套时 new 一个 Block
+    //              把 IfExpr 包成 ExprStmt 塞进去，保持 elseBlock 类型一致
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitPredicateLoopExpression(RustParser::PredicateLoopExpressionContext* ctx) {
+    // 伪代码（while）：
+    //   auto* node = new WhileExpr();
+    //   cond: visit(ctx->expression())，body: visit(ctx->blockExpression())
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitInfiniteLoopExpression(RustParser::InfiniteLoopExpressionContext* ctx) {
+    // 伪代码（loop { }）：
+    //   auto* node = new LoopExpr();
+    //   body: visit(ctx->blockExpression())
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitReturnExpression(RustParser::ReturnExpressionContext* ctx) {
+    // 伪代码：
+    //   auto* node = new ReturnExpr();
+    //   value: ctx->expression() 可空（裸 return;），判空后 visit
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitBreakExpression(RustParser::BreakExpressionContext* ctx) {
+    // 伪代码：同 ReturnExpr，value 可空
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitContinueExpression(RustParser::ContinueExpressionContext* ctx) {
+    // 伪代码：new ContinueExpr()，没有孩子，一行返回
+    return static_cast<Expr*>(nullptr);  // TODO(你)
 }
