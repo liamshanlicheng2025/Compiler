@@ -35,9 +35,11 @@ void ASTPrinter::visit(Block& node) {
 }
 
 void ASTPrinter::visit(Function& node) {
+    // 第 4 波补充：方法显示 self 标记
     std::string sig = "Function " + node.name + "(";
+    if (node.isMethod) sig += node.selfMut ? "&mut self" : "&self";
     for (size_t i = 0; i < node.params.size(); ++i) {
-        if (i) sig += ", ";
+        if (i || node.isMethod) sig += ", ";
         sig += node.params[i].name + ": " + node.params[i].typeName;
     }
     sig += ")";

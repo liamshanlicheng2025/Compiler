@@ -41,6 +41,16 @@ std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
     auto* node = new Function();
     node -> name = ctx -> identifier() -> getText();
     if (ctx -> functionParameters()){
+        // 第 4 波补充：检测 selfParam（&self / &mut self）。
+        // 它不在 functionParam() 列表里，是独立入口；方法调用时 receiver
+        // 是隐式 self 实参，CodeGen 的第一个参数槽位要留给它。
+        if (auto* sp = ctx->functionParameters()->selfParam()) {
+            node->isMethod = true;
+            // shorthandSelf: (AND lifetime?)? KW_MUT? KW_SELFVALUE
+            // typedSelf（self: &mut Self 等）课程子集基本不出现，先按 mut 文本判断
+            node->selfMut = (sp->shorthandSelf() && sp->shorthandSelf()->KW_MUT())
+                            || sp->getText().find("mut") != std::string::npos;
+        }
         for (auto* fp : ctx -> functionParameters() ->functionParam()){
             auto* pat = fp -> functionParamPattern();
             Param p;
@@ -49,15 +59,6 @@ std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
             node -> params.push_back(p);
         }
     }
-    // 参数列表
-    //   ctx->functionParameters() 可空（无参函数）；
-    //   里面 ctx->...->functionParam() 是 vector，每个 functionParam 往下钻到
-    //   functionParamPattern：pattern()->getText() 是参数名，type_()->getText() 是类型
-    //   （pattern 里钻 identifier 的链路和 letStatement 一样）
-    //   注意跳过 selfParam（impl 方法的 &self，第 4 波再处理）
-    //
-    //  返回类型
-    //   ctx->functionReturnType() 可空；非空时 ->getText() 存进 returnType
     if (ctx -> functionReturnType()) node -> returnType = ctx -> functionReturnType() -> type_() -> getText();
     node -> body = std::any_cast<Block*>(visit(ctx -> blockExpression()));
     return static_cast<Item*>(node);

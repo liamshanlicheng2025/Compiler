@@ -56,10 +56,12 @@ struct Param {
 class Function : public Item {
 public:
     std::string name;
-    std::vector<Param> params;   // 空 vector = 无参数
+    std::vector<Param> params;   // 空 vector = 无参数（不含 self）
     std::string returnType;      // 空字符串 = 无返回类型标注（返回 ()）
     Block* body = nullptr;
-    // TODO(第 4 波): impl 里的方法有 selfParam（&self / &mut self），到时加字段
+    // 第 4 波补充：selfParam 支持
+    bool isMethod = false;       // impl 块里第一个参数是 self/&self/&mut self 的方法
+    bool selfMut = false;        // &mut self 时为 true（CodeGen 需要区分）
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -67,7 +69,7 @@ public:
 class LetStmt : public Stmt {
 public:
     std::string name;
-    std::string typeName;      // 类型标注，没写就留空字符串（之后再支持省略）
+    std::string typeName;      // 类型标注原文；省略时为空串，由语义检查阶段推导填充
     Expr* init = nullptr;      // 初值表达式；let x; 无初值时是 nullptr
     void accept(ASTVisitor& visitor) override;
 };
@@ -263,10 +265,8 @@ public:
     std::string argsText;
     void accept(ASTVisitor& visitor) override;
 };
-// ---- 第 3 波及之后（提示，先别实现）----
-// Function 节点扩展：参数列表（名字+类型）、返回类型
-// CallExpr    : callee(Expr*), args(vector<Expr*>)   —— 函数调用
-// Block 扩展  : 尾部表达式 tailExpr（statements 规则里那个落单的 expression?）
-// StructDef   : name, fields                          —— 属于 Item
-// ImplBlock   : typeName, methods(vector<Function*>)  —— 属于 Item
-// FieldExpr / MethodCallExpr / ArrayExpr / IndexExpr
+
+// 已完成波次备忘（留痕，勿删）：
+//   第 3 波：Function 参数/返回类型、CallExpr、Block 尾表达式 tailExpr
+//   第 4 波：StructDef、ImplBlock、StructLiteralExpr、FieldExpr、MethodCallExpr
+//   第 5 波：ArrayExpr、IndexExpr、ConstDef、StaticDef；引用/解引用复用 UnaryExpr
