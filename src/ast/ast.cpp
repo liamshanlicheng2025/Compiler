@@ -19,3 +19,5 @@ void LoopExpr::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
 void ReturnExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
 void BreakExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void ContinueExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
+void CallExpr::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
+void MacroStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }

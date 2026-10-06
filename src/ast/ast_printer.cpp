@@ -30,11 +30,19 @@ void ASTPrinter::visit(Block& node) {
     for (auto* stmt : node.statements) {
         if (stmt) stmt->accept(*this);
     }
+    if (node.tailExpr) node.tailExpr->accept(*this);
     --indent_;
 }
 
 void ASTPrinter::visit(Function& node) {
-    line("Function " + node.name);
+    std::string sig = "Function " + node.name + "(";
+    for (size_t i = 0; i < node.params.size(); ++i) {
+        if (i) sig += ", ";
+        sig += node.params[i].name + ": " + node.params[i].typeName;
+    }
+    sig += ")";
+    if (!node.returnType.empty()) sig += " -> " + node.returnType;
+    line(sig);
     ++indent_;
     if (node.body) node.body->accept(*this);
     --indent_;
@@ -119,4 +127,18 @@ void ASTPrinter::visit(BreakExpr& node) {
 
 void ASTPrinter::visit(ContinueExpr& node) {
     line("ContinueExpr");
+}
+
+void ASTPrinter::visit(CallExpr& node) {
+    line("CallExpr");
+    ++indent_;
+    if (node.callee) node.callee->accept(*this);
+    for (auto* arg : node.args) {
+        if (arg) arg->accept(*this);
+    }
+    --indent_;
+}
+
+void ASTPrinter::visit(MacroStmt& node) {
+    line("MacroStmt " + node.name + "(" + node.argsText + ")");
 }

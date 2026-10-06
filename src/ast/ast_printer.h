@@ -36,6 +36,8 @@ public:
     void visit(ReturnExpr& node) override;
     void visit(BreakExpr& node) override;
     void visit(ContinueExpr& node) override;
+    void visit(CallExpr& node) override;
+    void visit(MacroStmt& node) override;
 
 private:
     std::ostream& out_;

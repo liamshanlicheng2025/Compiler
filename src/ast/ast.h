@@ -41,17 +41,25 @@ public:
 class Block : public Node {
 public:
     std::vector<Stmt*> statements;
-    // TODO(之后): Rust 里 block 其实是表达式（最后一个不带分号的表达式是块的值），
-    // 支持 if/while 的块返回值时再处理
+    Expr* tailExpr = nullptr;    // 尾部表达式：{ stmt*; expr } 里那个不带分号的 expr，
+                                 // 是块的值（如 fn f() -> i32 { 1 + 2 }）
     void accept(ASTVisitor& visitor) override;
+};
+
+// 函数参数（名字 + 类型标注）
+struct Param {
+    std::string name;
+    std::string typeName;
 };
 
 // 函数定义
 class Function : public Item {
 public:
     std::string name;
+    std::vector<Param> params;   // 空 vector = 无参数
+    std::string returnType;      // 空字符串 = 无返回类型标注（返回 ()）
     Block* body = nullptr;
-    // TODO(之后): 参数列表（名字+类型）、返回类型
+    // TODO(第 4 波): impl 里的方法有 selfParam（&self / &mut self），到时加字段
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -156,6 +164,22 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
+// ---- 第 3 波：函数完整化 ----
+
+// 函数调用：callee(arg1, arg2, ...)
+class CallExpr : public Expr {
+public:
+    Expr* callee = nullptr;              // 通常是 PathExpr（函数名）
+    std::vector<Expr*> args;
+    void accept(ASTVisitor& visitor) override;
+};
+
+class MacroStmt : public Stmt {
+public:
+    std::string name;
+    std::string argsText;
+    void accept(ASTVisitor& visitor) override;
+};
 // ---- 第 3 波及之后（提示，先别实现）----
 // Function 节点扩展：参数列表（名字+类型）、返回类型
 // CallExpr    : callee(Expr*), args(vector<Expr*>)   —— 函数调用

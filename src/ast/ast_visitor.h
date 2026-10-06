@@ -23,6 +23,8 @@ class LoopExpr;
 class ReturnExpr;
 class BreakExpr;
 class ContinueExpr;
+class CallExpr;
+class MacroStmt;
 
 class ASTVisitor {
 public:
@@ -43,4 +45,6 @@ public:
     virtual void visit(ReturnExpr& node) = 0;
     virtual void visit(BreakExpr& node) = 0;
     virtual void visit(ContinueExpr& node) = 0;
+    virtual void visit(CallExpr& node) = 0;
+    virtual void visit(MacroStmt& node) = 0;
 };

@@ -43,4 +43,10 @@ public:
     std::any visitReturnExpression(RustParser::ReturnExpressionContext* ctx) override;
     std::any visitBreakExpression(RustParser::BreakExpressionContext* ctx) override;
     std::any visitContinueExpression(RustParser::ContinueExpressionContext* ctx) override;
+
+    // ---- 宏调用（语句级：println! 等）----
+    std::any visitMacroInvocationSemi(RustParser::MacroInvocationSemiContext* ctx) override;
+
+    // ---- 第 3 波：函数完整化 ----
+    std::any visitCallExpression(RustParser::CallExpressionContext* ctx) override;
 };
