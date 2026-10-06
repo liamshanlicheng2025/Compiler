@@ -217,6 +217,46 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
+// ---- 第 5 波：数组 / 引用 / 全局条目 ----
+
+// 数组字面量：[1, 2, 3] 或 [0; 5]（重复填充）
+class ArrayExpr : public Expr {
+public:
+    std::vector<Expr*> elements;   // 列举形式 [1, 2, 3]
+    Expr* repeatValue = nullptr;   // 重复形式 [0; 5]：值
+    Expr* repeatCount = nullptr;   //                和次数；两者为空则是列举形式
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 下标访问：a[i]
+class IndexExpr : public Expr {
+public:
+    Expr* array = nullptr;
+    Expr* index = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 全局常量：const MAX: i32 = 100;
+class ConstDef : public Item {
+public:
+    std::string name;
+    std::string typeName;
+    Expr* value = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 全局静态量：static mut COUNT: i32 = 0;
+class StaticDef : public Item {
+public:
+    std::string name;
+    std::string typeName;
+    bool isMut = false;            // static mut
+    Expr* value = nullptr;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 引用 &x / &mut x 和解引用 *p：复用 UnaryExpr（op 存 "&"、"&mut"、"*"）
+
 class MacroStmt : public Stmt {
 public:
     std::string name;

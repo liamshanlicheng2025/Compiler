@@ -42,6 +42,10 @@ public:
     void visit(StructLiteralExpr& node) override;
     void visit(FieldExpr& node) override;
     void visit(MethodCallExpr& node) override;
+    void visit(ArrayExpr& node) override;
+    void visit(IndexExpr& node) override;
+    void visit(ConstDef& node) override;
+    void visit(StaticDef& node) override;
     void visit(MacroStmt& node) override;
 
 private:

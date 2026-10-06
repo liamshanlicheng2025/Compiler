@@ -29,6 +29,10 @@ class ImplBlock;
 class StructLiteralExpr;
 class FieldExpr;
 class MethodCallExpr;
+class ArrayExpr;
+class IndexExpr;
+class ConstDef;
+class StaticDef;
 class MacroStmt;
 
 class ASTVisitor {
@@ -56,5 +60,9 @@ public:
     virtual void visit(StructLiteralExpr& node) = 0;
     virtual void visit(FieldExpr& node) = 0;
     virtual void visit(MethodCallExpr& node) = 0;
+    virtual void visit(ArrayExpr& node) = 0;
+    virtual void visit(IndexExpr& node) = 0;
+    virtual void visit(ConstDef& node) = 0;
+    virtual void visit(StaticDef& node) = 0;
     virtual void visit(MacroStmt& node) = 0;
 };

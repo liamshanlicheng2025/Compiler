@@ -25,4 +25,8 @@ void ImplBlock::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void StructLiteralExpr::accept(ASTVisitor& visitor) { visitor.visit(*this); }
 void FieldExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void MethodCallExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void ArrayExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void IndexExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void ConstDef::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
+void StaticDef::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void MacroStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }

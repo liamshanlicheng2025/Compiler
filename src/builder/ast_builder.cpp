@@ -146,14 +146,15 @@ std::any AstBuilder::visitArithmeticOrLogicalExpression(
 // ============================================================
 
 std::any AstBuilder::visitPathExpression_(RustParser::PathExpression_Context* ctx) {
-    // 伪代码：
-    //   auto* node = new PathExpr();
-    //   穿透链路：pathExpression → pathInExpression → pathExprSegment(0)
-    //             → pathIdentSegment → identifier
-    //   先只取第一段：pathExprSegment(0) 的文本（多段 :: 路径之后处理）
-    //   return static_cast<Expr*>(node);
     auto* node = new PathExpr();
-    node -> name = ctx -> pathExpression() -> pathInExpression() -> pathExprSegment(0) -> getText();
+    // 修复（多段路径）：原来只取 pathExprSegment(0)，会丢掉 :: 后面的段
+    // （Point::new 变成 Point）。现在遍历所有段，用 :: 拼接完整路径。
+    std::string path;
+    for (auto* seg : ctx->pathExpression()->pathInExpression()->pathExprSegment()) {
+        if (!path.empty()) path += "::";
+        path += seg->getText();
+    }
+    node->name = path;
     return static_cast<Expr*>(node);
 }
 
@@ -331,7 +332,17 @@ std::any AstBuilder::visitStructStruct(RustParser::StructStructContext* ctx) {
     //           每个 structField 里 identifier() 是字段名、type_() 是类型，
     //           包成 Param 按值 push 进 fields
     //   return static_cast<Item*>(node);
-    return static_cast<Item*>(nullptr);  // TODO(你)
+    auto* node = new StructDef();
+    node -> name = ctx -> identifier() -> getText();
+    if (ctx -> structFields()){
+        for (auto* field : ctx -> structFields() -> structField()){
+            Param param;
+            param.name = field -> identifier() -> getText();
+            param.typeName = field -> type_() -> getText();
+            node -> fields.push_back(param);
+        }
+    }
+    return static_cast<Item*>(node);
 }
 
 std::any AstBuilder::visitInherentImpl(RustParser::InherentImplContext* ctx) {
@@ -346,7 +357,15 @@ std::any AstBuilder::visitInherentImpl(RustParser::InherentImplContext* ctx) {
     //   visitFunction_ 里遇到 selfParam() 非空时的处理要想清楚——
     //   方法调用时 receiver 就是隐式的 self 实参，这影响 CodeGen
     //   return static_cast<Item*>(node);
-    return static_cast<Item*>(nullptr);  // TODO(你)
+    auto* node = new ImplBlock();
+    node -> typeName = ctx -> type_() -> getText();
+    for (auto* item : ctx -> associatedItem()){
+        if (item -> function_()){
+            auto result = std::any_cast<Item*>(visit(item -> function_()));
+            node -> methods.push_back(static_cast<Function*>(result));
+        }
+    }
+    return static_cast<Item*>(node);
 }
 
 std::any AstBuilder::visitStructExpression_(RustParser::StructExpression_Context* ctx) {
@@ -359,7 +378,14 @@ std::any AstBuilder::visitStructExpression_(RustParser::StructExpression_Context
     //           遍历 ->structExprField() vector，
     //           每个里面 identifier() 是字段名、expression() 是初值
     //   return static_cast<Expr*>(node);
-    return static_cast<Expr*>(nullptr);  // TODO(你)
+    auto* node = new StructLiteralExpr();
+    node -> name = ctx -> structExpression() -> structExprStruct() -> pathInExpression() -> getText();
+    if (ctx -> structExpression() -> structExprStruct() -> structExprFields()){
+        for (auto* field : ctx -> structExpression() -> structExprStruct() -> structExprFields() -> structExprField()){
+            node -> fields.push_back({field -> identifier() -> getText(), std::any_cast<Expr*>(visit(field -> expression()))});
+        }
+    }
+    return static_cast<Expr*>(node);
 }
 
 std::any AstBuilder::visitFieldExpression(RustParser::FieldExpressionContext* ctx) {
@@ -368,7 +394,10 @@ std::any AstBuilder::visitFieldExpression(RustParser::FieldExpressionContext* ct
     //   object: visit(ctx->expression())      ← 左递归：点号左边
     //   field:  ctx->identifier()->getText()
     //   return static_cast<Expr*>(node);
-    return static_cast<Expr*>(nullptr);  // TODO(你)
+    auto* node = new FieldExpr();
+    node -> object = std::any_cast<Expr*>(visit(ctx -> expression()));
+    node -> field = ctx -> identifier() -> getText();
+    return static_cast<Expr*>(node);
 }
 
 std::any AstBuilder::visitMethodCallExpression(RustParser::MethodCallExpressionContext* ctx) {
@@ -378,5 +407,79 @@ std::any AstBuilder::visitMethodCallExpression(RustParser::MethodCallExpressionC
     //   method:   ctx->pathExprSegment()->getText()
     //   args:     ctx->callParams() 判空，遍历 ->expression() vector（同 CallExpr）
     //   return static_cast<Expr*>(node);
+    auto* node = new MethodCallExpr();
+    node -> receiver = std::any_cast<Expr*>(visit(ctx -> expression()));
+    node -> method = ctx -> pathExprSegment() -> getText();
+    if (ctx -> callParams()){
+        for (auto* expr : ctx -> callParams() -> expression()){
+            auto result = std::any_cast<Expr*>(visit(expr));
+            node -> args.push_back(result);
+        }
+    }
+    return static_cast<Expr*>(node);
+}
+
+// 修复（复合赋值）：新增，和 Arithmetic 同构。
+// op 用 compoundAssignOperator 子规则一步拿到（+=、-=、*=……）。
+std::any AstBuilder::visitCompoundAssignmentExpression(
+    RustParser::CompoundAssignmentExpressionContext* ctx) {
+    auto* node = new BinaryExpr();
+    node->lhs = std::any_cast<Expr*>(visit(ctx->expression(0)));
+    node->rhs = std::any_cast<Expr*>(visit(ctx->expression(1)));
+    node->op = ctx->compoundAssignOperator()->getText();
+    return static_cast<Expr*>(node);
+}
+
+// ============================================================
+// 第 5 波：数组 / 引用 / 全局条目
+// ============================================================
+
+std::any AstBuilder::visitArrayExpression(RustParser::ArrayExpressionContext* ctx) {
+    // 伪代码（数组字面量）：
+    //   auto* node = new ArrayExpr();
+    //   入口：ctx->arrayElements() 可空（[] 空数组）；
+    //   规则有两个备选（RustParser.g4:555）：
+    //     列举 [1,2,3] : expression (COMMA expression)* —— 遍历 expression() vector
+    //     重复 [0; 5]  : expression SEMI expression     —— 恰好两个 expression 且中间是 SEMI
+    //   区分方法：看 ctx->arrayElements()->SEMI() 是否非空
+    //     非空 → expression(0) 进 repeatValue，expression(1) 进 repeatCount
+    //     否则 → 全部进 elements
+    //   return static_cast<Expr*>(node);
     return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitIndexExpression(RustParser::IndexExpressionContext* ctx) {
+    // 伪代码（a[i]，左递归后缀）：
+    //   array: visit(ctx->expression(0))，index: visit(ctx->expression(1))
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitBorrowExpression(RustParser::BorrowExpressionContext* ctx) {
+    // 伪代码（&x / &mut x）：复用 UnaryExpr
+    //   op: "&"；如果 ctx->KW_MUT() 非空则 "&mut"
+    //   operand: visit(ctx->expression())
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitDereferenceExpression(RustParser::DereferenceExpressionContext* ctx) {
+    // 伪代码（*p）：复用 UnaryExpr，op = "*"，operand = visit(ctx->expression())
+    return static_cast<Expr*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitConstantItem(RustParser::ConstantItemContext* ctx) {
+    // 伪代码（const MAX: i32 = 100;）：
+    //   name:     ctx->identifier()->getText()
+    //   typeName: ctx->type_()->getText()
+    //   value:    ctx->expression() 判空后 visit
+    //   return static_cast<Item*>(node);
+    return static_cast<Item*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitStaticItem(RustParser::StaticItemContext* ctx) {
+    // 伪代码（static mut COUNT: i32 = 0;）：同 ConstDef，
+    //   多一个 isMut：看 ctx->KW_MUT() 是否非空
+    //   return static_cast<Item*>(node);
+    return static_cast<Item*>(nullptr);  // TODO(你)
 }

@@ -189,3 +189,42 @@ void ASTPrinter::visit(MethodCallExpr& node) {
     }
     --indent_;
 }
+
+void ASTPrinter::visit(ArrayExpr& node) {
+    if (node.repeatValue) {
+        line("ArrayExpr [value; count]");
+        ++indent_;
+        node.repeatValue->accept(*this);
+        if (node.repeatCount) node.repeatCount->accept(*this);
+        --indent_;
+    } else {
+        line("ArrayExpr");
+        ++indent_;
+        for (auto* e : node.elements) {
+            if (e) e->accept(*this);
+        }
+        --indent_;
+    }
+}
+
+void ASTPrinter::visit(IndexExpr& node) {
+    line("IndexExpr");
+    ++indent_;
+    if (node.array) node.array->accept(*this);
+    if (node.index) node.index->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(ConstDef& node) {
+    line("ConstDef " + node.name + " : " + node.typeName);
+    ++indent_;
+    if (node.value) node.value->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(StaticDef& node) {
+    line(std::string("StaticDef ") + (node.isMut ? "mut " : "") + node.name + " : " + node.typeName);
+    ++indent_;
+    if (node.value) node.value->accept(*this);
+    --indent_;
+}

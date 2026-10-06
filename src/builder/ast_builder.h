@@ -47,6 +47,10 @@ public:
     // ---- 宏调用（语句级：println! 等）----
     std::any visitMacroInvocationSemi(RustParser::MacroInvocationSemiContext* ctx) override;
 
+    // 修复（复合赋值）：a += b 走 CompoundAssignmentExpression 标签，
+    // 不覆盖的话默认穿透会把整个表达式静默替换成右操作数
+    std::any visitCompoundAssignmentExpression(RustParser::CompoundAssignmentExpressionContext* ctx) override;
+
     // ---- 第 3 波：函数完整化 ----
     std::any visitCallExpression(RustParser::CallExpressionContext* ctx) override;
 
@@ -56,4 +60,12 @@ public:
     std::any visitStructExpression_(RustParser::StructExpression_Context* ctx) override;
     std::any visitFieldExpression(RustParser::FieldExpressionContext* ctx) override;
     std::any visitMethodCallExpression(RustParser::MethodCallExpressionContext* ctx) override;
+
+    // ---- 第 5 波：数组 / 引用 / 全局条目 ----
+    std::any visitArrayExpression(RustParser::ArrayExpressionContext* ctx) override;
+    std::any visitIndexExpression(RustParser::IndexExpressionContext* ctx) override;
+    std::any visitBorrowExpression(RustParser::BorrowExpressionContext* ctx) override;
+    std::any visitDereferenceExpression(RustParser::DereferenceExpressionContext* ctx) override;
+    std::any visitConstantItem(RustParser::ConstantItemContext* ctx) override;
+    std::any visitStaticItem(RustParser::StaticItemContext* ctx) override;
 };
