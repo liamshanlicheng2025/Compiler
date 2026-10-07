@@ -1,0 +1,7 @@
+fn main() {
+    let y: usize = getInt() as usize;
+    let z: usize = getInt() as usize;
+    printlnInt((y * z % 2147483647usize) as i32);
+    printlnInt(((y + z) % 2147483647usize) as i32);
+    printlnInt((y * z / z) as i32);
+}
