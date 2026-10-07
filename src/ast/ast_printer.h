@@ -46,6 +46,8 @@ public:
     void visit(IndexExpr& node) override;
     void visit(ConstDef& node) override;
     void visit(StaticDef& node) override;
+    void visit(EnumDef& node) override;
+    void visit(MatchExpr& node) override;
     void visit(MacroStmt& node) override;
 
 private:

@@ -154,6 +154,12 @@ std::any AstBuilder::visitAssignmentExpression(RustParser::AssignmentExpressionC
     return static_cast<Expr*>(node);
 }
 
+// 括号表达式：(expr)，括号只是分组，直接穿透返回内层表达式的节点
+// （官方测试里出现 while (turn < 9) 这种带括号条件，不覆盖会崩）
+std::any AstBuilder::visitGroupedExpression(RustParser::GroupedExpressionContext* ctx) {
+    return visit(ctx->expression());
+}
+
 // 表达式语句：普通表达式（带分号）和 if/while/loop 等带块表达式（分号可选）
 // 统一包成 ExprStmt
 std::any AstBuilder::visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) {
@@ -376,4 +382,38 @@ std::any AstBuilder::visitStaticItem(RustParser::StaticItemContext* ctx) {
     if (ctx -> expression()) node -> value = std::any_cast<Expr*>(visit(ctx -> expression()));
     node -> isMut = (ctx -> KW_MUT())? true : false;
     return static_cast<Item*>(node);
+}
+
+// ============================================================
+// enum / match
+// ============================================================
+
+std::any AstBuilder::visitEnumeration(RustParser::EnumerationContext* ctx) {
+    // 伪代码（enum Cell { X, O } / enum Shape { Circle(f64), Empty }）：
+    //   auto* node = new EnumDef();
+    //   name: ctx->identifier()->getText()
+    //   variants: ctx->enumItems() 可空（空 enum）；
+    //     遍历 ->enumItem() vector，每个 enumItem：
+    //       名字 = identifier()->getText()
+    //       若 enumItemTuple() 非空 → tuple 式负载：
+    //         链路 enumItemTuple → tupleFields → tupleField（vector）→ type_()->getText()
+    //       enumItemStruct / enumItemDiscriminant（= 显式值）课程测试基本不出现，可跳过
+    //   return static_cast<Item*>(node);
+    return static_cast<Item*>(nullptr);  // TODO(你)
+}
+
+std::any AstBuilder::visitMatchExpression(RustParser::MatchExpressionContext* ctx) {
+    // 伪代码：
+    //   auto* node = new MatchExpr();
+    //   scrutinee: visit(ctx->expression())
+    //   arms: ctx->matchArms() 可空；注意 matchArms 规则结构（RustParser.g4:692）：
+    //     (matchArm FATARROW matchArmExpression)* matchArm FATARROW expression COMMA?
+    //     即前 n-1 个分支的体在 matchArmExpression(i) 里，
+    //     最后一个分支的体单独在 matchArms->expression() 里
+    //   每个 matchArm：patternText = matchArm(i)->pattern()->getText()
+    //   matchArmExpression 有两个备选：expression（普通）或
+    //     expressionWithBlock（块）——块的情况 visit 返回 Block*，
+    //     存进 MatchArmNode::bodyBlock（与 body 二选一）
+    //   return static_cast<Expr*>(node);
+    return static_cast<Expr*>(nullptr);  // TODO(你)
 }

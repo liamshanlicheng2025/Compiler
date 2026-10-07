@@ -259,6 +259,39 @@ public:
 
 // 引用 &x / &mut x 和解引用 *p：复用 UnaryExpr（op 存 "&"、"&mut"、"*"）
 
+// ---- enum / match（AST 最后一块）----
+
+// enum 的一个变体：Cell::X（无负载）、Circle(f64)（tuple 式负载）
+struct EnumVariant {
+    std::string name;
+    std::vector<std::string> payloadTypes;  // 空 = 单元变体（无负载）
+    // struct 式变体（Rect { w: f64 }）在官方测试中基本不出现，暂不支持
+};
+
+// enum 定义
+class EnumDef : public Item {
+public:
+    std::string name;
+    std::vector<EnumVariant> variants;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// match 的一个分支：pattern => body
+struct MatchArmNode {
+    std::string patternText;   // 模式原文（Cell::X、1、_ 等）；
+                               // 语义检查若需要结构化模式再升级为节点
+    Expr* body = nullptr;      // 分支体是表达式时用这个
+    Block* bodyBlock = nullptr;// 分支体是块 { ... } 时用这个（二选一）
+};
+
+// match 表达式
+class MatchExpr : public Expr {
+public:
+    Expr* scrutinee = nullptr;          // match 后面被匹配的值
+    std::vector<MatchArmNode> arms;
+    void accept(ASTVisitor& visitor) override;
+};
+
 class MacroStmt : public Stmt {
 public:
     std::string name;

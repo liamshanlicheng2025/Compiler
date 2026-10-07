@@ -33,6 +33,8 @@ class ArrayExpr;
 class IndexExpr;
 class ConstDef;
 class StaticDef;
+class EnumDef;
+class MatchExpr;
 class MacroStmt;
 
 class ASTVisitor {
@@ -64,5 +66,7 @@ public:
     virtual void visit(IndexExpr& node) = 0;
     virtual void visit(ConstDef& node) = 0;
     virtual void visit(StaticDef& node) = 0;
+    virtual void visit(EnumDef& node) = 0;
+    virtual void visit(MatchExpr& node) = 0;
     virtual void visit(MacroStmt& node) = 0;
 };

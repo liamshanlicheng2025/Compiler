@@ -29,4 +29,6 @@ void ArrayExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void IndexExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void ConstDef::accept(ASTVisitor& visitor)   { visitor.visit(*this); }
 void StaticDef::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
+void EnumDef::accept(ASTVisitor& visitor)    { visitor.visit(*this); }
+void MatchExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void MacroStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }

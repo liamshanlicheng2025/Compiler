@@ -230,3 +230,34 @@ void ASTPrinter::visit(StaticDef& node) {
     if (node.value) node.value->accept(*this);
     --indent_;
 }
+
+void ASTPrinter::visit(EnumDef& node) {
+    std::string s = "EnumDef " + node.name + " {";
+    for (size_t i = 0; i < node.variants.size(); ++i) {
+        if (i) s += ", ";
+        s += node.variants[i].name;
+        if (!node.variants[i].payloadTypes.empty()) {
+            s += "(";
+            for (size_t j = 0; j < node.variants[i].payloadTypes.size(); ++j) {
+                if (j) s += ", ";
+                s += node.variants[i].payloadTypes[j];
+            }
+            s += ")";
+        }
+    }
+    line(s + "}");
+}
+
+void ASTPrinter::visit(MatchExpr& node) {
+    line("MatchExpr");
+    ++indent_;
+    if (node.scrutinee) node.scrutinee->accept(*this);
+    for (auto& arm : node.arms) {
+        line("arm " + arm.patternText + " =>");
+        ++indent_;
+        if (arm.body) arm.body->accept(*this);
+        if (arm.bodyBlock) arm.bodyBlock->accept(*this);
+        --indent_;
+    }
+    --indent_;
+}

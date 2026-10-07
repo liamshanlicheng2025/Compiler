@@ -35,6 +35,8 @@ public:
     std::any visitComparisonExpression(RustParser::ComparisonExpressionContext* ctx) override;
     std::any visitAssignmentExpression(RustParser::AssignmentExpressionContext* ctx) override;
     std::any visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) override;
+    // 括号表达式穿透：(expr) → 内层节点
+    std::any visitGroupedExpression(RustParser::GroupedExpressionContext* ctx) override;
 
     // ---- 第 2 波：控制流 ----
     std::any visitIfExpression(RustParser::IfExpressionContext* ctx) override;
@@ -68,4 +70,8 @@ public:
     std::any visitDereferenceExpression(RustParser::DereferenceExpressionContext* ctx) override;
     std::any visitConstantItem(RustParser::ConstantItemContext* ctx) override;
     std::any visitStaticItem(RustParser::StaticItemContext* ctx) override;
+
+    // ---- enum / match ----
+    std::any visitEnumeration(RustParser::EnumerationContext* ctx) override;
+    std::any visitMatchExpression(RustParser::MatchExpressionContext* ctx) override;
 };
