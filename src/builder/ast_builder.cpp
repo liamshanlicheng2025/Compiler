@@ -284,7 +284,17 @@ std::any AstBuilder::visitStructExpression_(RustParser::StructExpression_Context
     node -> name = ctx -> structExpression() -> structExprStruct() -> pathInExpression() -> getText();
     if (ctx -> structExpression() -> structExprStruct() -> structExprFields()){
         for (auto* field : ctx -> structExpression() -> structExprStruct() -> structExprFields() -> structExprField()){
-            node -> fields.push_back({field -> identifier() -> getText(), std::any_cast<Expr*>(visit(field -> expression()))});
+            // 修正：structExprField 允许简写 Point { x }（g4:585），此时 expression() 为空，
+            // 直接 visit(nullptr) 会段错误；简写等价于 x: x，补一个同名 PathExpr
+            Expr* value;
+            if (field -> expression())
+                value = std::any_cast<Expr*>(visit(field -> expression()));
+            else {
+                auto* shorthand = new PathExpr();
+                shorthand -> name = field -> identifier() -> getText();
+                value = static_cast<Expr*>(shorthand);
+            }
+            node -> fields.push_back({field -> identifier() -> getText(), value});
         }
     }
     return static_cast<Expr*>(node);
@@ -399,7 +409,26 @@ std::any AstBuilder::visitEnumeration(RustParser::EnumerationContext* ctx) {
     //         链路 enumItemTuple → tupleFields → tupleField（vector）→ type_()->getText()
     //       enumItemStruct / enumItemDiscriminant（= 显式值）课程测试基本不出现，可跳过
     //   return static_cast<Item*>(node);
-    return static_cast<Item*>(nullptr);  // TODO(你)
+    auto node = new EnumDef();
+    node -> name = ctx -> identifier() -> getText();
+    if (ctx -> enumItems()){
+        // 修正：enumItems() 返回单个上下文（不是 vector），列表在它下面的 enumItem() 方法里
+        for (auto* item : ctx -> enumItems() -> enumItem()){
+            // 修正：variants 是 vector<EnumVariant>（按值存），不用 new
+            EnumVariant variant;
+            variant.name = item -> identifier() -> getText();
+            if (auto* tup = item -> enumItemTuple()){
+                // 修正：tupleFields/tupleField 是方法（要带 ()）；空括号 () 时 tupleFields() 为空
+                if (auto* fields = tup -> tupleFields()){
+                    for (auto* field : fields -> tupleField()){
+                        variant.payloadTypes.push_back(field -> type_() -> getText());
+                    }
+                }
+            }
+            node -> variants.push_back(variant);
+        }
+    }
+    return static_cast<Item*>(node);
 }
 
 std::any AstBuilder::visitMatchExpression(RustParser::MatchExpressionContext* ctx) {
@@ -415,5 +444,40 @@ std::any AstBuilder::visitMatchExpression(RustParser::MatchExpressionContext* ct
     //     expressionWithBlock（块）——块的情况 visit 返回 Block*，
     //     存进 MatchArmNode::bodyBlock（与 body 二选一）
     //   return static_cast<Expr*>(node);
-    return static_cast<Expr*>(nullptr);  // TODO(你)
+    auto* node = new MatchExpr();
+    node -> scrutinee = std::any_cast<Expr*>(visit(ctx -> expression()));
+    if (auto* arms = ctx -> matchArms()){
+        // 修正：matchArm 上下文里只有 pattern(+guard)，没有 expression；
+        // 分支体在 matchArms 层——前 n-1 个在 matchArmExpression(i)，最后一个在 matchArms->expression()
+        auto armCtxs = arms -> matchArm();
+        for (size_t i = 0; i < armCtxs.size(); ++i){
+            MatchArmNode arm;   // arms 是 vector<MatchArmNode>（按值存），不用 new
+            arm.patternText = armCtxs[i] -> pattern() -> getText();
+            // 修正：ANTLR 实际会把 => { ... } 解析进 matchArmExpression 的第一个备选
+            // expression COMMA（因为 expression 规则自身包含 expressionWithBlock 备选），
+            // 所以判断块式体不能看 matchArmExpression::expressionWithBlock()，
+            // 要对拿到的 expression 上下文 dynamic_cast 成 ExpressionWithBlock_Context 再往里看
+            auto fillBody = [&](RustParser::ExpressionContext* exprCtx){
+                if (auto* ewbAlt = dynamic_cast<RustParser::ExpressionWithBlock_Context*>(exprCtx)){
+                    auto* ewb = ewbAlt -> expressionWithBlock();
+                    if (ewb -> blockExpression())
+                        // 字面 { } 块存 bodyBlock（visitBlockExpression 返回 Block*）
+                        arm.bodyBlock = std::any_cast<Block*>(visit(ewb -> blockExpression()));
+                    else
+                        // if/while/loop/嵌套 match：visit 返回 Expr*，存 body
+                        arm.body = std::any_cast<Expr*>(visit(ewb));
+                } else {
+                    arm.body = std::any_cast<Expr*>(visit(exprCtx));
+                }
+            };
+            if (i + 1 < armCtxs.size()){
+                fillBody(arms -> matchArmExpression(i) -> expression());
+            } else {
+                // 最后一个分支体：单独在 matchArms->expression() 里（修正：原来漏了 visit()）
+                fillBody(arms -> expression());
+            }
+            node -> arms.push_back(arm);
+        }
+    }
+    return static_cast<Expr*>(node);
 }
