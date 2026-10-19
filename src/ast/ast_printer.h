@@ -49,6 +49,8 @@ public:
     void visit(EnumDef& node) override;
     void visit(MatchExpr& node) override;
     void visit(MacroStmt& node) override;
+    void visit(ItemStmt& node) override;
+    void visit(CastExpr& node) override;
 
 private:
     std::ostream& out_;

@@ -3,17 +3,42 @@
 // ============================================================
 // AST 节点定义
 //
-// 内存策略：全项目统一使用裸指针，节点创建后活到进程结束，不 delete。
+// 内存策略：全项目统一使用 std::shared_ptr 持有节点（CR 后修订：
+// 原先裸指针 + 进程退出统一回收，现改为 shared_ptr 自动管理）。
 // 设计约定：
+//   - 节点间传递一律用别名：CratePtr / ItemPtr / StmtPtr / ExprPtr / BlockPtr
+//   - visitor 接口仍按引用传递（visit(Xxx&)），accept 不变
+//   - 类型标注一律存结构化 Type（ast/type.h），不再存字符串原文
 //   - 每个具体节点类都要在 ast.cpp 里实现 accept()
-//   - 之后做语义分析时，可能要给节点挂类型信息/源码位置，
-//     到时在 Node 基类里加成员即可
 // ============================================================
 
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "ast/type.h"
+
 class ASTVisitor;
+
+// ---- 前向声明 + 智能指针别名 ----
+
+class Node;
+class Item;
+class Stmt;
+class Expr;
+class Crate;
+class Block;
+class Function;
+
+enum class LiteralKind {Int, Float, Bool, Char, Str};
+
+using NodePtr  = std::shared_ptr<Node>;
+using ItemPtr  = std::shared_ptr<Item>;
+using StmtPtr  = std::shared_ptr<Stmt>;
+using ExprPtr  = std::shared_ptr<Expr>;
+using CratePtr = std::shared_ptr<Crate>;
+using BlockPtr = std::shared_ptr<Block>;
+using FunctionPtr = std::shared_ptr<Function>;
 
 class Node {
 public:
@@ -28,28 +53,30 @@ class Item : public Node {};   // crate 顶层：函数、struct、enum……
 class Stmt : public Node {};   // 语句：let、表达式语句……
 class Expr : public Node {};   // 表达式：字面量、二元运算……
 
-// ---- 第一个里程碑需要的 6 个具体节点 ----
+// ---- 基础节点 ----
 
 // 整个源文件（对应 g4 的 crate 规则）
 class Crate : public Node {
 public:
-    std::vector<Item*> items;
+    std::vector<ItemPtr> items;
     void accept(ASTVisitor& visitor) override;
 };
 
-// 语句块 { ... }
-class Block : public Node {
+// 语句块 { ... }——Rust 里块本身是表达式（值 = 尾表达式或 ()），
+// 所以继承 Expr：裸块可以直接当 ExprStmt 的内容
+class Block : public Expr {
 public:
-    std::vector<Stmt*> statements;
-    Expr* tailExpr = nullptr;    // 尾部表达式：{ stmt*; expr } 里那个不带分号的 expr，
-                                 // 是块的值（如 fn f() -> i32 { 1 + 2 }）
+    std::vector<StmtPtr> statements;
+    ExprPtr tailExpr;            // 尾部表达式：{ stmt*; expr } 里那个不带分号的 expr，
+                                 // 是块的值（如 fn f() -> i32 { 1 + 2 }）；空指针 = 无
     void accept(ASTVisitor& visitor) override;
 };
 
-// 函数参数（名字 + 类型标注）
+// 函数参数（名字 + 结构化类型标注）
 struct Param {
     std::string name;
-    std::string typeName;
+    Type type;
+    bool isMut = false;   // fn f(mut n: i32) 的可变参数（semantic 允许对其赋值）
 };
 
 // 函数定义
@@ -57,107 +84,122 @@ class Function : public Item {
 public:
     std::string name;
     std::vector<Param> params;   // 空 vector = 无参数（不含 self）
-    std::string returnType;      // 空字符串 = 无返回类型标注（返回 ()）
-    Block* body = nullptr;
-    // 第 4 波补充：selfParam 支持
+    std::shared_ptr<Type> returnType;  // 空指针 = 无返回类型标注（返回 ()）
+    BlockPtr body;
     bool isMethod = false;       // impl 块里第一个参数是 self/&self/&mut self 的方法
-    bool selfMut = false;        // &mut self 时为 true（CodeGen 需要区分）
+    bool selfMut = false;        // &mut self 或 mut self 时为 true
+    bool selfByValue = false;    // 按值 self（fn better(self, ...)），类型不是引用
     void accept(ASTVisitor& visitor) override;
 };
 
-// let 声明：let x: i32 = 1 + 2;
+// let 声明：let x: i32 = 1 + 2; / let mut y = 5;
 class LetStmt : public Stmt {
 public:
     std::string name;
-    std::string typeName;      // 类型标注原文；省略时为空串，由语义检查阶段推导填充
-    Expr* init = nullptr;      // 初值表达式；let x; 无初值时是 nullptr
+    std::shared_ptr<Type> type;  // 类型标注；空指针 = 省略，由语义检查阶段推导
+    ExprPtr init;                // 初值表达式；let x; 无初值时是空指针
+    bool isMut = false;          // let mut（语义阶段查"给不可变变量赋值"要用）
     void accept(ASTVisitor& visitor) override;
 };
 
 // 表达式语句：一个表达式后面跟分号，如 foo();
 class ExprStmt : public Stmt {
 public:
-    Expr* expr = nullptr;
+    ExprPtr expr;
+    bool hasSemi = true;   // expressionWithBlock 的分号可选；无分号的尾部
+                           // if/loop/match/块 是所在块的值（basic22）
+    void accept(ASTVisitor& visitor) override;
+};
+
+// 语句位置的顶层条目：块内的嵌套 fn、局部 const/static
+// （g4 的 statement 规则允许 item；return12 的嵌套函数、loop3 的局部 const）
+class ItemStmt : public Stmt {
+public:
+    ItemPtr item;
+    void accept(ASTVisitor& visitor) override;
+};
+
+// as 类型转换：expr as T（如 counter < len as i32）
+class CastExpr : public Expr {
+public:
+    ExprPtr expr;
+    Type target;                 // as 后面的目标类型
     void accept(ASTVisitor& visitor) override;
 };
 
 // 字面量：1、true、"hello"……
 class Literal : public Expr {
 public:
-    std::string text;          // 先存原文
-    // TODO: 用一个枚举区分种类（整数/布尔/字符/字符串），IR 阶段会需要
+    std::string text;          // 原文（IR 阶段取数值用）
+    LiteralKind kind;          // 种类（builder 填好，语义阶段直接查表）
     void accept(ASTVisitor& visitor) override;
 };
 
 // 二元运算：lhs op rhs
+// 比较（==、<、>……）和赋值（=、+=……）复用本节点，op 存运算符字符串
 class BinaryExpr : public Expr {
 public:
-    std::string op;            // "+", "-", "*", "/", "%", "==", ...
-    Expr* lhs = nullptr;
-    Expr* rhs = nullptr;
+    std::string op;            // "+", "-", "*", "/", "%", "==", "=", "+=", ...
+    ExprPtr lhs;
+    ExprPtr rhs;
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 第 1 波：表达式补全 ----
-// 比较（==、<、>……）和赋值（=、+=……）不需要新节点：
-// 复用 BinaryExpr，op 存运算符字符串即可
-
-// 变量/路径引用：x、foo、Point::new
+// 变量/路径引用：x、foo、Point::new（多段用 :: 拼进 name）
 class PathExpr : public Expr {
 public:
-    std::string name;          // 先只支持单段（变量名）；
-                               // 多段路径（Point::new）做 impl 时再拆段
+    std::string name;
     void accept(ASTVisitor& visitor) override;
 };
 
-// 一元运算：-x、!x、*p（解引用）
+// 一元运算：-x、!x、*p（解引用）、&x / &mut x（引用）
 class UnaryExpr : public Expr {
 public:
-    std::string op;            // "-", "!", "*"
-    Expr* operand = nullptr;
+    std::string op;            // "-", "!", "*", "&", "&mut"
+    ExprPtr operand;
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 第 2 波：控制流 ----
-// 注意：Rust 里 if/while/loop/return/break/continue 都是表达式（Expr），
-// 不是语句。它们出现在"语句位置"时由外层规则包装，
-// 你在 visitExpressionStatement 里决定怎么包（提示见 ast_builder.cpp）。
+// ---- 控制流 ----
+// 注意：Rust 里 if/while/loop/return/break/continue 都是表达式（Expr）。
 
 // if 表达式
 class IfExpr : public Expr {
 public:
-    Expr* cond = nullptr;
-    Block* thenBlock = nullptr;
-    Block* elseBlock = nullptr;  // 可空；else if 链 = elseBlock 里包一个
-                                 // 只含一条 ExprStmt(IfExpr) 的 Block
+    ExprPtr cond;
+    BlockPtr thenBlock;
+    BlockPtr elseBlock;          // 空指针 = 无 else；else if 链 = elseBlock 里包一个
+                                 // 只含尾表达式 IfExpr 的 Block
+    bool condGrouped = true;     // 条件是否带括号（课程规范要求带，expr12/20/25/30）
     void accept(ASTVisitor& visitor) override;
 };
 
 // while 循环
 class WhileExpr : public Expr {
 public:
-    Expr* cond = nullptr;
-    Block* body = nullptr;
+    ExprPtr cond;
+    BlockPtr body;
+    bool condGrouped = true;     // 同 IfExpr
     void accept(ASTVisitor& visitor) override;
 };
 
 // loop 无限循环
 class LoopExpr : public Expr {
 public:
-    Block* body = nullptr;
+    BlockPtr body;
     void accept(ASTVisitor& visitor) override;
 };
 
 // return / break / continue
 class ReturnExpr : public Expr {
 public:
-    Expr* value = nullptr;       // 可空：裸 `return;`
+    ExprPtr value;               // 空指针：裸 `return;`
     void accept(ASTVisitor& visitor) override;
 };
 
 class BreakExpr : public Expr {
 public:
-    Expr* value = nullptr;       // 可空：`break;`；带值 break 之后再说
+    ExprPtr value;               // 空指针：`break;`；带值 break 之后再说
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -166,17 +208,15 @@ public:
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 第 3 波：函数完整化 ----
-
 // 函数调用：callee(arg1, arg2, ...)
 class CallExpr : public Expr {
 public:
-    Expr* callee = nullptr;              // 通常是 PathExpr（函数名）
-    std::vector<Expr*> args;
+    ExprPtr callee;                      // 通常是 PathExpr（函数名）
+    std::vector<ExprPtr> args;
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 第 4 波：复合类型 ----
+// ---- 复合类型 ----
 
 // struct 定义：struct Point { x: i32, y: i32 }
 class StructDef : public Item {
@@ -189,23 +229,23 @@ public:
 // impl 块：impl Point { fn new(...) ... fn norm2(&self) ... }
 class ImplBlock : public Item {
 public:
-    std::string typeName;                // impl 目标类型名
-    std::vector<Function*> methods;
+    std::string typeName;                // impl 目标类型名（名字引用，语义阶段解析）
+    std::vector<FunctionPtr> methods;
     void accept(ASTVisitor& visitor) override;
 };
 
 // 结构体字面量：Point { x: 1, y: 2 }
 class StructLiteralExpr : public Expr {
 public:
-    std::string name;                              // 结构体名
-    std::vector<std::pair<std::string, Expr*>> fields;  // (字段名, 初值) 保持声明顺序
+    std::string name;                                    // 结构体名
+    std::vector<std::pair<std::string, ExprPtr>> fields; // (字段名, 初值) 保持声明顺序
     void accept(ASTVisitor& visitor) override;
 };
 
 // 字段访问：p.x
 class FieldExpr : public Expr {
 public:
-    Expr* object = nullptr;
+    ExprPtr object;
     std::string field;
     void accept(ASTVisitor& visitor) override;
 };
@@ -213,28 +253,28 @@ public:
 // 方法调用：p.shift(3)
 class MethodCallExpr : public Expr {
 public:
-    Expr* receiver = nullptr;            // 点号左边的对象
+    ExprPtr receiver;                    // 点号左边的对象
     std::string method;
-    std::vector<Expr*> args;             // 不含 self
+    std::vector<ExprPtr> args;           // 不含 self
     void accept(ASTVisitor& visitor) override;
 };
 
-// ---- 第 5 波：数组 / 引用 / 全局条目 ----
+// ---- 数组 / 全局条目 ----
 
 // 数组字面量：[1, 2, 3] 或 [0; 5]（重复填充）
 class ArrayExpr : public Expr {
 public:
-    std::vector<Expr*> elements;   // 列举形式 [1, 2, 3]
-    Expr* repeatValue = nullptr;   // 重复形式 [0; 5]：值
-    Expr* repeatCount = nullptr;   //                和次数；两者为空则是列举形式
+    std::vector<ExprPtr> elements;   // 列举形式 [1, 2, 3]
+    ExprPtr repeatValue;             // 重复形式 [0; 5]：值
+    ExprPtr repeatCount;             //                和次数；两者为空则是列举形式
     void accept(ASTVisitor& visitor) override;
 };
 
 // 下标访问：a[i]
 class IndexExpr : public Expr {
 public:
-    Expr* array = nullptr;
-    Expr* index = nullptr;
+    ExprPtr array;
+    ExprPtr index;
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -242,8 +282,8 @@ public:
 class ConstDef : public Item {
 public:
     std::string name;
-    std::string typeName;
-    Expr* value = nullptr;
+    Type type;                     // 类型标注语法上必填，按值存
+    ExprPtr value;
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -251,20 +291,18 @@ public:
 class StaticDef : public Item {
 public:
     std::string name;
-    std::string typeName;
+    Type type;
     bool isMut = false;            // static mut
-    Expr* value = nullptr;
+    ExprPtr value;
     void accept(ASTVisitor& visitor) override;
 };
 
-// 引用 &x / &mut x 和解引用 *p：复用 UnaryExpr（op 存 "&"、"&mut"、"*"）
-
-// ---- enum / match（AST 最后一块）----
+// ---- enum / match ----
 
 // enum 的一个变体：Cell::X（无负载）、Circle(f64)（tuple 式负载）
 struct EnumVariant {
     std::string name;
-    std::vector<std::string> payloadTypes;  // 空 = 单元变体（无负载）
+    std::vector<Type> payloadTypes;  // 空 = 单元变体（无负载）
     // struct 式变体（Rect { w: f64 }）在官方测试中基本不出现，暂不支持
 };
 
@@ -280,18 +318,19 @@ public:
 struct MatchArmNode {
     std::string patternText;   // 模式原文（Cell::X、1、_ 等）；
                                // 语义检查若需要结构化模式再升级为节点
-    Expr* body = nullptr;      // 分支体是表达式时用这个
-    Block* bodyBlock = nullptr;// 分支体是块 { ... } 时用这个（二选一）
+    ExprPtr body;              // 分支体是表达式时用这个
+    BlockPtr bodyBlock;        // 分支体是块 { ... } 时用这个（二选一）
 };
 
 // match 表达式
 class MatchExpr : public Expr {
 public:
-    Expr* scrutinee = nullptr;          // match 后面被匹配的值
+    ExprPtr scrutinee;                  // match 后面被匹配的值
     std::vector<MatchArmNode> arms;
     void accept(ASTVisitor& visitor) override;
 };
 
+// 语句级宏调用：println!(...)
 class MacroStmt : public Stmt {
 public:
     std::string name;
@@ -303,3 +342,4 @@ public:
 //   第 3 波：Function 参数/返回类型、CallExpr、Block 尾表达式 tailExpr
 //   第 4 波：StructDef、ImplBlock、StructLiteralExpr、FieldExpr、MethodCallExpr
 //   第 5 波：ArrayExpr、IndexExpr、ConstDef、StaticDef；引用/解引用复用 UnaryExpr
+//   CR 后重构：类型标注从 string 改为结构化 Type；节点持有从裸指针改为 shared_ptr

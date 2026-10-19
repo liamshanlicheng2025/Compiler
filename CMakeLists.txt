@@ -53,6 +53,10 @@ add_executable(compiler
     src/ast/ast.cpp
     src/ast/ast_printer.cpp
     src/builder/ast_builder.cpp
+    src/ast/type.cpp
+    src/semantic/symbol_table.cpp
+    src/semantic/decl_collector.cpp
+    src/semantic/semantic_checker.cpp
     grammar/cpp/RustLexerBase.cpp
     grammar/cpp/RustParserBase.cpp
     ${GENERATED_SRCS})

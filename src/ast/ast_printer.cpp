@@ -18,7 +18,7 @@ void ASTPrinter::line(const std::string& text) {
 void ASTPrinter::visit(Crate& node) {
     line("Crate");
     ++indent_;
-    for (auto* item : node.items) {
+    for (auto& item : node.items) {
         if (item) item->accept(*this);
     }
     --indent_;
@@ -27,7 +27,7 @@ void ASTPrinter::visit(Crate& node) {
 void ASTPrinter::visit(Block& node) {
     line("Block");
     ++indent_;
-    for (auto* stmt : node.statements) {
+    for (auto& stmt : node.statements) {
         if (stmt) stmt->accept(*this);
     }
     if (node.tailExpr) node.tailExpr->accept(*this);
@@ -40,10 +40,10 @@ void ASTPrinter::visit(Function& node) {
     if (node.isMethod) sig += node.selfMut ? "&mut self" : "&self";
     for (size_t i = 0; i < node.params.size(); ++i) {
         if (i || node.isMethod) sig += ", ";
-        sig += node.params[i].name + ": " + node.params[i].typeName;
+        sig += node.params[i].name + ": " + node.params[i].type.toString();
     }
     sig += ")";
-    if (!node.returnType.empty()) sig += " -> " + node.returnType;
+    if (node.returnType) sig += " -> " + node.returnType->toString();
     line(sig);
     ++indent_;
     if (node.body) node.body->accept(*this);
@@ -51,9 +51,8 @@ void ASTPrinter::visit(Function& node) {
 }
 
 void ASTPrinter::visit(LetStmt& node) {
-    // TODO(你): 打印成 "LetStmt x : i32" 的形式，
-    // 注意 typeName 可能为空（let x = 1; 没写类型标注）
-    line("LetStmt " + node.name + (node.typeName.empty() ? "" : " : " + node.typeName));
+    // 注意 type 可能为空指针（let x = 1; 没写类型标注）
+    line("LetStmt " + node.name + (node.type ? " : " + node.type->toString() : ""));
     ++indent_;
     if (node.init) node.init->accept(*this);
     --indent_;
@@ -135,7 +134,7 @@ void ASTPrinter::visit(CallExpr& node) {
     line("CallExpr");
     ++indent_;
     if (node.callee) node.callee->accept(*this);
-    for (auto* arg : node.args) {
+    for (auto& arg : node.args) {
         if (arg) arg->accept(*this);
     }
     --indent_;
@@ -145,11 +144,25 @@ void ASTPrinter::visit(MacroStmt& node) {
     line("MacroStmt " + node.name + "(" + node.argsText + ")");
 }
 
+void ASTPrinter::visit(ItemStmt& node) {
+    line("ItemStmt");
+    ++indent_;
+    if (node.item) node.item->accept(*this);
+    --indent_;
+}
+
+void ASTPrinter::visit(CastExpr& node) {
+    line("CastExpr as " + node.target.toString());
+    ++indent_;
+    if (node.expr) node.expr->accept(*this);
+    --indent_;
+}
+
 void ASTPrinter::visit(StructDef& node) {
     std::string s = "StructDef " + node.name + " {";
     for (size_t i = 0; i < node.fields.size(); ++i) {
         if (i) s += ", ";
-        s += node.fields[i].name + ": " + node.fields[i].typeName;
+        s += node.fields[i].name + ": " + node.fields[i].type.toString();
     }
     line(s + "}");
 }
@@ -157,7 +170,7 @@ void ASTPrinter::visit(StructDef& node) {
 void ASTPrinter::visit(ImplBlock& node) {
     line("ImplBlock " + node.typeName);
     ++indent_;
-    for (auto* m : node.methods) {
+    for (auto& m : node.methods) {
         if (m) m->accept(*this);
     }
     --indent_;
@@ -186,7 +199,7 @@ void ASTPrinter::visit(MethodCallExpr& node) {
     line("MethodCall ." + node.method);
     ++indent_;
     if (node.receiver) node.receiver->accept(*this);
-    for (auto* arg : node.args) {
+    for (auto& arg : node.args) {
         if (arg) arg->accept(*this);
     }
     --indent_;
@@ -202,7 +215,7 @@ void ASTPrinter::visit(ArrayExpr& node) {
     } else {
         line("ArrayExpr");
         ++indent_;
-        for (auto* e : node.elements) {
+        for (auto& e : node.elements) {
             if (e) e->accept(*this);
         }
         --indent_;
@@ -218,14 +231,14 @@ void ASTPrinter::visit(IndexExpr& node) {
 }
 
 void ASTPrinter::visit(ConstDef& node) {
-    line("ConstDef " + node.name + " : " + node.typeName);
+    line("ConstDef " + node.name + " : " + node.type.toString());
     ++indent_;
     if (node.value) node.value->accept(*this);
     --indent_;
 }
 
 void ASTPrinter::visit(StaticDef& node) {
-    line(std::string("StaticDef ") + (node.isMut ? "mut " : "") + node.name + " : " + node.typeName);
+    line(std::string("StaticDef ") + (node.isMut ? "mut " : "") + node.name + " : " + node.type.toString());
     ++indent_;
     if (node.value) node.value->accept(*this);
     --indent_;
@@ -240,7 +253,7 @@ void ASTPrinter::visit(EnumDef& node) {
             s += "(";
             for (size_t j = 0; j < node.variants[i].payloadTypes.size(); ++j) {
                 if (j) s += ", ";
-                s += node.variants[i].payloadTypes[j];
+                s += node.variants[i].payloadTypes[j].toString();
             }
             s += ")";
         }

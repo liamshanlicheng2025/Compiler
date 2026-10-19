@@ -7,10 +7,10 @@
 // 只覆盖你关心的 visit 方法；没覆盖的走基类默认行为。
 //
 // 约定（全项目统一，否则 std::any 会炸得很难查）：
-//   - visit 表达式类规则  → 返回 Expr*
-//   - visit 语句类规则    → 返回 Stmt*
-//   - visit 顶层条目规则  → 返回 Item*
-//   （std::any 会自动包裹指针，return 节点指针即可）
+//   - visit 表达式类规则  → 返回 ExprPtr
+//   - visit 语句类规则    → 返回 StmtPtr
+//   - visit 顶层条目规则  → 返回 ItemPtr
+//   （return 时用别名显式转换，如 return ExprPtr(node);）
 // ============================================================
 
 #include "RustParserBaseVisitor.h"
@@ -19,7 +19,18 @@
 class AstBuilder : public RustParserBaseVisitor {
 public:
     // 入口：解析树的 crate 根节点进，你的 Crate 节点出
-    Crate* build(RustParser::CrateContext* ctx);
+    CratePtr build(RustParser::CrateContext* ctx);
+
+private:
+    // 类型标注解析：g4 type_ 子树 → 结构化 Type（CR 后新增）
+    Type parseType(RustParser::Type_Context* ctx);
+    Type parseTypeNoBounds(RustParser::TypeNoBoundsContext* ctx);
+
+    // visit 结果统一成 ExprPtr：子表达式是块（{ ... } 参与运算，如 if10 的
+    // if ({ n -= 1; n } > 3)）时 visit 返回 BlockPtr，这里转成 ExprPtr
+    ExprPtr toExpr(std::any r);
+
+public:
 
     // ---- 第一个里程碑要实现的 6 个 visit ----
     std::any visitCrate(RustParser::CrateContext* ctx) override;
@@ -28,11 +39,16 @@ public:
     std::any visitLetStatement(RustParser::LetStatementContext* ctx) override;
     std::any visitLiteralExpression(RustParser::LiteralExpressionContext* ctx) override;
     std::any visitArithmeticOrLogicalExpression(RustParser::ArithmeticOrLogicalExpressionContext* ctx) override;
+    // 逻辑运算 &&/||：LazyBooleanExpression 标签，不覆盖的话默认穿透会
+    // 静默丢掉运算符、只留右操作数（补 semantic 测试时发现）
+    std::any visitLazyBooleanExpression(RustParser::LazyBooleanExpressionContext* ctx) override;
 
     // ---- 第 1 波：表达式补全 ----
     std::any visitPathExpression_(RustParser::PathExpression_Context* ctx) override;
     std::any visitNegationExpression(RustParser::NegationExpressionContext* ctx) override;
     std::any visitComparisonExpression(RustParser::ComparisonExpressionContext* ctx) override;
+    // as 类型转换：expr as T（TypeCastExpression 标签）
+    std::any visitTypeCastExpression(RustParser::TypeCastExpressionContext* ctx) override;
     std::any visitAssignmentExpression(RustParser::AssignmentExpressionContext* ctx) override;
     std::any visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) override;
     // 括号表达式穿透：(expr) → 内层节点

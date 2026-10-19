@@ -115,7 +115,10 @@ LINE_COMMENT: ('//' (~[/!] | '//') ~[\r\n]* | '//') -> channel (HIDDEN);
 
 BLOCK_COMMENT:
     (
-        '/*' (~[*!] | '**' | BLOCK_COMMENT_OR_DOC) (BLOCK_COMMENT_OR_DOC | ~[*])*? '*/'
+        // 修正：正文允许任意字符（含孤立的 *，如注释里的代码 p * p），
+        // 通过递归 BLOCK_COMMENT 保持嵌套注释支持；原规则的 ~[*] 正文
+        // 遇到注释里夹代码会词法失败（comprehensive39）
+        '/*' (BLOCK_COMMENT_OR_DOC | .)*? '*/'
         | '/**/'
         | '/***/'
     ) -> channel (HIDDEN)

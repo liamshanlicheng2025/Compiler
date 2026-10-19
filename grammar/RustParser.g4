@@ -432,8 +432,11 @@ letStatement
     ;
 
 expressionStatement
-    : expression SEMI
-    | expressionWithBlock SEMI?
+    // 修正：expressionWithBlock 必须在前——否则 while(){...} 后面紧跟 *x / &x 时，
+    // ANTLR 会把块表达式当成二元运算的左操作数继续吞（c11：} 后的 *pattern_count
+    // 被并进 while 的表达式里）。块表达式在语句位置到此为止，符合 Rust 语义
+    : expressionWithBlock SEMI?
+    | expression SEMI
     ;
 
 // 8.2
@@ -1069,6 +1072,7 @@ identifier
     : NON_KEYWORD_IDENTIFIER
     | RAW_IDENTIFIER
     | KW_MACRORULES
+    | KW_UNION
     ;
 
 keyword

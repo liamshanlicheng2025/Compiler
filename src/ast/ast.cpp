@@ -32,3 +32,5 @@ void StaticDef::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void EnumDef::accept(ASTVisitor& visitor)    { visitor.visit(*this); }
 void MatchExpr::accept(ASTVisitor& visitor)  { visitor.visit(*this); }
 void MacroStmt::accept(ASTVisitor& visitor)    { visitor.visit(*this); }
+void ItemStmt::accept(ASTVisitor& visitor)     { visitor.visit(*this); }
+void CastExpr::accept(ASTVisitor& visitor)     { visitor.visit(*this); }

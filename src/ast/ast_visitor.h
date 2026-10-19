@@ -36,6 +36,8 @@ class StaticDef;
 class EnumDef;
 class MatchExpr;
 class MacroStmt;
+class ItemStmt;
+class CastExpr;
 
 class ASTVisitor {
 public:
@@ -69,4 +71,6 @@ public:
     virtual void visit(EnumDef& node) = 0;
     virtual void visit(MatchExpr& node) = 0;
     virtual void visit(MacroStmt& node) = 0;
+    virtual void visit(ItemStmt& node) = 0;
+    virtual void visit(CastExpr& node) = 0;
 };
