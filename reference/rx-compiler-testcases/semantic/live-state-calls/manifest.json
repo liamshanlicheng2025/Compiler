@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-recursive-calls-preserve-32-runtime-values.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Thirty-two runtime scalar arguments remain live across recursive calls and wrapping reductions."
+  }
+]

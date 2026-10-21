@@ -1,0 +1,12 @@
+use rx::core::*;
+
+fn main() {
+    let a = 4;
+    let mut b = 5;
+    println_i32((&a < &mut b) as i32);
+    println_i32((&&a < &&b) as i32);
+    let mut c = 3;
+    println_i32((&mut b > &mut c) as i32);
+    let d = 4;
+    println_i32((&a == &d) as i32);
+}

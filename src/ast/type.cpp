@@ -41,8 +41,7 @@ bool Type::equal(const Type& other) const {
     if (other.kind == TypeKind::IntLit && isConcreteInt(kind)) return true;
     if (kind == TypeKind::IntLit && other.kind == TypeKind::IntLit) return true;
     if (kind != other.kind) return false;
-    // 修正：elem 是单个 shared_ptr<Type>（子类型），不是数组，不能下标遍历；
-    // 递归 equal 一次即可。other 是引用不是指针，用 . 不用 ->
+    // elem 是单个子类型，递归 equal 一次即可
     if (kind == TypeKind::Array){
         // 长度 0 = 未知（数组长度是常量表达式时算不出，如 [usize; N+1]），作通配
         if (arrayLen != 0 && other.arrayLen != 0 && arrayLen != other.arrayLen)

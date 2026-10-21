@@ -1,0 +1,17 @@
+[
+  {
+    "source": "acc-builtin-type-names-may-be-fields-associated-items-and-ordinary-values.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Builtin type names may be fields, associated items, and ordinary values."
+  },
+  {
+    "source": "rej-protected-type-name-i32.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Protected type name i32.",
+    "metadata": {
+      "rust_reference": "skip"
+    }
+  }
+]

@@ -3,8 +3,7 @@
 // ============================================================
 // AST 节点定义
 //
-// 内存策略：全项目统一使用 std::shared_ptr 持有节点（CR 后修订：
-// 原先裸指针 + 进程退出统一回收，现改为 shared_ptr 自动管理）。
+// 内存策略：全项目统一使用 std::shared_ptr 持有节点，自动管理生命周期。
 // 设计约定：
 //   - 节点间传递一律用别名：CratePtr / ItemPtr / StmtPtr / ExprPtr / BlockPtr
 //   - visitor 接口仍按引用传递（visit(Xxx&)），accept 不变
@@ -337,9 +336,3 @@ public:
     std::string argsText;
     void accept(ASTVisitor& visitor) override;
 };
-
-// 已完成波次备忘（留痕，勿删）：
-//   第 3 波：Function 参数/返回类型、CallExpr、Block 尾表达式 tailExpr
-//   第 4 波：StructDef、ImplBlock、StructLiteralExpr、FieldExpr、MethodCallExpr
-//   第 5 波：ArrayExpr、IndexExpr、ConstDef、StaticDef；引用/解引用复用 UnaryExpr
-//   CR 后重构：类型标注从 string 改为结构化 Type；节点持有从裸指针改为 shared_ptr

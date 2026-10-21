@@ -1,0 +1,18 @@
+use rx::core::*;
+
+struct Opaque {
+    x: i32,
+}
+fn main() {
+    let x = Opaque { x: 8 };
+    let r = &x;
+    let copied = r.clone();
+    println_i32(copied.x);
+    println_i32(r.x);
+    let a = [1, 2, 3];
+    let mut b = a.clone();
+    b[1] = 9;
+    println_i32(a[1]);
+    println_i32(b[1]);
+    println_i32(5i32.clone());
+}

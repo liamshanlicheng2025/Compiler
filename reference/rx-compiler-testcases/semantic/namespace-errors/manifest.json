@@ -1,0 +1,98 @@
+[
+  {
+    "source": "acc-named-field-struct-and-function-may-share-a-spelling.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Named-field struct and function may share a spelling."
+  },
+  {
+    "source": "rej-unresolved-value-name.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unresolved value name."
+  },
+  {
+    "source": "rej-unresolved-signature-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unresolved signature type."
+  },
+  {
+    "source": "rej-duplicate-top-level-function.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate top-level function."
+  },
+  {
+    "source": "rej-duplicate-constant.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate constant."
+  },
+  {
+    "source": "rej-function-and-constant-share-the-value-namespace.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Function and constant share the value namespace."
+  },
+  {
+    "source": "rej-duplicate-struct.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate struct."
+  },
+  {
+    "source": "rej-duplicate-field.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate field."
+  },
+  {
+    "source": "rej-duplicate-parameter.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate parameter."
+  },
+  {
+    "source": "rej-a-block-local-name-cannot-escape.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A block-local name cannot escape."
+  },
+  {
+    "source": "rej-a-binding-is-invisible-in-its-own-initializer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A binding is invisible in its own initializer."
+  },
+  {
+    "source": "rej-a-local-shadows-a-function-without-callable-fallback.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A local shadows a function without callable fallback."
+  },
+  {
+    "source": "rej-self-outside-a-struct-impl.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Self outside a struct/impl."
+  },
+  {
+    "source": "rej-self-outside-a-method.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "self outside a method."
+  },
+  {
+    "source": "rej-a-top-level-function-cannot-have-a-receiver.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A top-level function cannot have a receiver."
+  },
+  {
+    "source": "rej-named-field-structs-are-not-callable-constructors.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Named-field structs are not callable constructors."
+  }
+]

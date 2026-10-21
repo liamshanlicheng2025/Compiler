@@ -1,0 +1,5 @@
+use rx::core::*;
+
+fn main() {
+    let x: u32 = if true { 1u32 } else { 2i32 };
+}

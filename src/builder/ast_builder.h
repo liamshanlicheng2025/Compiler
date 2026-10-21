@@ -65,7 +65,7 @@ public:
     // ---- 宏调用（语句级：println! 等）----
     std::any visitMacroInvocationSemi(RustParser::MacroInvocationSemiContext* ctx) override;
 
-    // 修复（复合赋值）：a += b 走 CompoundAssignmentExpression 标签，
+    // 复合赋值：a += b 走 CompoundAssignmentExpression 标签，
     // 不覆盖的话默认穿透会把整个表达式静默替换成右操作数
     std::any visitCompoundAssignmentExpression(RustParser::CompoundAssignmentExpressionContext* ctx) override;
 

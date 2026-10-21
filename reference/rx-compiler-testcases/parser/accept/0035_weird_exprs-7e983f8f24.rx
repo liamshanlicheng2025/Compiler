@@ -1,0 +1,1 @@
+fn strange() -> bool { let _x: bool = return true; }

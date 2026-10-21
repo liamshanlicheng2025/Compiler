@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn main() {
+    let x = 1;
+    println_i32(x[0]);
+}

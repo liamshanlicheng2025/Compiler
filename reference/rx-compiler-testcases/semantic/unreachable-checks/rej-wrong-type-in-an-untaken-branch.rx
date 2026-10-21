@@ -1,0 +1,7 @@
+use rx::core::*;
+
+fn main() {
+    if false {
+        let x: i32 = true;
+    }
+}

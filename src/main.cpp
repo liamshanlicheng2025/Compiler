@@ -7,8 +7,8 @@
 
 #include "builder/ast_builder.h"
 #include "ast/ast_printer.h"
-#include "semantic/decl_collector.h"
-#include "semantic/semantic_checker.h"
+#include "semantic/crate_index.h"
+#include "semantic/body_checker.h"
 #include "semantic/semantic_error.h"
 
 int main(int argc, char** argv) {
@@ -51,13 +51,15 @@ int main(int argc, char** argv) {
     AstBuilder builder;
     CratePtr ast = builder.build(tree);
 
-    // ---- 阶段 3：语义检查（两遍扫描：先收集声明，再逐函数检查）----
+    // ---- 阶段 3：语义分析 ----
+    // CrateIndex（声明收集 + 签名 + 入口检查）→ BodyChecker（函数体检查）
+    // TODO：LayoutChecker（struct 按值包含环）实现后插在两者之间
     SymbolTable symtab;
     try {
-        DeclCollector collector(symtab);
-        collector.run(ast);          // Pass 1：注册所有顶层名字 + 内建函数
-        SemanticChecker checker(symtab);
-        checker.run(ast);            // Pass 2：名字解析 + 类型检查 + 控制流
+        CrateIndex collector(symtab);
+        collector.run(ast);          // 注册所有顶层名字 + 内建函数 + 入口检查
+        BodyChecker checker(symtab);
+        checker.run(ast);            // 名字解析 + 类型检查 + 控制流
     } catch (const SemanticError& e) {
         std::cerr << "semantic error: " << e.what() << std::endl;
         return 1;

@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-finite-but-unconstructible-box-recursion-is-legal.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Finite but unconstructible Box recursion is legal."
+  },
+  {
+    "source": "acc-mutual-recursion-broken-by-indirection.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Mutual recursion broken by indirection."
+  },
+  {
+    "source": "rej-direct-infinite-inline-layout.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Direct infinite inline layout."
+  },
+  {
+    "source": "rej-mutual-inline-cycle.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Mutual inline cycle."
+  },
+  {
+    "source": "rej-inline-arrays-do-not-break-layout-cycles.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Inline arrays do not break layout cycles."
+  },
+  {
+    "source": "rej-a-container-cannot-repair-an-invalid-declaration.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A container cannot repair an invalid declaration."
+  }
+]

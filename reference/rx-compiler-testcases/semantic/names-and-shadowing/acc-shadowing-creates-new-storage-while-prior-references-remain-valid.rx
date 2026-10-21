@@ -1,0 +1,27 @@
+use rx::core::*;
+
+fn main() {
+    let n = 3;
+    let r = &n;
+    let n = n + 4;
+    {
+        let n = true;
+        println_i32(n as i32);
+    }
+    println_i32(n);
+    println_i32(*r);
+    let s = Same { x: Same() };
+    println_i32(s.x);
+    println_i32(later(4));
+}
+struct Same {
+    x: i32,
+}
+fn Same() -> i32 {
+    8
+}
+fn later(mut x: i32) -> i32 {
+    x += 1;
+    let x = x * 2;
+    x
+}

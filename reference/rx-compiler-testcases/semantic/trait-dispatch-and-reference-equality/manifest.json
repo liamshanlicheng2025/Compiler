@@ -1,0 +1,20 @@
+[
+  {
+    "source": "acc-generated-clones-bypass-dot-lookup-same-type-mutable-reference-equality-borrows-operands.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Generated clones bypass dot lookup; same-type mutable-reference equality borrows operands."
+  },
+  {
+    "source": "rej-container-equality-requires-element-partialeq.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Container equality requires element PartialEq."
+  },
+  {
+    "source": "rej-even-empty-container-clone-requires-element-clone.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Even empty container clone requires element Clone."
+  }
+]

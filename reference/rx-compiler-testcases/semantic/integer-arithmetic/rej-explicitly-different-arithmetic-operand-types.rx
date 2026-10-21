@@ -1,0 +1,5 @@
+use rx::core::*;
+
+fn main() {
+    let a = 1i32 + 2u32;
+}

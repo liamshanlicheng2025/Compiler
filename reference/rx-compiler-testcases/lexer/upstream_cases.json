@@ -1,0 +1,126 @@
+[
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b121"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b10_10301"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b30"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b41"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b5"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b6"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b7"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b8"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0b9"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-octal-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0o18"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-octal-literal.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Malformed radix digit from the upstream integer lexer regression.",
+    "source": "0o1234_9_5670"
+  },
+  {
+    "path": "tests/ui/lexer/unterminated-comment.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct."
+  },
+  {
+    "path": "tests/ui/lexer/unterminated-nested-comment.rs",
+    "suite": "lexer",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct."
+  },
+  {
+    "path": "tests/ui/parser/nested-block-comments.rs",
+    "suite": "lexer",
+    "expected": "accept",
+    "note": "Exact nested block comment from a rustc run-pass regression.",
+    "source": "/* This test checks that nested comments are supported\n\n   /* This is a nested comment\n      /* And this is even more deeply nested */\n      Back to the first level of nesting\n   */\n\n   /* Another nested comment at the same level */\n*/"
+  },
+  {
+    "path": "tests/ui/parser/nested-block-comments.rs",
+    "suite": "lexer",
+    "expected": "accept",
+    "note": "Exact nested block comment from a rustc run-pass regression.",
+    "source": "/* Additional test cases for nested comments */"
+  },
+  {
+    "path": "tests/ui/parser/nested-block-comments.rs",
+    "suite": "lexer",
+    "expected": "accept",
+    "note": "Exact nested block comment from a rustc run-pass regression.",
+    "source": "/*\n    /* Level 1\n        /* Level 2\n            /* Level 3 */\n         */\n    */\n*/"
+  },
+  {
+    "path": "tests/ui/parser/nested-block-comments.rs",
+    "suite": "lexer",
+    "expected": "accept",
+    "note": "Exact nested block comment from a rustc run-pass regression.",
+    "source": "/* Even inline /* nested */ comments work */"
+  },
+  {
+    "path": "tests/ui/parser/nested-block-comments.rs",
+    "suite": "lexer",
+    "expected": "accept",
+    "note": "Exact nested block comment from a rustc run-pass regression.",
+    "source": "/* nested /* comment */ test */"
+  }
+]

@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-input-dependent-reference-aggregate-and-owner-results.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Runtime branches and value-bearing breaks merge coerced references, mutable targets, copied aggregates and owned containers."
+  }
+]

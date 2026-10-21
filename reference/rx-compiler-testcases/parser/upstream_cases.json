@@ -1,0 +1,998 @@
+[
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0000_struct_field_missing_comma.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0004_use_path_bad_segment.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0008_item_block_recovery.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0015_curly_in_params.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0016_missing_semi.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0017_incomplete_binexpr.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0019_let_recover.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0020_fn_recover.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0021_incomplete_param.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0029_field_completion.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0035_use_recover.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/err/0036_partial_use.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/arg_list_recovery.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/empty_param_slot.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/empty_segment.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/missing_const_type.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/missing_fn_param_type.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/path_item_without_excl.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "src/tools/rust-analyzer/crates/parser/test_data/parser/inline/err/postfix_dot_expr_ambiguity.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/bad-if-statements.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/bad-let-as-field.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/bad-value-ident-false.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/bad-value-ident-true.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/bare-struct-body.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/chained-comparison-suggestion.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/fn-colon-return-type.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/import-from-path.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/import-glob-path.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/integer-literal-start-ident.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/fn-no-semicolon-issue-124935-semi-after-item.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-101540.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-10636-1.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-107705.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-108242-semicolon-recovery.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-111416.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-113110-non-item-at-module-root.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-13483.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-17718-const-mut.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-1802-1.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-24197.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-24780.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-31804.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-33455.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-39616.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-58856-1.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-61858.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-69259.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-70552-ascription-in-parens-after-call.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/issue-91421.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/issues/missing-main-issue-124935-semi-after-item.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/keyword-abstract.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/keyword-final.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/keyword-override.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/keyword-typeof.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/keywords-followed-by-double-colon.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/missing-fn-issue-125446.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/missing-fn-issue-65381-1.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/missing-fn-issue-65381-2.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/multiline-comment-line-tracking.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/old-suffixes-are-really-forbidden.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/omitted-arg-in-item-fn.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/parse-error-correct.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/removed-syntax/removed-syntax-field-let.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/removed-syntax/removed-syntax-field-semicolon.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/suggest-semi-in-array.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/type-parameters-in-field-exprs.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/unmatched-delimiter-at-end-of-file.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/use-as-where-use-ends-with-mod-sep.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/use-colon-as-mod-sep.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/use-ends-with-mod-sep.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bad-octal-literal.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Upstream negative regression for malformed syntax in an Rx-supported construct.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/if-block-unreachable-expr.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Supported syntax; any unreachable-code/control-flow semantic error is outside a parser test.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/break-in-unlabeled-block.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Supported syntax; any unreachable-code/control-flow semantic error is outside a parser test.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/lexer/lex-bare-cr-nondoc-comment.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Bare CR is allowed inside comments, which are ignored by Rx.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/doc-before-eof.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Intentional Rx difference: doc-comment spellings are ordinary comments, not attributes. Rust diagnostic expectations do not apply.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/doc-before-fn-rbrace.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Intentional Rx difference: doc-comment spellings are ordinary comments, not attributes. Rust diagnostic expectations do not apply.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/doc-before-identifier.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Intentional Rx difference: doc-comment spellings are ordinary comments, not attributes. Rust diagnostic expectations do not apply.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/doc-before-semi.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Intentional Rx difference: doc-comment spellings are ordinary comments, not attributes. Rust diagnostic expectations do not apply.",
+    "entry": "crate"
+  },
+  {
+    "path": "tests/ui/parser/doc-comment-in-if-statement.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Intentional Rx difference: doc-comment spellings are ordinary comments, not attributes. Rust diagnostic expectations do not apply.",
+    "entry": "crate"
+  },
+  {
+    "path": "compiler/rustc_parse/src/parser/tests.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact input of rustc parse_use; no string escapes or source rewrites.",
+    "entry": "item",
+    "source": "use foo::bar::baz;"
+  },
+  {
+    "path": "compiler/rustc_parse/src/parser/tests.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact input of rustc parse_use; no string escapes or source rewrites.",
+    "entry": "item",
+    "source": "use foo::bar as baz;"
+  },
+  {
+    "path": "compiler/rustc_parse/src/parser/tests.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact input of rustc parse_exprs; no string escapes or source rewrites.",
+    "entry": "expression",
+    "source": "3 + 4"
+  },
+  {
+    "path": "compiler/rustc_parse/src/parser/tests.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact input of rustc parse_exprs; no string escapes or source rewrites.",
+    "entry": "expression",
+    "source": "a::z.froob(b,&(987+3))"
+  },
+  {
+    "path": "tests/ui/parser/as-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact supported expression extracted from an upstream assertion macro; the macro is excluded.",
+    "entry": "expression",
+    "source": "3 as usize * 3"
+  },
+  {
+    "path": "tests/ui/parser/as-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact supported expression extracted from an upstream assertion macro; the macro is excluded.",
+    "entry": "expression",
+    "source": "3 as (usize) * 3"
+  },
+  {
+    "path": "tests/ui/parser/as-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact supported expression extracted from an upstream assertion macro; the macro is excluded.",
+    "entry": "expression",
+    "source": "3 as (usize) / 3"
+  },
+  {
+    "path": "tests/ui/parser/as-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact supported expression extracted from an upstream assertion macro; the macro is excluded.",
+    "entry": "expression",
+    "source": "3 as usize + 3"
+  },
+  {
+    "path": "tests/ui/parser/as-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact supported expression extracted from an upstream assertion macro; the macro is excluded.",
+    "entry": "expression",
+    "source": "3 as (usize) + 3"
+  },
+  {
+    "path": "tests/ui/parser/cast-angle-bracket-precedence.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact cast/comparison or cast/shift operand of an upstream print macro; no floating-point cases imported.",
+    "entry": "expression",
+    "source": "a as usize > long_name"
+  },
+  {
+    "path": "tests/ui/parser/cast-angle-bracket-precedence.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Exact cast/comparison or cast/shift operand of an upstream print macro; no floating-point cases imported.",
+    "entry": "expression",
+    "source": "a as usize < 4"
+  },
+  {
+    "path": "tests/ui/parser/cast-angle-bracket-precedence.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Exact cast/comparison or cast/shift operand of an upstream print macro; no floating-point cases imported.",
+    "entry": "expression",
+    "source": "a as usize << long_name"
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& usize",
+    "start": 151,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "&1",
+    "start": 165,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & usize",
+    "start": 186,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "&&1",
+    "start": 201,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & & usize",
+    "start": 221,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "&&&1",
+    "start": 237,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & & usize",
+    "start": 258,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& &&1",
+    "start": 273,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & & & usize",
+    "start": 293,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "&&&&1",
+    "start": 310,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & & & usize",
+    "start": 330,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& &&&1",
+    "start": 346,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& & & & & usize",
+    "start": 365,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "&&&&&1",
+    "start": 383,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "&usize",
+    "start": 425,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& 1",
+    "start": 442,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "&&usize",
+    "start": 461,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & 1",
+    "start": 477,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "&&&usize",
+    "start": 497,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & & 1",
+    "start": 512,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& &&usize",
+    "start": 533,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & & 1",
+    "start": 549,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "&&&&usize",
+    "start": 570,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & & & 1",
+    "start": 584,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "& &&&usize",
+    "start": 606,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & & & 1",
+    "start": 621,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "typeRef",
+    "source": "&&&&&usize",
+    "start": 643,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/reference-whitespace-parsing.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "entry": "expression",
+    "source": "& & & & & 1",
+    "start": 656,
+    "note": "Exact reference type or borrow expression; the unsupported wildcard binding/pattern is not imported."
+  },
+  {
+    "path": "tests/ui/parser/operator-precedence-braces-exprs.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact initialized let statement; assertion macros and uninitialized lets are excluded.",
+    "entry": "letStatement",
+    "source": "let v1 = { 1 + { 2 } * { 3 } };"
+  },
+  {
+    "path": "tests/ui/parser/operator-precedence-braces-exprs.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact initialized let statement; assertion macros and uninitialized lets are excluded.",
+    "entry": "letStatement",
+    "source": "let v2 = 1 + { 2 } * { 3 };"
+  },
+  {
+    "path": "tests/ui/parser/operator-precedence-braces-exprs.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact initialized let statement; assertion macros and uninitialized lets are excluded.",
+    "entry": "letStatement",
+    "source": "let v5 = { 1 + { 2 } * 3 };"
+  },
+  {
+    "path": "tests/ui/parser/operator-precedence-braces-exprs.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Exact initialized let statement; assertion macros and uninitialized lets are excluded.",
+    "entry": "letStatement",
+    "source": "let v9 = { 1 + if 1 > 2 { 1 } else { 2 } * { 3 } };"
+  },
+  {
+    "path": "tests/ui/parser/block-expr-statement-vs-expr.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Verbatim supported part of the block-statement boundary regression; unsupported statics and function pointer declarations are excluded.",
+    "entry": "expression",
+    "source": "x & if true { 10u32 } else { 20u32 } & x"
+  },
+  {
+    "path": "tests/ui/parser/block-expr-statement-vs-expr.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Verbatim supported part of the block-statement boundary regression; unsupported statics and function pointer declarations are excluded.",
+    "entry": "expression",
+    "source": "x = if true { [1, 2, 3] } else { [2, 3, 4] }[0]"
+  },
+  {
+    "path": "tests/ui/parser/block-expr-statement-vs-expr.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Verbatim supported part of the block-statement boundary regression; unsupported statics and function pointer declarations are excluded.",
+    "entry": "item",
+    "source": "fn t2() -> [u32; 1] {\n    if true { [1, 2, 3]; } else { [2, 3, 4]; }\n    [0]\n}"
+  },
+  {
+    "path": "tests/ui/parser/block-expr-statement-vs-expr.rs",
+    "suite": "parser",
+    "expected": "accept",
+    "note": "Verbatim supported part of the block-statement boundary regression; unsupported statics and function pointer declarations are excluded.",
+    "entry": "item",
+    "source": "fn t4() -> () {\n    if true { i1 as F; } else { i2 as F; }\n    ()\n}"
+  },
+  {
+    "path": "tests/ui/parser/require-parens-for-chained-comparison.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Supported operators/path calls with malformed unparenthesized comparison chaining.",
+    "entry": "expression",
+    "source": "false == false == false"
+  },
+  {
+    "path": "tests/ui/parser/require-parens-for-chained-comparison.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Supported operators/path calls with malformed unparenthesized comparison chaining.",
+    "entry": "expression",
+    "source": "false == 0 < 2"
+  },
+  {
+    "path": "tests/ui/parser/require-parens-for-chained-comparison.rs",
+    "suite": "parser",
+    "expected": "reject",
+    "note": "Supported operators/path calls with malformed unparenthesized comparison chaining.",
+    "entry": "expression",
+    "source": "f<X>()"
+  }
+]

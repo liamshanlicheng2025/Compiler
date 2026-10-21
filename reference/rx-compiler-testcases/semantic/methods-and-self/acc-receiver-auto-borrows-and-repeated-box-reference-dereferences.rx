@@ -1,0 +1,44 @@
+use rx::core::*;
+
+#[derive(Clone, Copy)]
+struct Counter {
+    value: i32,
+}
+impl Counter {
+    const START: i32 = 3;
+    fn new() -> Self {
+        Self { value: Self::START }
+    }
+    fn value(&self) -> i32 {
+        self.value
+    }
+    fn add(&mut self, x: i32) {
+        self.value += x;
+    }
+}
+impl Counter {
+    fn owned(self) -> i32 {
+        self.value
+    }
+    fn changed(mut self) -> Self {
+        self.value += 10;
+        self
+    }
+}
+fn main() {
+    let mut c = Counter::new();
+    c.add(4);
+    println_i32(c.value());
+    let d = c.changed();
+    println_i32(c.value);
+    println_i32(d.owned());
+    Counter::add(&mut c, 2);
+    println_i32(Counter::value(&c));
+    let mut b = Box::<Counter>::new(c);
+    b.add(1);
+    println_i32(b.value());
+    let r = &mut b;
+    r.add(2);
+    println_i32(r.value());
+    println_i32(Counter::new().changed().value());
+}

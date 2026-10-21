@@ -57,11 +57,11 @@ void SymbolTable::registerBuiltins() {
     sym.type = Type{TypeKind::Unit};
     global_ -> insert(sym);
     sym.name = "getInt";
-    sym.paramTypes = {};                        // 修正：无参数 = 空 vector（原来赋了单个 Type，类型不匹配）
+    sym.paramTypes = {};                        // 无参数 = 空 vector
     sym.type = Type{TypeKind::I32};
     global_ -> insert(sym);
     sym.name = "exit";
-    sym.paramTypes = {Type{TypeKind::I32}};     // 修正：vector 要套花括号
+    sym.paramTypes = {Type{TypeKind::I32}};
     sym.type = Type{TypeKind::Unit};
     global_ -> insert(sym);
     // 内建类型 String：注册为 StructType 使 let x: String 等标注可查；

@@ -1,0 +1,7 @@
+use rx::core::*;
+
+#[derive(Clone, Clone)]
+struct S {
+    x: i32,
+}
+fn main() {}

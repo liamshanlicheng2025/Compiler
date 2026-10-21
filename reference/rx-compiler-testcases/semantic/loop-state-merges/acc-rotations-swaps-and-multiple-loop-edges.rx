@@ -1,0 +1,74 @@
+use rx::core::*;
+
+// Rotations and swaps require simultaneous values at loop merge edges.
+fn main() {
+    let rounds = get_i32();
+    let stop = get_i32();
+    let seed = get_i32() as u32;
+    let mut a = seed ^ 1u32;
+    let mut b = seed ^ 17u32;
+    let mut c = seed ^ 257u32;
+    let mut d = seed ^ 4099u32;
+    let mut e = seed ^ 65537u32;
+    let mut f = seed ^ 1048583u32;
+    let mut g = seed ^ 16777259u32;
+    let mut h = seed ^ 268435459u32;
+    let mut i = 0;
+    while i < rounds {
+        i += 1;
+        let saved = a;
+        a = b;
+        b = c;
+        c = d;
+        d = e;
+        e = f;
+        f = g;
+        g = h;
+        h = saved;
+        if i == stop {
+            break;
+        }
+        if ((a ^ (i as u32)) & 7u32) == 0u32 {
+            let saved = b;
+            b = f;
+            f = saved;
+            a += h;
+            continue;
+        }
+        let mut turns = 0usize;
+        loop {
+            let saved = c;
+            c = e;
+            e = saved;
+            d = (d ^ c) * 1664525u32 + 1013904223u32;
+            g += d ^ (i as u32);
+            turns += 1usize;
+            if turns == 3usize || (g & 3u32) == 0u32 {
+                break;
+            }
+        }
+        if (c & 1u32) == 0u32 {
+            a ^= d;
+            f += g;
+        } else {
+            a += g;
+            f ^= d;
+        }
+        h = (h << 5u32) | (h >> 27u32);
+        h += a ^ f;
+        if (h & 15u32) == 0u32 {
+            continue;
+        }
+        b += h;
+        e ^= b;
+    }
+    println_i32(a as i32);
+    println_i32(b as i32);
+    println_i32(c as i32);
+    println_i32(d as i32);
+    println_i32(e as i32);
+    println_i32(f as i32);
+    println_i32(g as i32);
+    println_i32(h as i32);
+    println_i32(i);
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "source": "rej-write-through-stored-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Writing through an indexed mutable reference requires mutable access to the vector."
+  },
+  {
+    "source": "rej-compound-assignment-through-stored-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Compound assignment through an indexed mutable reference requires mutable vector access."
+  },
+  {
+    "source": "rej-explicit-mutable-borrow-of-stored-target.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Explicitly borrowing an indexed referent mutably requires mutable vector access."
+  },
+  {
+    "source": "rej-mutable-reference-initializer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An annotated mutable-reference initializer requires mutable vector access even before a write."
+  },
+  {
+    "source": "rej-mutable-reference-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Passing an indexed reference to an &mut parameter requires mutable vector access."
+  },
+  {
+    "source": "rej-mutable-method-through-stored-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An &mut self call through a reference stored in a vector requires mutable vector access."
+  },
+  {
+    "source": "rej-reference-field-does-not-bypass-vector-mutability.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A mutable reference in a struct field does not bypass the vector indexing requirement."
+  },
+  {
+    "source": "rej-boxed-reference-does-not-bypass-vector-mutability.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Dereferencing a Box and its stored mutable reference after vector indexing still requires a mutable vector."
+  },
+  {
+    "source": "rej-array-element-does-not-bypass-vector-mutability.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Array indexing after vector indexing cannot bypass the vector's mutable-access requirement."
+  },
+  {
+    "source": "rej-nested-vector-reference-requires-mutable-outer-vector.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A mutable reference to an inner vector does not provide mutable access to the outer vector."
+  },
+  {
+    "source": "rej-immutable-box-owner-of-vector.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An immutable Box<Vec<&mut T>> cannot supply mutable access to the vector."
+  },
+  {
+    "source": "rej-shared-vector-reference-blocks-stored-mutable-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A shared reference to a vector prevents mutation through its stored mutable references."
+  },
+  {
+    "source": "rej-shared-array-reference-blocks-stored-mutable-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "The valid immutable owned-array case does not permit mutation through a shared array reference."
+  },
+  {
+    "source": "rej-shared-box-reference-blocks-stored-mutable-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "The valid immutable owned-Box case does not permit mutation through a shared Box reference."
+  },
+  {
+    "source": "acc-mutable-vector-supports-writes-and-mutable-borrows.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Mutable vectors permit assignment, compound assignment, explicit borrowing, annotated mutable-reference initializers, and &mut arguments."
+  },
+  {
+    "source": "acc-immutable-binding-of-mutable-vector-reference.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "An immutable binding holding &mut Vec permits indexed writes, mutable arguments, and &mut method receivers."
+  },
+  {
+    "source": "acc-shared-coercions-and-receivers-on-immutable-vector.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Shared coercions, explicit shared borrows, and shared method receivers need no mutable vector access."
+  },
+  {
+    "source": "acc-immutable-array-struct-and-box-preserve-stored-mutable-access.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Immutable owned arrays, structs, and Boxes permit mutation through their stored mutable references."
+  },
+  {
+    "source": "acc-mutable-reference-before-vector-indexing.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "A mutable reference reached through an immutable array or Box can supply access before indexing a vector."
+  },
+  {
+    "source": "acc-mutable-vector-supports-nested-projections.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Mutable vectors permit writes through nested struct fields, Boxes, arrays, and mutable vector references."
+  },
+  {
+    "source": "acc-moved-vectors-use-new-place-mutability.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Moving a vector to a mutable binding or temporary gives indexing the new place's mutability."
+  },
+  {
+    "source": "acc-copied-and-cloned-values-have-independent-mutability.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Mutating a separate copy or explicit clone does not require mutable access to the original vector."
+  }
+]

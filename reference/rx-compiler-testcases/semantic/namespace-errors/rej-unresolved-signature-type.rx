@@ -1,0 +1,4 @@
+use rx::core::*;
+
+fn f(x: Missing) {}
+fn main() {}

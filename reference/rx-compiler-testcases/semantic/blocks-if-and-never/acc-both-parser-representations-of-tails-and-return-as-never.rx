@@ -1,0 +1,27 @@
+use rx::core::*;
+
+fn f(x: i32) -> i32 {
+    let v = if x < 0 {
+        return 90;
+    } else if x == 0 {
+        7
+    } else {
+        { x + 1 }
+    };
+    { v * 2 }
+}
+fn main() {
+    let x = get_i32();
+    println_i32(f(x));
+    if true {
+    } else {
+    }
+    -1;
+    if true {
+        10
+    } else {
+        20
+    };
+    let y = if true { 10 } else { 20 } - 1;
+    println_i32(y);
+}

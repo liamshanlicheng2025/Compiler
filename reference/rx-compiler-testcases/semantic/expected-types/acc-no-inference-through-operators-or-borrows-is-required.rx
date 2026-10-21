@@ -1,0 +1,34 @@
+use rx::core::*;
+
+struct S {
+    x: u32,
+}
+fn f(x: u32) -> u32 {
+    x
+}
+fn tail() -> usize {
+    { (17) }
+}
+fn ret() -> isize {
+    return 19;
+}
+fn main() {
+    let mut x: u32 = if true { { 3 } } else { 4 };
+    x = (5);
+    let a: [u32; 2] = [6, 7];
+    let b: [u32; 2] = [8; 2];
+    let v: u32 = loop {
+        break { 9 };
+    };
+    let s = S { x: 10 };
+    let p = Box::<u32>::new(11);
+    println_i32(x as i32);
+    println_i32(a[1] as i32);
+    println_i32(b[0] as i32);
+    println_i32(v as i32);
+    println_i32(s.x as i32);
+    println_i32(*p as i32);
+    println_i32(f(12) as i32);
+    println_i32(tail() as i32);
+    println_i32(ret() as i32);
+}

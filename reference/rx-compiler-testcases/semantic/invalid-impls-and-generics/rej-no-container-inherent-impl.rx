@@ -1,0 +1,6 @@
+use rx::core::*;
+
+impl Box<i32> {
+    fn f(&self) {}
+}
+fn main() {}

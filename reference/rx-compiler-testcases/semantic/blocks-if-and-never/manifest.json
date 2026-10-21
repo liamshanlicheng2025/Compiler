@@ -1,0 +1,44 @@
+[
+  {
+    "source": "acc-both-parser-representations-of-tails-and-return-as-never.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Both parser representations of tails and return-as-never."
+  },
+  {
+    "source": "rej-if-without-else-requires-a-unit-consequent.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "If without else requires a unit consequent."
+  },
+  {
+    "source": "rej-a-non-final-block-statement-without-semicolon-must-be-unit.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A non-final block statement without semicolon must be unit."
+  },
+  {
+    "source": "rej-a-semicolon-removes-the-function-tail-value.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A semicolon removes the function tail value."
+  },
+  {
+    "source": "rej-bare-return-is-unit.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Bare return is unit."
+  },
+  {
+    "source": "rej-a-unit-function-cannot-return-an-integer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A unit function cannot return an integer."
+  },
+  {
+    "source": "acc-divergent-block-without-tail-statement.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "A block without a tail expression whose inner statement diverges has never type."
+  }
+]

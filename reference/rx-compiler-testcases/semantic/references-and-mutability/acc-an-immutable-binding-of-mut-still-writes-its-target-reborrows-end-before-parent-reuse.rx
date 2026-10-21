@@ -1,0 +1,36 @@
+use rx::core::*;
+
+struct Pair {
+    x: i32,
+    y: i32,
+}
+fn inc(x: &mut i32) {
+    *x += 1;
+}
+fn read(a: &i32, b: &i32) -> i32 {
+    *a + *b
+}
+fn main() {
+    let mut value = 10;
+    let p = &mut value;
+    {
+        let q: &mut i32 = p;
+        inc(q);
+    }
+    inc(p);
+    *p += 3;
+    println_i32(*p);
+    println_i32(read(&value, &value));
+    let mut s = Pair { x: 4, y: 7 };
+    let a = &mut s.x;
+    let b = &mut s.y;
+    *a += *b;
+    *b += 2;
+    println_i32(s.x);
+    println_i32(s.y);
+    let nested = &&s.x;
+    println_i32(**nested);
+    let temporary = &mut 20;
+    *temporary += 1;
+    println_i32(*temporary);
+}

@@ -1,0 +1,9 @@
+use rx::core::*;
+
+struct Bad {
+    next: Bad,
+}
+struct Wrap {
+    b: Box<Bad>,
+}
+fn main() {}

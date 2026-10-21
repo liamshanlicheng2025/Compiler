@@ -56,14 +56,13 @@ class Scope {
 public:
     explicit Scope(std::shared_ptr<Scope> parent) : parent_(std::move(parent)) {}
 
-    // 伪代码：name 已在 symbols_ 里 → 返回 false（重复定义，调用方报错）；
-    //         否则插入返回 true
+    // name 已在 symbols_ 里 → 返回 false（重复定义，调用方报错）；否则插入返回 true
     bool insert(const Symbol& sym);
 
     // 同层重名直接覆盖（Rust 允许同作用域 let 遮蔽，comprehensive2）
     void upsert(const Symbol& sym) { symbols_[sym.name] = sym; }
 
-    // 伪代码：只查当前层，找到返回指针，没有返回 nullptr
+    // 只查当前层，找到返回指针，没有返回 nullptr
     Symbol* lookupLocal(const std::string& name);
 
     std::shared_ptr<Scope> parent() const { return parent_; }
@@ -81,21 +80,17 @@ public:
     void enterScope();
     void exitScope();
 
-    // 伪代码：向当前作用域插入；重复定义返回 false
+    // 向当前作用域插入；重复定义返回 false
     bool insert(const Symbol& sym);
 
     // let 遮蔽专用：同层重名覆盖旧符号
     void insertOrShadow(const Symbol& sym) { current_->upsert(sym); }
 
-    // 伪代码：从当前作用域开始沿 parent 链逐层向外找，
-    //         找到返回指针，全部没有返回 nullptr（调用方报"未声明"）
+    // 从当前作用域开始沿 parent 链逐层向外找；全部没有返回 nullptr
     Symbol* lookup(const std::string& name);
 
-    // 伪代码：向全局作用域注册内建函数，在 Pass 1 开始前调用一次：
-    //   printlnInt(i32) -> unit
-    //   printInt(i32)   -> unit
-    //   getInt()        -> i32
-    //   exit(i32)       -> unit
+    // 向全局作用域注册内建函数与内建类型（String），CrateIndex 开始前调用一次：
+    //   printlnInt(i32) -> unit / printInt(i32) -> unit / getInt() -> i32 / exit(i32) -> unit
     void registerBuiltins();
 
     std::shared_ptr<Scope> current() const { return current_; }

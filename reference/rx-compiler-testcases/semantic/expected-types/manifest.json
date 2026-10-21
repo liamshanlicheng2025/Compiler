@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-no-inference-through-operators-or-borrows-is-required.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "No inference through operators or borrows is required."
+  },
+  {
+    "source": "rej-a-fixed-if-target-rejects-a-suffixed-incompatible-branch.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A fixed if target rejects a suffixed incompatible branch."
+  },
+  {
+    "source": "rej-a-fixed-array-target-rejects-a-mismatched-element.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A fixed array target rejects a mismatched element."
+  },
+  {
+    "source": "rej-a-fixed-loop-target-rejects-a-mismatched-break.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A fixed loop target rejects a mismatched break."
+  },
+  {
+    "source": "rej-assignment-cannot-change-a-binding-s-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Assignment cannot change a binding's type."
+  }
+]

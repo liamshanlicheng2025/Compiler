@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-integer-stack-machine.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Execute integer bytecode with stack effects and conditional control flow."
+  }
+]

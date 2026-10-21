@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-lifetimes-and-unused-valid-import-aliases-do-not-affect-rx-resolution.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Lifetimes and unused valid import aliases do not affect Rx resolution."
+  },
+  {
+    "source": "rej-discarding-a-valid-use-does-not-suppress-a-type-error.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Discarding a valid use does not suppress a type error."
+  }
+]

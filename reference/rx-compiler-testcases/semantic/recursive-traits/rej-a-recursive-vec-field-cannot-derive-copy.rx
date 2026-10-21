@@ -1,0 +1,7 @@
+use rx::core::*;
+
+#[derive(Clone, Copy)]
+struct N {
+    children: Vec<N>,
+}
+fn main() {}

@@ -1,0 +1,79 @@
+use rx::core::*;
+
+#[derive(Clone, Copy)]
+struct Packet {
+    data: [i32; 3],
+    flag: bool,
+}
+fn packet(seed: i32) -> Packet {
+    Packet { data: [seed, seed + 1, seed + 2], flag: seed > 0 }
+}
+fn vector(seed: i32) -> Vec<i32> {
+    let mut values = Vec::<i32>::new();
+    values.push(seed);
+    values.push(seed + 1);
+    values
+}
+fn main() {
+    let selector = get_i32();
+    let seed = get_i32();
+    let first = (selector & 1) != 0;
+    let second = (selector & 2) != 0;
+    let mut a = seed;
+    let b = seed + 10;
+    let r = if first { &mut a } else { &b };
+    println_i32(*r);
+    let mut c = seed + 20;
+    let reverse = if first { &b } else { &mut c };
+    println_i32(*reverse);
+    let mut step = 0;
+    let from_loop = loop {
+        if second {
+            break &b;
+        }
+        step += 1;
+        if step == 2 {
+            break &mut a;
+        }
+    };
+    println_i32(*from_loop);
+
+    let mut left = seed + 30;
+    let mut right = seed + 40;
+    let target = if first { &mut left } else { &mut right };
+    *target += 3;
+    println_i32(left);
+    println_i32(right);
+
+    let mut chosen = if first { packet(seed) } else { packet(seed + 1) };
+    let saved = chosen;
+    chosen.data[1] += 5;
+    println_i32(saved.data[1]);
+    println_i32(chosen.data[1]);
+    println_i32(chosen.flag as i32);
+    let mut array = loop {
+        if second {
+            break [seed, seed + 1];
+        }
+        break [seed + 2, seed + 3];
+    };
+    let saved_array = array;
+    array[0] += 7;
+    println_i32(saved_array[0]);
+    println_i32(array[0]);
+
+    let owned = if first {
+        Box::<i32>::new(seed + 50)
+    } else {
+        Box::<i32>::new(seed + 60)
+    };
+    println_i32(*owned);
+    let mut values = loop {
+        if second {
+            break vector(seed);
+        }
+        break vector(seed + 5);
+    };
+    println_i32(values.remove(0));
+    println_i32(values[0]);
+}

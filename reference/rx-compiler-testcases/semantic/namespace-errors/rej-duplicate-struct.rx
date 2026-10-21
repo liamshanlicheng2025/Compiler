@@ -1,0 +1,9 @@
+use rx::core::*;
+
+struct A {
+    x: i32,
+}
+struct A {
+    y: i32,
+}
+fn main() {}

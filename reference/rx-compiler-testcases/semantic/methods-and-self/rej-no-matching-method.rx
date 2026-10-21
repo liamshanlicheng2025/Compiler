@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn main() {
+    let x = 1i32;
+    x.missing();
+}

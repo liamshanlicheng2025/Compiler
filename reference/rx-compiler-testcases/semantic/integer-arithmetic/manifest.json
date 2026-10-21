@@ -1,0 +1,50 @@
+[
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on i32."
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on u32."
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on isize."
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on usize."
+  },
+  {
+    "source": "rej-explicitly-different-arithmetic-operand-types.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Explicitly different arithmetic operand types."
+  },
+  {
+    "source": "rej-unary-minus-is-signed-only.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unary minus is signed-only."
+  },
+  {
+    "source": "rej-booleans-are-not-arithmetic-integers.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Booleans are not arithmetic integers."
+  },
+  {
+    "source": "rej-no-bool-to-integer-implicit-conversion.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "No bool-to-integer implicit conversion."
+  }
+]

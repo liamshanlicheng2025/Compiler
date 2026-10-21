@@ -1,0 +1,50 @@
+[
+  {
+    "source": "acc-cross-several-growth-boundaries-remove-first-middle-and-last-while-preserving-order.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Cross several growth boundaries; remove first, middle and last while preserving order."
+  },
+  {
+    "source": "acc-vec-apis-do-not-require-clone-or-copy-emptying-and-refilling-stays-valid.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Vec APIs require no Clone or Copy; is_empty tracks construction, partial removal, emptying and refill."
+  },
+  {
+    "source": "rej-push-requires-mutable-access.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Push requires mutable access."
+  },
+  {
+    "source": "rej-push-checks-element-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Push checks element type."
+  },
+  {
+    "source": "rej-remove-index-must-be-usize.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Remove index must be usize."
+  },
+  {
+    "source": "rej-vec-is-not-dereferenceable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Vec is not dereferenceable."
+  },
+  {
+    "source": "rej-vec-constructor-has-no-value-arguments.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Vec constructor has no value arguments."
+  },
+  {
+    "source": "rej-shared-vec-indexing-is-immutable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shared Vec indexing is immutable."
+  }
+]

@@ -134,8 +134,8 @@ std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
         for (auto* fp : ctx -> functionParameters() ->functionParam()){
             auto* pat = fp -> functionParamPattern();
             Param p;
-            // 修正（mut 参数）：沿 pattern 链钻到 identifierPattern，
-            // fn f(mut n: i32) 的名字是 n（不是 "mut n"），可变性别丢
+            // 沿 pattern 链钻到 identifierPattern：fn f(mut n: i32) 的
+            // 名字是 n，可变性存在 isMut
             auto* idpat = pat -> pattern() -> patternNoTopAlt(0)
                             -> patternWithoutRange() -> identifierPattern();
             p.name = idpat -> identifier() -> getText();
@@ -316,7 +316,7 @@ std::any AstBuilder::visitIfExpression(RustParser::IfExpressionContext* ctx) {
     if (ctx -> KW_ELSE()){
         if (ctx -> ifExpression()){
             // else if 链：嵌套的 if 作为包装块的尾表达式（块的值 = if 的值），
-            // 否则两分支类型比对会拿到语句位置的 Unit（if8 回归）
+            // 否则两分支类型比对会拿到语句位置的 Unit
             auto result = std::make_shared<Block>();
             result->tailExpr = toExpr(visit(ctx -> ifExpression()));
             node -> elseBlock = BlockPtr(result);
@@ -462,7 +462,7 @@ std::any AstBuilder::visitMethodCallExpression(RustParser::MethodCallExpressionC
 }
 
 // 复合赋值：a += b，运算符在 compoundAssignOperator 子规则里
-// （修复记录：此前未覆盖，默认穿透导致整个表达式被静默替换成右操作数）
+//（不覆盖的话基类默认穿透会把整个表达式静默替换成右操作数）
 std::any AstBuilder::visitCompoundAssignmentExpression(
     RustParser::CompoundAssignmentExpressionContext* ctx) {
     auto node = std::make_shared<BinaryExpr>();

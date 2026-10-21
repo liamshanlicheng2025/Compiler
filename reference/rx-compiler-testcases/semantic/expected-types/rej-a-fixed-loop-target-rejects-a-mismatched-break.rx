@@ -1,0 +1,7 @@
+use rx::core::*;
+
+fn main() {
+    let x: u32 = loop {
+        break 1i32;
+    };
+}

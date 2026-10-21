@@ -1,0 +1,43 @@
+use rx::core::*;
+
+fn many(
+    a: i32,
+    b: i32,
+    c: i32,
+    d: i32,
+    e: i32,
+    f: i32,
+    g: i32,
+    h: i32,
+    i: i32,
+    j: i32,
+    k: i32,
+    l: i32,
+) -> i32 {
+    a + 2 * b + 3 * c + 4 * d + 5 * e + 6 * f + 7 * g + 8 * h + 9 * i + 10 * j + 11 * k + 12 * l
+}
+fn even(n: i32) -> bool {
+    if n == 0 { true } else { odd(n - 1) }
+}
+fn odd(n: i32) -> bool {
+    if n == 0 { false } else { even(n - 1) }
+}
+fn fib(n: i32) -> i32 {
+    if n < 2 { n } else { fib(n - 1) + fib(n - 2) }
+}
+fn make(n: i32) -> [i32; 5] {
+    [n, n + 1, n + 2, n + 3, n + 4]
+}
+fn main() {
+    let input = get_i32();
+    let a = make(input);
+    let live = input * 100;
+    println_i32(many(
+        get_i32(), get_i32(), get_i32(), get_i32(),
+        get_i32(), get_i32(), get_i32(), get_i32(),
+        get_i32(), get_i32(), get_i32(), get_i32(),
+    ));
+    println_i32(fib(input));
+    println_i32(even(input) as i32);
+    println_i32(live + a[4]);
+}

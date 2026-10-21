@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-receiver-auto-borrows-and-repeated-box-reference-dereferences.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Receiver auto-borrows and repeated Box/reference dereferences."
+  },
+  {
+    "source": "rej-mutable-receiver-needs-a-mutable-place.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Mutable receiver needs a mutable place."
+  },
+  {
+    "source": "rej-explicit-associated-call-does-not-autoref-an-owned-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Explicit associated call does not autoref an owned argument."
+  },
+  {
+    "source": "rej-an-associated-function-is-not-a-dot-call-method.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An associated function is not a dot-call method."
+  },
+  {
+    "source": "rej-associated-values-share-a-namespace-across-impl-blocks.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Associated values share a namespace across impl blocks."
+  },
+  {
+    "source": "rej-no-matching-method.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "No matching method."
+  }
+]

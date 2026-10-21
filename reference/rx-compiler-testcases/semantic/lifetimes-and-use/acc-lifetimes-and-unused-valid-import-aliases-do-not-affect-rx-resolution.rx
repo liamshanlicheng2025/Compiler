@@ -1,0 +1,31 @@
+use rx::core::*;
+
+use rx::core::{get_i32, print_i32 as unused_print, println_i32};
+struct View<'a>
+where
+    'a: 'a,
+{
+    value: &'a i32,
+}
+impl<'a> View<'a> {
+    fn new(value: &'a i32) -> Self {
+        Self { value: value }
+    }
+    fn get(&self) -> &'a i32 {
+        self.value
+    }
+}
+fn shorten<'long: 'short, 'short>(value: &'long i32) -> &'short i32
+where
+    'long: 'short,
+{
+    value
+}
+fn main() {
+    let x = get_i32();
+    let v: View<'_> = View::new(&x);
+    println_i32(*shorten(v.get()));
+    let mut refs = Vec::<&i32>::new();
+    refs.push(&x);
+    println_i32(*refs[0]);
+}

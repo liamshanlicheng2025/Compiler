@@ -1,0 +1,44 @@
+[
+  {
+    "source": "acc-bool-padding-cannot-corrupt-neighboring-fields-or-by-value-copies.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Bool padding cannot corrupt neighboring fields or by-value copies."
+  },
+  {
+    "source": "rej-missing-struct-initializer-field.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Missing struct initializer field."
+  },
+  {
+    "source": "rej-duplicate-initializer-field.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Duplicate initializer field."
+  },
+  {
+    "source": "rej-unknown-initializer-field.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unknown initializer field."
+  },
+  {
+    "source": "rej-wrong-field-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Wrong field type."
+  },
+  {
+    "source": "rej-unknown-accessed-field.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unknown accessed field."
+  },
+  {
+    "source": "rej-same-shaped-structs-remain-nominally-distinct.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Same-shaped structs remain nominally distinct."
+  }
+]

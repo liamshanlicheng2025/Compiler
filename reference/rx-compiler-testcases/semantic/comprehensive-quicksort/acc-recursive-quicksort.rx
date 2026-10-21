@@ -1,0 +1,47 @@
+use rx::core::*;
+
+fn sort(a: &mut Vec<i32>, lo: usize, hi: usize) {
+    if hi - lo < 2usize {
+        return;
+    }
+    let pivot = a[lo + (hi - lo) / 2usize];
+    let mut left = lo;
+    let mut right = hi;
+    loop {
+        while left < hi && a[left] < pivot {
+            left += 1usize;
+        }
+        while right > lo && a[right - 1usize] > pivot {
+            right -= 1usize;
+        }
+        if left >= right {
+            break;
+        }
+        right -= 1usize;
+        let old = a[left];
+        a[left] = a[right];
+        a[right] = old;
+        left += 1usize;
+    }
+    if right > lo {
+        sort(a, lo, right);
+    }
+    if left < hi {
+        sort(a, left, hi);
+    }
+}
+fn main() {
+    let n = get_i32() as usize;
+    let mut a = Vec::<i32>::new();
+    let mut i = 0usize;
+    while i < n {
+        a.push(get_i32());
+        i += 1usize;
+    }
+    sort(&mut a, 0, n);
+    i = 0usize;
+    while i < n {
+        println_i32(a[i]);
+        i += 1usize;
+    }
+}

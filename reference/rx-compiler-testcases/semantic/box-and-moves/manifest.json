@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-owned-dereference-move-valid-partial-moves-and-reinitialization-after-move.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Owned dereference move, valid partial moves, and reinitialization after move."
+  },
+  {
+    "source": "rej-immutable-box-owner-gives-immutable-contents.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Immutable Box owner gives immutable contents."
+  },
+  {
+    "source": "rej-shared-reference-to-box-forbids-writes.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shared reference to Box forbids writes."
+  },
+  {
+    "source": "rej-constructor-argument-must-match-t.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Constructor argument must match T."
+  },
+  {
+    "source": "rej-box-constructor-needs-one-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Box constructor needs one argument."
+  }
+]

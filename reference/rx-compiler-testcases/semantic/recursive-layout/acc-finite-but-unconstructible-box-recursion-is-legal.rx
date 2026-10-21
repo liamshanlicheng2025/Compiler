@@ -1,0 +1,6 @@
+use rx::core::*;
+
+struct Chain {
+    next: Box<Chain>,
+}
+fn main() {}

@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-clone-mutate-remove-tree.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Recursive Box/Vec tree with deep clone and removal."
+  }
+]

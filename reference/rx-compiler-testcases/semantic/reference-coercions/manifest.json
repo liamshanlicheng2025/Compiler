@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-repeated-deref-coercion-and-mutable-to-shared-coercion.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Repeated deref coercion and mutable-to-shared coercion."
+  },
+  {
+    "source": "rej-owned-box-is-not-implicitly-borrowed.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Owned Box is not implicitly borrowed."
+  },
+  {
+    "source": "rej-box-does-not-coerce-to-owned-contents.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Box does not coerce to owned contents."
+  },
+  {
+    "source": "rej-inner-reference-mutability-is-not-rewritten.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Inner reference mutability is not rewritten."
+  },
+  {
+    "source": "rej-vec-has-no-deref-coercion.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Vec has no deref coercion."
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-repeat-executes-once-copy-arrays-remain-independent-and-length-one-needs-no-copy.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Repeat executes once, Copy arrays remain independent, and length one needs no Copy."
+  },
+  {
+    "source": "rej-array-length-mismatch.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Array length mismatch."
+  },
+  {
+    "source": "rej-an-existing-i32-cannot-index-an-array.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An existing i32 cannot index an array."
+  },
+  {
+    "source": "rej-immutable-array-element-cannot-be-assigned.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Immutable array element cannot be assigned."
+  },
+  {
+    "source": "rej-repeating-more-than-once-requires-copy.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Repeating more than once requires Copy."
+  },
+  {
+    "source": "rej-integers-are-not-indexable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Integers are not indexable."
+  }
+]

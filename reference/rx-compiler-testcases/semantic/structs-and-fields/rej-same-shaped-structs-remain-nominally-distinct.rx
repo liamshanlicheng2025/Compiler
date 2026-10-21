@@ -1,0 +1,11 @@
+use rx::core::*;
+
+struct A {
+    x: i32,
+}
+struct B {
+    x: i32,
+}
+fn main() {
+    let a: A = B { x: 1 };
+}

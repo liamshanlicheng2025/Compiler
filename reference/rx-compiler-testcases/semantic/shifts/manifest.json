@@ -1,0 +1,44 @@
+[
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of i32 shifts."
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of u32 shifts."
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of isize shifts."
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of usize shifts."
+  },
+  {
+    "source": "acc-constant-folded-shifts-also-mask-the-count.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Constant-folded shifts also mask the count."
+  },
+  {
+    "source": "rej-shift-count-must-be-integer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shift count must be integer."
+  },
+  {
+    "source": "rej-shift-left-operand-must-be-integer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shift left operand must be integer."
+  }
+]

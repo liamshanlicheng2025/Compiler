@@ -1,0 +1,20 @@
+[
+  {
+    "source": "acc-shadowing-creates-new-storage-while-prior-references-remain-valid.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Shadowing creates new storage while prior references remain valid."
+  },
+  {
+    "source": "rej-unresolved-initializer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unresolved initializer."
+  },
+  {
+    "source": "rej-local-non-callable-shadow-prevents-function-lookup.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Local non-callable shadow prevents function lookup."
+  }
+]

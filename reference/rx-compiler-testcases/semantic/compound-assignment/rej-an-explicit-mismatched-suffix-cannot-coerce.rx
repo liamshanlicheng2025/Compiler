@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn main() {
+    let mut x = 1u32;
+    x += 1i32;
+}

@@ -1,0 +1,2239 @@
+[
+  {
+    "source": "accept/block_comment-5fd112cac3.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "43a2466ca6b959abacbecd60da20df4d259a2e2f60e5a5a308d2e0aae17b72cd",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/block_comment.rs",
+          "line": 1,
+          "start": 0,
+          "end": 23,
+          "source_sha256": "43a2466ca6b959abacbecd60da20df4d259a2e2f60e5a5a308d2e0aae17b72cd",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "COMMENT",
+          "/* */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/**/"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/* /* */ */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/frontmatter-af000ae460.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "22df91c9296ae5c01209d88facd23a354599b435e2658bc72454413cb298876f",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/frontmatter.rs",
+          "line": 6,
+          "start": 35,
+          "end": 50,
+          "source_sha256": "703f5d96bd67fa160cf8ba6fecdb08129df1d8638fe2953f97afb1f3e3cafaf4",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        },
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/shebang_frontmatter.rs",
+          "line": 7,
+          "start": 56,
+          "end": 71,
+          "source_sha256": "4d773a09904d6f9d5164d2a4b673b6ba66e15d1282c5c98d8a076b4dcdb1d055",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "KEYWORD",
+          "fn"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "main"
+        ],
+        [
+          "PUNCTUATION",
+          "("
+        ],
+        [
+          "PUNCTUATION",
+          ")"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "{"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          "}"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/guarded_str_prefix_edition_2021-5d75672c58.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "c9befff8dbb4fdc79acd6dabe2e0cfd28d3f2be66d1dd4adacc4a8e0840c62b5",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/guarded_str_prefix_edition_2021.rs",
+          "line": 1,
+          "start": 0,
+          "end": 20,
+          "source_sha256": "46ddd78f1499c527ec245acf78574dde10cd077a29f314103853526c8a655c3a",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "COMMENT",
+          "//@ edition: 2021"
+        ],
+        [
+          "WHITESPACE",
+          "\n\n"
+        ],
+        [
+          "PUNCTUATION",
+          "#"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/hello-33710ec532.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/hello.rs",
+          "line": 1,
+          "start": 0,
+          "end": 11,
+          "source_sha256": "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "IDENTIFIER",
+          "hello"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "world"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/ident-a99ba7d1fe.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "61518d2f1950a38d28b327bc913b44c66bf790d5905a3039f48e29261e4a17f6",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/ident.rs",
+          "line": 1,
+          "start": 0,
+          "end": 21,
+          "source_sha256": "3d718c497a4ca9dd68e5b40896492ab2af4079c02743b453b6f00408b1101b82",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "IDENTIFIER",
+          "foo"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "foo_"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "_foo"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "_"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "__"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "x"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/keywords-6260d3e809.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "07ea82c171082b00fcc8cfc605f16a6fb46c027795b4ab6dd4519489846e327b",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/keywords.rs",
+          "line": 1,
+          "start": 0,
+          "end": 162,
+          "source_sha256": "07ea82c171082b00fcc8cfc605f16a6fb46c027795b4ab6dd4519489846e327b",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "KEYWORD",
+          "async"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "fn"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "use"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "struct"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "trait"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "enum"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "impl"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "true"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "false"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "as"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "extern"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "crate"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "KEYWORD",
+          "mod"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "pub"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "self"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "super"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "in"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "where"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "for"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "loop"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "while"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "if"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "match"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "const"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "KEYWORD",
+          "static"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "mut"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "type"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "ref"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "let"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "else"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "move"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "return"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/lifetimes-60174f9680.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "2d534ad9ee8634dd1fa6eda9b1d7dc6d3ad578e1d677a27b10961a53e9abb9c1",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/lifetimes.rs",
+          "line": 1,
+          "start": 0,
+          "end": 24,
+          "source_sha256": "2d534ad9ee8634dd1fa6eda9b1d7dc6d3ad578e1d677a27b10961a53e9abb9c1",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "LIFETIME",
+          "'a"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "LIFETIME",
+          "'foo"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "LIFETIME",
+          "'foo_bar_baz"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "LIFETIME",
+          "'_"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/nested-block-comments-03bb4c3dac.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "90e65103e8b39f29f748bff17645e6476d343f5178de37d01edb0db8e678cbed",
+      "origins": [
+        {
+          "path": "tests/ui/parser/nested-block-comments.rs",
+          "line": 33,
+          "start": 694,
+          "end": 725,
+          "source_sha256": "707f811a993ce4df572f24b316edc0ca9a9c60e2916f60b80602c09f2cbb0cc8",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Exact nested block comment from a rustc run-pass regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "accept/nested-block-comments-1d7dc951c9.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "e77f65bc40fbb7aeea5dae11d9c9187b086802d67d014a6ace0a1f63642960fc",
+      "origins": [
+        {
+          "path": "tests/ui/parser/nested-block-comments.rs",
+          "line": 32,
+          "start": 636,
+          "end": 680,
+          "source_sha256": "707f811a993ce4df572f24b316edc0ca9a9c60e2916f60b80602c09f2cbb0cc8",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Exact nested block comment from a rustc run-pass regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "accept/nested-block-comments-70ea462484.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "e8e99df4fa6056d6bc70c49089e81d2c1daecdb2aa781dc7921c7021b9c5b563",
+      "origins": [
+        {
+          "path": "tests/ui/parser/nested-block-comments.rs",
+          "line": 17,
+          "start": 385,
+          "end": 432,
+          "source_sha256": "707f811a993ce4df572f24b316edc0ca9a9c60e2916f60b80602c09f2cbb0cc8",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Exact nested block comment from a rustc run-pass regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "accept/nested-block-comments-df896b4529.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "b6f2f4b155b1088c5d7a376637fb5556a1263bae29c7fb7c2358f573b9eae0a4",
+      "origins": [
+        {
+          "path": "tests/ui/parser/nested-block-comments.rs",
+          "line": 20,
+          "start": 451,
+          "end": 535,
+          "source_sha256": "707f811a993ce4df572f24b316edc0ca9a9c60e2916f60b80602c09f2cbb0cc8",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Exact nested block comment from a rustc run-pass regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "accept/nested-block-comments-e292bc01d0.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "03dd366eb2620fdd64eb56d245edbff657b9e16507d1b07ca42a50445645e7cd",
+      "origins": [
+        {
+          "path": "tests/ui/parser/nested-block-comments.rs",
+          "line": 7,
+          "start": 148,
+          "end": 383,
+          "source_sha256": "707f811a993ce4df572f24b316edc0ca9a9c60e2916f60b80602c09f2cbb0cc8",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Exact nested block comment from a rustc run-pass regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "accept/numbers-29b079fcfd.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "d44989b0a7b3a51100e9ce9535a1c91fc1458fa2a09d01b5d8750dd1212e76ae",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 1,
+          "start": 13,
+          "end": 20,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "01790"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/numbers-57920fe182.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "e7ab401fa10f59c13a53efaa06cb483e9768d29bd6553903d03ec57ee05777a5",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 2,
+          "start": 33,
+          "end": 67,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "INTEGER",
+          "0x1790aAbBcCdDeEfF"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "INTEGER",
+          "001279"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "INTEGER",
+          "0_1279"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/numbers-57c8fa4818.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "17244166906e76a52c97203591fa4aac1c75632a6475d523742401a12ef14a2a",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 1,
+          "start": 0,
+          "end": 8,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "INTEGER",
+          "0"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "INTEGER",
+          "00"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "INTEGER",
+          "0_"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/numbers-61a34dcfaa.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "04a6140b9ec1fb76c4c28674c00682f673a1a4372a51346858dde459b132d6a0",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 2,
+          "start": 87,
+          "end": 101,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "0"
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "INTEGER",
+          "2"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "0"
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "IDENTIFIER",
+          "foo"
+        ],
+        [
+          "PUNCTUATION",
+          "("
+        ],
+        [
+          "PUNCTUATION",
+          ")"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/numbers-ad7d779a0c.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "58707f063a3eb0305b00c4235efaac910c6335e01b44acfdd298566f412101ad",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 5,
+          "start": 105,
+          "end": 112,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "0"
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "IDENTIFIER",
+          "e"
+        ],
+        [
+          "PUNCTUATION",
+          "+"
+        ],
+        [
+          "INTEGER",
+          "1"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/single_line_comments-66a4addfa5.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "d35afa9efa47ecc126d99ecb0d56b8100fc7c7e986269a057e6affc1cdfeee7e",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/single_line_comments.rs",
+          "line": 2,
+          "start": 20,
+          "end": 29,
+          "source_sha256": "fcc011c59b4b69fa74c5ebef310ac08559293b1dc9cbff0d80a0df5d6f86669b",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "COMMENT",
+          "// hello"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/single_line_comments-a3a584b594.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "9d7e61329082192f88536ef1919a0115012327ee669d87ed8ed16f6b3a8ede1d",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/single_line_comments.rs",
+          "line": 11,
+          "start": 114,
+          "end": 120,
+          "source_sha256": "fcc011c59b4b69fa74c5ebef310ac08559293b1dc9cbff0d80a0df5d6f86669b",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "////"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/single_line_comments-ffed16fa5e.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "7441b2f2741d1724223122c81e4dbbde4ffe2583d5bea0d32c5a7f06cd1ce87a",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/single_line_comments.rs",
+          "line": 5,
+          "start": 77,
+          "end": 102,
+          "source_sha256": "fcc011c59b4b69fa74c5ebef310ac08559293b1dc9cbff0d80a0df5d6f86669b",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "//// Just a comment"
+        ],
+        [
+          "WHITESPACE",
+          "\n\n"
+        ],
+        [
+          "COMMENT",
+          "//"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/symbols-73d3ed84b0.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "e2b00b113672c33d31e723385158522711e2e47aa06197c09dbd3e153b106233",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/symbols.rs",
+          "line": 1,
+          "start": 0,
+          "end": 20,
+          "source_sha256": "bfaa164a4dbf26b42457e1e72dd4b12ac427f37d14c628ad77055f90d5e82479",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "PUNCTUATION",
+          ";"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          ","
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "("
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          ")"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "{"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "}"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "["
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "]"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "<"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          ">"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/symbols-7d923bf51c.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "6b49be1d4e6ab376885339b90f781bcd94c83cabd7353f61609c443f45472ae9",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/symbols.rs",
+          "line": 1,
+          "start": 29,
+          "end": 77,
+          "source_sha256": "bfaa164a4dbf26b42457e1e72dd4b12ac427f37d14c628ad77055f90d5e82479",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "&"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "|"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "+"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "*"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "/"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "^"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "%"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "."
+        ],
+        [
+          "PUNCTUATION",
+          "="
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          ":"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          ":"
+        ],
+        [
+          "PUNCTUATION",
+          ":"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          "="
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "="
+        ],
+        [
+          "PUNCTUATION",
+          ">"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          "!"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "!"
+        ],
+        [
+          "PUNCTUATION",
+          "="
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "PUNCTUATION",
+          "-"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "-"
+        ],
+        [
+          "PUNCTUATION",
+          ">"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/symbols-fa1802a888.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "1fe27de478bf004394c11503980d96278e0d65ba860a2b1ed146bead2bd22e82",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/symbols.rs",
+          "line": 1,
+          "start": 21,
+          "end": 24,
+          "source_sha256": "bfaa164a4dbf26b42457e1e72dd4b12ac427f37d14c628ad77055f90d5e82479",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "#"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-6e0c29af29.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "001bf5d77697c52ecc6bc58c4a61d4d4efc56d59e62271e16c25309d2860cce7",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 202,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "nested_block_comments",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "COMMENT",
+          "/* /* */ */"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-8eddb3e8f5.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "353c542a6765b6421d4326a833bbbacf979f7a874a163d56823c2576721e4746",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 251,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "literal_suffixes",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "1234"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "0b101"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "INTEGER",
+          "0xABC"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-cdd59dd8ce.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "36f9c8c0981a4b4df1866745562130d740e7c5a673af47531a508f580d3f79a2",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 229,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "lifetime",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "LIFETIME",
+          "'abc"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-da9c815cf2.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "9336056f2e5ca9130f71207d3c168cadd13be3573c8b5f20bd7c275829a318e0",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 163,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "comment_flavors",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "// line"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "//// line as well"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/// outer doc line"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "//! inner doc line"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/* block */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/**/"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/*** also block */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/** outer doc block */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "COMMENT",
+          "/*! inner doc block */"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-dc9e82fdde.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "8c1f3573209527b5c3955a22a3c518d4ab8001e119a1a396841833a4f5f3fe9c",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 134,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "smoke_test",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "COMMENT",
+          "/* my source file */"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "KEYWORD",
+          "fn"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "main"
+        ],
+        [
+          "PUNCTUATION",
+          "("
+        ],
+        [
+          "PUNCTUATION",
+          ")"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "{"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "println"
+        ],
+        [
+          "PUNCTUATION",
+          "!"
+        ],
+        [
+          "PUNCTUATION",
+          "("
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/tests-f4813f2585.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "4c5109e865d2b58c7f58581c3d368cd14aaf9d4a0f425b804c35caa6e0b5518d",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 134,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "smoke_test",
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "PUNCTUATION",
+          ")"
+        ],
+        [
+          "PUNCTUATION",
+          ";"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "PUNCTUATION",
+          "}"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "accept/whitespace-86418a4e69.rx",
+    "stage": "lex",
+    "compilation_success": true,
+    "metadata": {
+      "sha256": "2111e2b8bdd8494c7bbef95522907675310c98e4dc0b2385b8bc031ad56b51b1",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/whitespace.rs",
+          "line": 1,
+          "start": 0,
+          "end": 14,
+          "source_sha256": "2111e2b8bdd8494c7bbef95522907675310c98e4dc0b2385b8bc031ad56b51b1",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Token spellings and boundaries come from the upstream lexer snapshot; doc-comment styles are ordinary comments in Rx."
+        }
+      ],
+      "tokens": [
+        [
+          "IDENTIFIER",
+          "a"
+        ],
+        [
+          "WHITESPACE",
+          " "
+        ],
+        [
+          "IDENTIFIER",
+          "b"
+        ],
+        [
+          "WHITESPACE",
+          "  "
+        ],
+        [
+          "IDENTIFIER",
+          "c"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ],
+        [
+          "IDENTIFIER",
+          "d"
+        ],
+        [
+          "WHITESPACE",
+          "\n\n"
+        ],
+        [
+          "IDENTIFIER",
+          "e"
+        ],
+        [
+          "WHITESPACE",
+          "\t"
+        ],
+        [
+          "IDENTIFIER",
+          "f"
+        ],
+        [
+          "WHITESPACE",
+          "\n"
+        ]
+      ]
+    }
+  },
+  {
+    "source": "reject/empty_int-95a1bae8bf.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "78a8a03a66c04757654036c7424a1b18dc6d2cb117c7f0f97edfdbc29d7108d9",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/err/empty_int.rs",
+          "line": 1,
+          "start": 0,
+          "end": 73,
+          "source_sha256": "78a8a03a66c04757654036c7424a1b18dc6d2cb117c7f0f97edfdbc29d7108d9",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream lexer/err fixture for malformed integer prefixes or unterminated nested comments."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-3dac1bd316.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "95026ec9b638d56e49eb8521343591abd3ccd751395a29cb6bc1ec6aa2f3ef20",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 3,
+          "start": 72,
+          "end": 82,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-5329952680.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "6b13de03491fafccbff9c451126819a541ff393885d7f297396984b892cb1587",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 4,
+          "start": 133,
+          "end": 137,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-6938a244b4.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "2a3e30db6a81d95f9b5b0984de6fd534b41d831d80667aca96887e10955a4552",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 8,
+          "start": 351,
+          "end": 354,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-69786d9aa0.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "cb26def124b309f4e2d94dd09ef68c46ee445ace5722cab931070b90e316b56a",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 5,
+          "start": 188,
+          "end": 192,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-962d4c812c.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "b97fe420577be447ab2ebad005c8169ada2f5cde9eab15eaa247635f4116eb1a",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 7,
+          "start": 297,
+          "end": 300,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-a80941cff2.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "86bb76cfc389dc31533d92b2973f02831665dd426fd4fb0ddacc9b2309700eb9",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 6,
+          "start": 243,
+          "end": 246,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-b2a3c4225c.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "56936ab59faa4429bbaa41cc70fc47a8ef1285fe35490d11900ddf1c83b8f954",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 2,
+          "start": 16,
+          "end": 21,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-b35bfe3e94.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "4aa964c9923ef975cda7ae12cf66125ab99575c8e89b7ed1bbcbd1824c57ab15",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 10,
+          "start": 459,
+          "end": 462,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-binary-literal-e12771e162.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "dab8d9f967e1355c8a05c4f8f4a8a99808e38b343c025557ece948d72b40f1be",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-binary-literal.rs",
+          "line": 9,
+          "start": 405,
+          "end": 408,
+          "source_sha256": "ae1de2a139283ca6fd879d148cad2cd53a917a27c8d104bf0249f29e4f28cd8f",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-octal-literal-0730c79b95.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "d78bf1ca003a72cd4a42c8be22d78aa00cdbf0aa1b3fbefd06415d219fb6ace7",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-octal-literal.rs",
+          "line": 2,
+          "start": 16,
+          "end": 20,
+          "source_sha256": "13b864563123887c80bbaa2fee29e9305de9245b2b6d6bbdc5c9b6e877c60499",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/lex-bad-octal-literal-b2e74a7290.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "5930fa166c629f35f87bcb8492aadee9013e124ae0f695c7e8aacbd90cea48a1",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/lex-bad-octal-literal.rs",
+          "line": 3,
+          "start": 71,
+          "end": 84,
+          "source_sha256": "13b864563123887c80bbaa2fee29e9305de9245b2b6d6bbdc5c9b6e877c60499",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Malformed radix digit from the upstream integer lexer regression."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/numbers-0333fae972.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "d6f0c1543b43246aeb2d41909bf5a9c1565c3f6de6d5969494c19596a7dbcd3a",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 2,
+          "start": 27,
+          "end": 33,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Rust's general numeric token has a malformed radix/suffix under the Rx integer spelling rules."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/numbers-98101fae27.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "96f7899af0113f7fb719c335f6e2043db7b230cfc7a29771c5804278faf0189f",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 1,
+          "start": 11,
+          "end": 13,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Rust's general numeric token has a malformed radix/suffix under the Rx integer spelling rules."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/numbers-e7a13252b9.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "25519b53a5eee1418f869b6c05edf7d6cc3f65bc5d29e3fbf491cee6918725a3",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 2,
+          "start": 20,
+          "end": 26,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Rust's general numeric token has a malformed radix/suffix under the Rx integer spelling rules."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/numbers-f17b2cc943.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "6328c324b33488867f7b10b4cd2d35c2346749b15f02b2a386af5b0964fb4af4",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/ok/numbers.rs",
+          "line": 9,
+          "start": 159,
+          "end": 164,
+          "source_sha256": "190d02db16f0f4ade15eb5e3270e0cebb04de091b6598dccbfede6be4a2486f7",
+          "extraction": "verbatim",
+          "whole_file": false,
+          "note": "Rust's general numeric token has a malformed radix/suffix under the Rx integer spelling rules."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/tests-4c77ecf383.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "1019735d1ab68345fe252d2ffacce5d65dad52e016607f5ac42b14aeb9a3c69c",
+      "origins": [
+        {
+          "path": "compiler/rustc_lexer/src/tests.rs",
+          "line": 251,
+          "source_sha256": "90516c7444d6102ab1fceae40cf260cf473ec6542bc372d8bf9d6033eaf507da",
+          "extraction": "decoded Rust string literal",
+          "whole_file": false,
+          "unit_test": "literal_suffixes",
+          "note": "Rust's general numeric token has a malformed radix/suffix under the Rx integer spelling rules."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unclosed_block_comment_at_eof-c25875b858.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "766e0153d3f7ec95c97e755b1ea7b1681566923b9299365fdc8399443ca20c1d",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/err/unclosed_block_comment_at_eof.rs",
+          "line": 1,
+          "start": 0,
+          "end": 2,
+          "source_sha256": "766e0153d3f7ec95c97e755b1ea7b1681566923b9299365fdc8399443ca20c1d",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream lexer/err fixture for malformed integer prefixes or unterminated nested comments."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unclosed_block_comment_with_content-e0a0a3fced.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "1702878dae7241ded1f35456c1c5315ec82461530439b23328b13bc210287ee3",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/err/unclosed_block_comment_with_content.rs",
+          "line": 1,
+          "start": 0,
+          "end": 11,
+          "source_sha256": "1702878dae7241ded1f35456c1c5315ec82461530439b23328b13bc210287ee3",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream lexer/err fixture for malformed integer prefixes or unterminated nested comments."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unclosed_nested_block_comment_entirely-75dc81f4ab.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "75d8e29d2c557ffc2d04ebf03addee51828298af1501a927951f9ca48ccf6795",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/err/unclosed_nested_block_comment_entirely.rs",
+          "line": 1,
+          "start": 0,
+          "end": 9,
+          "source_sha256": "75d8e29d2c557ffc2d04ebf03addee51828298af1501a927951f9ca48ccf6795",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream lexer/err fixture for malformed integer prefixes or unterminated nested comments."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unclosed_nested_block_comment_partially-750a4f6bc1.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "29c81d8c67d68bbf0d5d4a914c6b808d2ef93ca121edc28ec6e0bf6deaac7c91",
+      "origins": [
+        {
+          "path": "src/tools/rust-analyzer/crates/parser/test_data/lexer/err/unclosed_nested_block_comment_partially.rs",
+          "line": 1,
+          "start": 0,
+          "end": 25,
+          "source_sha256": "29c81d8c67d68bbf0d5d4a914c6b808d2ef93ca121edc28ec6e0bf6deaac7c91",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream lexer/err fixture for malformed integer prefixes or unterminated nested comments."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unterminated-comment-dca0e74fae.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "dd68c8ac2cd23e6e29211f3c69213f110f1dfcf67a20629b559fb06030ac90e0",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/unterminated-comment.rs",
+          "line": 1,
+          "start": 0,
+          "end": 19,
+          "source_sha256": "dd68c8ac2cd23e6e29211f3c69213f110f1dfcf67a20629b559fb06030ac90e0",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream negative regression for malformed syntax in an Rx-supported construct."
+        }
+      ]
+    }
+  },
+  {
+    "source": "reject/unterminated-nested-comment-a7fd7b14f4.rx",
+    "stage": "lex",
+    "compilation_success": false,
+    "metadata": {
+      "sha256": "952cee3d6d25162db44f6e20d3c705ec08ea742a0792a9fe86eadbcb5c42feb6",
+      "origins": [
+        {
+          "path": "tests/ui/lexer/unterminated-nested-comment.rs",
+          "line": 1,
+          "start": 0,
+          "end": 31,
+          "source_sha256": "952cee3d6d25162db44f6e20d3c705ec08ea742a0792a9fe86eadbcb5c42feb6",
+          "extraction": "verbatim",
+          "whole_file": true,
+          "note": "Upstream negative regression for malformed syntax in an Rx-supported construct."
+        }
+      ]
+    }
+  }
+]

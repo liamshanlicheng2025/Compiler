@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-nested-break-does-not-give-an-outer-loop-a-value.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Nested break does not give an outer loop a value."
+  },
+  {
+    "source": "acc-a-valid-unreachable-tail-is-allowed.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "A valid unreachable tail is allowed."
+  },
+  {
+    "source": "rej-unknown-name-after-return.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unknown name after return."
+  },
+  {
+    "source": "rej-wrong-type-in-an-untaken-branch.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Wrong type in an untaken branch."
+  },
+  {
+    "source": "rej-unreachable-break-participates-in-loop-result-typing.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unreachable break participates in loop result typing."
+  },
+  {
+    "source": "rej-while-remains-unit-even-when-its-condition-is-true.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "While remains unit even when its condition is true."
+  }
+]
