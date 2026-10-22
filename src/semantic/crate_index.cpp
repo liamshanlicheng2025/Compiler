@@ -1,5 +1,6 @@
 #include "semantic/crate_index.h"
 
+#include "../ast/type.h"
 #include "semantic/semantic_error.h"
 
 
@@ -31,14 +32,20 @@ void CrateIndex::visit(Crate& node) {
     }
 }
 
-// 入口检查（骨架，待实现）。伪代码：
-//   在 crate->items 里找 Function 且 name == "main"：
-//     找不到        → semaError("缺少 main 函数")
-//     params 非空   → semaError("main 不能有参数")
-//     returnType 非空且不是 Unit → semaError("main 不能声明返回类型")
-//   找到多个同名 main 已被 registerFunction 的重复定义检查拦截，无需再查。
+// 入口检查：main 必须存在、无泛型参数、无参数、无返回类型标注（或显式标注 -> ()）。
+// 同名 main 重复定义已被 registerFunction 拦截，此处无需再查。
 void CrateIndex::checkEntryPoint(const CratePtr& crate) {
-    (void)crate;   // TODO：按上面伪代码实现
+    FunctionPtr mainFn = nullptr;
+    for (auto& item : crate -> items) {
+        if (auto fn = std::dynamic_pointer_cast<Function>(item)) {
+            if (fn -> name == "main") { mainFn = fn; break; }
+        }
+    }
+    if (!mainFn) semaError("缺少 main 函数");
+    if (mainFn -> hasGenericParams) semaError("main 不能有泛型参数");
+    if (!mainFn -> params.empty()) semaError("main 不能有参数");
+    if (mainFn -> returnType && mainFn -> returnType -> kind != TypeKind::Unit)
+        semaError("main 不能声明返回类型");
 }
 
 

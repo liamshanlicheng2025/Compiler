@@ -8,6 +8,8 @@
 #include "builder/ast_builder.h"
 #include "ast/ast_printer.h"
 #include "semantic/crate_index.h"
+#include "semantic/const_evaluator.h"
+#include "semantic/layout_checker.h"
 #include "semantic/body_checker.h"
 #include "semantic/semantic_error.h"
 
@@ -52,12 +54,16 @@ int main(int argc, char** argv) {
     CratePtr ast = builder.build(tree);
 
     // ---- 阶段 3：语义分析 ----
-    // CrateIndex（声明收集 + 签名 + 入口检查）→ BodyChecker（函数体检查）
-    // TODO：LayoutChecker（struct 按值包含环）实现后插在两者之间
+    // CrateIndex（声明收集 + 签名 + 入口检查）→ ConstEvaluator（常量预求值
+    // + 依赖环）→ LayoutChecker（struct 按值包含环）→ BodyChecker（函数体检查）
     SymbolTable symtab;
     try {
         CrateIndex collector(symtab);
         collector.run(ast);          // 注册所有顶层名字 + 内建函数 + 入口检查
+        ConstEvaluator constEval(symtab);
+        constEval.evaluateAll(ast);  // 常量统一预求值 + 依赖环检查
+        LayoutChecker layout;
+        layout.run(ast);             // struct 按值包含查环（只看形状，不算大小）
         BodyChecker checker(symtab);
         checker.run(ast);            // 名字解析 + 类型检查 + 控制流
     } catch (const SemanticError& e) {

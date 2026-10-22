@@ -119,6 +119,7 @@ std::any AstBuilder::visitCrate(RustParser::CrateContext* ctx) {
 std::any AstBuilder::visitFunction_(RustParser::Function_Context* ctx) {
     auto node = std::make_shared<Function>();
     node -> name = ctx -> identifier() -> getText();
+    node -> hasGenericParams = (ctx -> genericParams() != nullptr);
     if (ctx -> functionParameters()){
         // selfParam（&self / &mut self）不在 functionParam() 列表里，是独立入口；
         // 方法调用时 receiver 是隐式 self 实参，CodeGen 要给它留第一个参数槽位

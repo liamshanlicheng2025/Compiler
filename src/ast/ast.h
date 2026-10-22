@@ -88,6 +88,7 @@ public:
     bool isMethod = false;       // impl 块里第一个参数是 self/&self/&mut self 的方法
     bool selfMut = false;        // &mut self 或 mut self 时为 true
     bool selfByValue = false;    // 按值 self（fn better(self, ...)），类型不是引用
+    bool hasGenericParams = false;  // 带 <T> 泛型参数（子集不支持泛型，仅入口检查用）
     void accept(ASTVisitor& visitor) override;
 };
 

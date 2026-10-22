@@ -64,6 +64,17 @@ void SymbolTable::registerBuiltins() {
     sym.paramTypes = {Type{TypeKind::I32}};
     sym.type = Type{TypeKind::Unit};
     global_ -> insert(sym);
+    // 新官方测试集（rx-compiler-testcases）的 snake_case 别名，签名相同
+    sym.name = "println_i32";
+    sym.paramTypes = {Type{TypeKind::I32}};
+    sym.type = Type{TypeKind::Unit};
+    global_ -> insert(sym);
+    sym.name = "print_i32";
+    global_ -> insert(sym);              // 参数/返回类型与 println_i32 相同
+    sym.name = "get_i32";
+    sym.paramTypes = {};
+    sym.type = Type{TypeKind::I32};
+    global_ -> insert(sym);
     // 内建类型 String：注册为 StructType 使 let x: String 等标注可查；
     // structDef 为空（无字段表，FieldExpr 有专门的空指针拦截）
     Symbol strType;

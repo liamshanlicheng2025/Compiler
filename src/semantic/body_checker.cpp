@@ -1,5 +1,6 @@
 #include "semantic/body_checker.h"
 
+#include "semantic_error.h"
 #include "semantic/semantic_error.h"
 
 static bool isInt(const Type& t){
@@ -633,6 +634,19 @@ void BodyChecker::visit(ArrayExpr& node) {
         size_t len = 0;
         if (auto* lit = dynamic_cast<Literal*>(node.repeatCount.get()))
             len = static_cast<size_t>(std::stoull(lit->text));
+        // 次数是 const 名（[1; N]）时的三道检查：
+        //   1. 名字必须解析到 const（局部变量 → 拒）
+        //   2. 该 const 必须是 usize 类型（i32 常量也拒）
+        //   3. 有编译期值则用它作数组长度（evaluateAll 已预求值）
+        if (auto* p = dynamic_cast<PathExpr*>(node.repeatCount.get())) {
+            Symbol* s = symtab_.lookup(p -> name);
+            if (!s || s -> kind != SymbolKind::Const)
+                semaError("数组重复次数必须是常量：" + p -> name);
+            if (s -> type.kind != TypeKind::Usize)
+                semaError("数组重复次数必须是 usize 常量：" + p -> name
+                          + "，实际类型 " + s -> type.toString());
+            if (s -> hasConstValue) len = static_cast<size_t>(s -> constValue);
+        }
         Type arr;
         arr.kind = TypeKind::Array;
         arr.elem = std::make_shared<Type>(elemT);
