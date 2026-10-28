@@ -19,11 +19,18 @@
 #include "semantic/const_evaluator.h"
 #include "semantic/symbol_table.h"
 
+#include <unordered_map>
+
 class BodyChecker : public ASTVisitor {
 public:
     explicit BodyChecker(SymbolTable& symtab) : symtab_(symtab), constEval_(symtab) {}
 
     void run(const CratePtr& crate);
+
+    // 表达式类型旁表：每个被检查过的表达式节点 → 它的类型。
+    // 检查期间由 evalExpr 填充；检查结束后交给 IR 阶段按节点指针查询
+    //（AST 节点由 shared_ptr 持有，整个编译期地址稳定，可放心当键用）
+    const std::unordered_map<const Expr*, Type>& exprTypes() const { return exprTypes_; }
 
     void visit(Crate& node) override;
     void visit(Block& node) override;
@@ -70,4 +77,8 @@ private:
     bool allowI32MinLit_ = false;  // 一元 - 直接作用时允许字面量 2147483648（i32 MIN）
     std::string currentImplType_;  // 当前所在 impl 的目标类型名（visit(ImplBlock)
                                    // 进入时设置、离开时清空；方法里注册 self 用）
+
+    std::unordered_map<const Expr*, Type> exprTypes_;   // 表达式类型旁表
+    // 求值子表达式并登记其类型：所有表达式参数的统一入口
+    void evalExpr(const ExprPtr& e);
 };

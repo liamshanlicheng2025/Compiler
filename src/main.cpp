@@ -14,13 +14,16 @@
 #include "semantic/semantic_error.h"
 
 int main(int argc, char** argv) {
-    // 用法: ./compiler <file.rs> [--tree]
-    //   --tree  只打印 ANTLR 解析树（扩展 AST 时的调试工具）
+    // 用法: ./compiler <file.rs> [--tree] [--types]
+    //   --tree   只打印 ANTLR 解析树（扩展 AST 时的调试工具）
+    //   --types  语义检查后打印表达式类型旁表的条目数（调试用）
     bool showParseTree = false;
+    bool showExprTypes = false;
     std::string inputFile;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--tree") showParseTree = true;
+        else if (arg == "--types") showExprTypes = true;
         else inputFile = arg;
     }
     if (inputFile.empty()) {
@@ -66,6 +69,9 @@ int main(int argc, char** argv) {
         layout.run(ast);             // struct 按值包含查环（只看形状，不算大小）
         BodyChecker checker(symtab);
         checker.run(ast);            // 名字解析 + 类型检查 + 控制流
+        if (showExprTypes)           // 旁表填充情况（IR 阶段的输入）
+            std::cout << "[types] exprTypes: " << checker.exprTypes().size()
+                      << " entries" << std::endl;
     } catch (const SemanticError& e) {
         std::cerr << "semantic error: " << e.what() << std::endl;
         return 1;

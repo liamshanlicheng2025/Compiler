@@ -17,6 +17,12 @@ void BodyChecker::run(const CratePtr& crate) {
     crate->accept(*this);
 }
 
+// 统一登记：子表达式求值后立刻把类型记进旁表（IR 阶段按节点指针查类型）
+void BodyChecker::evalExpr(const ExprPtr& e) {
+    e->accept(*this);
+    exprTypes_[e.get()] = lastType_;
+}
+
 void BodyChecker::visit(Crate& node) {
     // 顶层条目里只有函数有"体"要检查；const/static 的初值也要查
     for (auto& item : node.items) item->accept(*this);
@@ -51,7 +57,7 @@ void BodyChecker::visit(Function& node) {
         Symbol sym{SymbolKind::Variable, p.name, pt, p.isMut};
         symtab_.insert(sym);
     }
-    node.body->accept(*this);
+    evalExpr(node.body);
     if (!lastType_.equal(currentFnRetType_)) semaError("函数 " + node.name + " 返回类型不匹配：声明 " + currentFnRetType_.toString() + "，实际 " + lastType_.toString());
     symtab_.exitScope();
     currentFnRetType_ = savedRetType;
@@ -79,7 +85,7 @@ void BodyChecker::visit(Block& node) {
         lastStmtType = lastType_;   // 语句的类型（ExprStmt 会留下其中表达式的类型）
     }
     if (node.tailExpr) {
-        node.tailExpr->accept(*this);   // 块的类型 = 尾表达式类型
+        evalExpr(node.tailExpr);   // 块的类型 = 尾表达式类型
     } else {
         // 末尾是"无分号的带块表达式语句"（if/match/loop/裸块）时，它就是块的值
         //（函数体末尾的 if (k == p) { a[p] } else ... 这类形态）
@@ -111,7 +117,7 @@ void BodyChecker::visit(Block& node) {
 void BodyChecker::visit(LetStmt& node) {
     Type varType;
     if (node.init) {
-        node.init->accept(*this);           // 初值求类型，结果在 lastType_
+        evalExpr(node.init);           // 初值求类型，结果在 lastType_
         Type initType = lastType_;          // 立刻存走——之后的 visit 会覆盖它
         if (node.type) {
             Type ann = *node.type;
@@ -137,7 +143,7 @@ void BodyChecker::visit(LetStmt& node) {
 }
 
 void BodyChecker::visit(ExprStmt& node) {
-    if (node.expr) node.expr->accept(*this);   // 语句位置的表达式，类型丢弃
+    if (node.expr) evalExpr(node.expr);   // 语句位置的表达式，类型丢弃
 }
 
 void BodyChecker::visit(Literal& node) {
@@ -184,9 +190,9 @@ void BodyChecker::visit(Literal& node) {
 
 // 二元运算：按 op 分五类——赋值 / 复合赋值 / 算术位运算 / 比较 / 逻辑
 void BodyChecker::visit(BinaryExpr& node) {
-    node.lhs->accept(*this);
+    evalExpr(node.lhs);
     Type lhsT = lastType_;              // 立刻存走——visit rhs 会覆盖 lastType_
-    node.rhs->accept(*this);
+    evalExpr(node.rhs);
     Type rhsT = lastType_;
 
     auto isLValue = [](const ExprPtr& e) {
@@ -302,7 +308,7 @@ void BodyChecker::visit(UnaryExpr& node) {
     if (node.op == "-")
         if (auto* lit = dynamic_cast<Literal*>(node.operand.get()))
             if (lit->kind == LiteralKind::Int) allowI32MinLit_ = true;
-    node.operand->accept(*this);
+    evalExpr(node.operand);
     allowI32MinLit_ = savedAllow;
     Type t = lastType_;
     if (node.op == "-") {
@@ -336,13 +342,13 @@ void BodyChecker::visit(UnaryExpr& node) {
 // if 表达式：条件必须 bool；有 else 时两分支类型一致（值 = 分支类型），无 else 值为 ()
 void BodyChecker::visit(IfExpr& node) {
     if (!node.condGrouped) semaError("if 条件缺少括号");
-    node.cond->accept(*this);
+    evalExpr(node.cond);
     if (lastType_.kind != TypeKind::Bool && lastType_.kind != TypeKind::Never)
         semaError("if 条件必须是 bool，实际 " + lastType_.toString());
-    node.thenBlock->accept(*this);
+    evalExpr(node.thenBlock);
     Type thenT = lastType_;
     if (node.elseBlock) {
-        node.elseBlock->accept(*this);
+        evalExpr(node.elseBlock);
         Type elseT = lastType_;
         if (!elseT.equal(thenT))
             semaError("if 两分支类型不一致：then " + thenT.toString()
@@ -358,7 +364,7 @@ void BodyChecker::visit(IfExpr& node) {
 // 体内的带值 break 不上传（Rust 不允许 while 带值 break），进出时保存/恢复
 void BodyChecker::visit(WhileExpr& node) {
     if (!node.condGrouped) semaError("while 条件缺少括号");
-    node.cond->accept(*this);
+    evalExpr(node.cond);
     if (lastType_.kind != TypeKind::Bool && lastType_.kind != TypeKind::Never)
         semaError("while 条件必须是 bool，实际 " + lastType_.toString());
     ++loopDepth_;
@@ -366,7 +372,7 @@ void BodyChecker::visit(WhileExpr& node) {
     bool savedAny = hasAnyBreak_;
     hasLoopBreakValue_ = false;
     hasAnyBreak_ = false;
-    node.body->accept(*this);
+    evalExpr(node.body);
     hasLoopBreakValue_ = savedHas; loopBreakType_ = savedT;
     hasAnyBreak_ = savedAny;
     --loopDepth_;
@@ -381,7 +387,7 @@ void BodyChecker::visit(LoopExpr& node) {
     bool savedAny = hasAnyBreak_;
     hasLoopBreakValue_ = false;
     hasAnyBreak_ = false;
-    node.body->accept(*this);
+    evalExpr(node.body);
     if (hasLoopBreakValue_) lastType_ = loopBreakType_;
     else if (!hasAnyBreak_) lastType_ = Type{TypeKind::Never};
     else lastType_ = Type{TypeKind::Unit};
@@ -393,7 +399,7 @@ void BodyChecker::visit(LoopExpr& node) {
 // return：有值则与函数声明返回类型比对，无值则要求函数返回 ()；自身类型 Never（发散）
 void BodyChecker::visit(ReturnExpr& node) {
     if (node.value) {
-        node.value->accept(*this);
+        evalExpr(node.value);
         if (!lastType_.equal(currentFnRetType_))
             semaError("return 类型不匹配：函数声明返回 " + currentFnRetType_.toString()
                       + "，实际 " + lastType_.toString());
@@ -411,7 +417,7 @@ void BodyChecker::visit(BreakExpr& node) {
     if (loopDepth_ == 0) semaError("break 不在循环内");
     hasAnyBreak_ = true;
     if (node.value) {
-        node.value->accept(*this);
+        evalExpr(node.value);
         loopBreakType_ = lastType_;
         hasLoopBreakValue_ = true;
     }
@@ -437,7 +443,7 @@ void BodyChecker::visit(CallExpr& node) {
                       + std::to_string(params.size()) + " 个，实际 "
                       + std::to_string(node.args.size()) + " 个");
         for (size_t i = 0; i < node.args.size(); ++i) {
-            node.args[i]->accept(*this);
+            evalExpr(node.args[i]);
             if (!lastType_.equal(params[i]))
                 semaError("函数 " + fnName + " 第 " + std::to_string(i + 1)
                           + " 个参数类型不匹配：期望 " + params[i].toString()
@@ -452,7 +458,7 @@ void BodyChecker::visit(CallExpr& node) {
         // 内建关联函数：String::from(&str) -> String
         if (typeName == "String" && fnName == "from") {
             if (node.args.size() != 1) semaError("String::from 需要 1 个参数");
-            node.args[0]->accept(*this);
+            evalExpr(node.args[0]);
             Type t; t.kind = TypeKind::Named; t.name = "String";
             lastType_ = t;
             return;
@@ -482,7 +488,7 @@ void BodyChecker::visit(CallExpr& node) {
 // 字段访问 p.x：object 必须是 Named 类型；按类型名查 StructType 符号，
 // 回指 structDef 找字段定义，字段类型写进 lastType_
 void BodyChecker::visit(FieldExpr& node) {
-    node.object->accept(*this);
+    evalExpr(node.object);
     Type objT = lastType_;
     while (objT.kind == TypeKind::Ref) {
         objT = *objT.elem;
@@ -506,7 +512,7 @@ void BodyChecker::visit(FieldExpr& node) {
 // 方法调用 p.shift(3)：由 receiver 的类型定位 implMethods，找到方法后
 // 比对实参（self 不在 params 里）；&mut self 方法要求 receiver 可写
 void BodyChecker::visit(MethodCallExpr& node) {
-    node.receiver->accept(*this);
+    evalExpr(node.receiver);
     Type recvT = lastType_;
     // 自动解引用：&Point 的 receiver 也能调 Point 的方法（&self 本来就是这么传的）
     while (recvT.kind == TypeKind::Ref) recvT = *recvT.elem;
@@ -543,7 +549,7 @@ void BodyChecker::visit(MethodCallExpr& node) {
                               + std::to_string(m->params.size()) + " 个，实际 "
                               + std::to_string(node.args.size()) + " 个");
                 for (size_t i = 0; i < node.args.size(); ++i) {
-                    node.args[i]->accept(*this);
+                    evalExpr(node.args[i]);
                     if (!lastType_.equal(m->params[i].type))
                         semaError("方法 " + node.method + " 第 "
                                   + std::to_string(i + 1)
@@ -600,7 +606,7 @@ void BodyChecker::visit(StructLiteralExpr& node) {
         }
         if (!fieldType)
             semaError("struct " + node.name + " 没有字段 " + fname);
-        valueExpr->accept(*this);
+        evalExpr(valueExpr);
         if (!lastType_.equal(*fieldType))
             semaError("struct " + node.name + " 字段 " + fname
                       + " 类型不匹配：期望 " + fieldType->toString()
@@ -616,10 +622,10 @@ void BodyChecker::visit(ArrayExpr& node) {
         // ---- 列举形式 ----
         if (node.elements.empty())
             semaError("空数组字面量无法推导类型");
-        node.elements[0]->accept(*this);
+        evalExpr(node.elements[0]);
         Type firstT = lastType_;
         for (size_t i = 1; i < node.elements.size(); ++i) {
-            node.elements[i]->accept(*this);
+            evalExpr(node.elements[i]);
             if (!lastType_.equal(firstT))
                 semaError("数组元素类型不一致：第 1 个是 " + firstT.toString()
                           + "，第 " + std::to_string(i + 1) + " 个是 "
@@ -632,9 +638,9 @@ void BodyChecker::visit(ArrayExpr& node) {
         lastType_ = arr;
     } else {
         // ---- 重复形式 [0; 5] ----
-        node.repeatValue->accept(*this);
+        evalExpr(node.repeatValue);
         Type elemT = lastType_;
-        node.repeatCount->accept(*this);
+        evalExpr(node.repeatCount);
         if (!isInt(lastType_))
             semaError("数组重复次数必须是整型，实际 " + lastType_.toString());
         // 次数是字面量时取具体数值；
@@ -683,14 +689,14 @@ void BodyChecker::visit(ArrayExpr& node) {
 }
 
 void BodyChecker::visit(IndexExpr& node) {
-    node.array->accept(*this);
+    evalExpr(node.array);
     // 自动解引用：&[T; N] 也能直接用下标
     while (lastType_.kind == TypeKind::Ref) lastType_ = *lastType_.elem;
     if (lastType_.kind != TypeKind::Array)
         semaError("对非数组取下标：" + lastType_.toString());
     Type elemT = *lastType_.elem;        // 先存走元素类型
     size_t arrLen = lastType_.arrayLen;  // 已知长度（0 = 未知）留给越界检查
-    node.index->accept(*this);
+    evalExpr(node.index);
     if (!isInt(lastType_)) semaError("数组下标必须是整型");
     // 常量下标越界检查（如 grid[3][3]，grid 是 [[i32; 3]; 3]）
     long long idx;
@@ -706,7 +712,7 @@ void BodyChecker::visit(ConstDef& node) {
     //   node.value->accept(*this);
     //   if (!lastType_.equal(node.type)) semaError("const " + node.name + " 初值类型不匹配");
     // （常量求值留到 IR 阶段；这里只查类型。node.value 为空理论不可能，g4 要求必填）
-    node.value -> accept(*this);
+    evalExpr(node.value);
     if (!lastType_.equal(node.type)) semaError("const " + node.name + " 初值类型不匹配");
     // 初值是整数字面量时把编译期值记进符号（数组长度常量解析用）
     long long v;
@@ -720,7 +726,7 @@ void BodyChecker::visit(ConstDef& node) {
 
 void BodyChecker::visit(StaticDef& node) {
     // 同 ConstDef：node.value->accept(*this)，与 node.type 比对
-    node.value -> accept(*this);
+    evalExpr(node.value);
     if (!lastType_.equal(node.type)) semaError("static " + node.name + " 初值类型不匹配");
 }
 
@@ -738,7 +744,7 @@ void BodyChecker::visit(MacroStmt& node) {
 
 // as 类型转换：检查子表达式后，结果类型就是目标类型（数值间转换直接放行）
 void BodyChecker::visit(CastExpr& node) {
-    node.expr->accept(*this);
+    evalExpr(node.expr);
     lastType_ = node.target;
 }
 
