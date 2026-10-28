@@ -406,7 +406,7 @@ std::any AstBuilder::visitStructStruct(RustParser::StructStructContext* ctx) {
     return ItemPtr(node);
 }
 
-// impl 块：目标类型 + 方法列表（跳过非函数的 associatedItem，如 const）
+// impl 块：目标类型 + 方法列表 + 关联常量
 std::any AstBuilder::visitInherentImpl(RustParser::InherentImplContext* ctx) {
     auto node = std::make_shared<ImplBlock>();
     node -> typeName = ctx -> type_() -> getText();
@@ -414,6 +414,9 @@ std::any AstBuilder::visitInherentImpl(RustParser::InherentImplContext* ctx) {
         if (item -> function_()){
             auto result = std::any_cast<ItemPtr>(visit(item -> function_()));
             node -> methods.push_back(std::static_pointer_cast<Function>(result));
+        } else if (item -> constantItem()){
+            auto result = std::any_cast<ItemPtr>(visit(item -> constantItem()));
+            node -> consts.push_back(std::static_pointer_cast<ConstDef>(result));
         }
     }
     return ItemPtr(node);

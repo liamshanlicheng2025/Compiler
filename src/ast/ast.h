@@ -28,6 +28,7 @@ class Expr;
 class Crate;
 class Block;
 class Function;
+class ConstDef;
 
 enum class LiteralKind {Int, Float, Bool, Char, Str};
 
@@ -231,6 +232,7 @@ class ImplBlock : public Item {
 public:
     std::string typeName;                // impl 目标类型名（名字引用，语义阶段解析）
     std::vector<FunctionPtr> methods;
+    std::vector<std::shared_ptr<ConstDef>> consts;   // 关联常量：impl Config { const N: usize = 3; }
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -284,6 +286,10 @@ public:
     std::string name;
     Type type;                     // 类型标注语法上必填，按值存
     ExprPtr value;
+    // 编译期求值结果（ConstEvaluator::evaluateAll 填写）：
+    // 关联常量不走符号表，值就存在节点上，BodyChecker 经 implConsts 读到
+    bool hasConstValue = false;
+    long long constValue = 0;
     void accept(ASTVisitor& visitor) override;
 };
 

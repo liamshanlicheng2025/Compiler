@@ -22,6 +22,7 @@
 
 class StructDef;
 class Function;
+class ConstDef;
 
 enum class SymbolKind {
     Variable,    // let 声明的局部变量（isMut 区分 let / let mut）
@@ -99,6 +100,11 @@ public:
     // impl 方法表：类型名 → 方法列表。不在作用域体系里（方法是靠
     // receiver 的类型查到的，不是靠名字查到的）。Pass 1 填充，Pass 2 查询。
     std::unordered_map<std::string, std::vector<std::shared_ptr<Function>>> implMethods;
+
+    // impl 关联常量表：类型名 → 常量列表（Config::N 经 "Config" 查到）。
+    // 与方法同理：靠类型名查找，不进作用域。CrateIndex 填充，
+    // ConstEvaluator 求值（值写进 ConstDef 节点旁的符号/缓存），BodyChecker 查类型。
+    std::unordered_map<std::string, std::vector<std::shared_ptr<ConstDef>>> implConsts;
 
 private:
     std::shared_ptr<Scope> global_;

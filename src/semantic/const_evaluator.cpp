@@ -110,6 +110,9 @@ void ConstEvaluator::resolveArrayLens(Type& t) {
     if (t.elem) resolveArrayLens(*t.elem);
     if (t.arrayLen != 0 || t.arrayLenExpr.empty()) return;
     // 裸标识符：必须是带编译期值的 const（数组长度不能用运行期变量）
+    // TODO（关联常量）："[i32; Config::N]" 这类限定名含 "::"，
+    //   裸标识符判断会落空、字符串求值也失败 → 长度静默留 0。
+    //   如需支持：检出 "::" 时按 head/tail 拆开后查 symtab_.implConsts
     bool bareIdent = std::all_of(t.arrayLenExpr.begin(), t.arrayLenExpr.end(),
                                  [](char c){ return std::isalnum(c) || c == '_'; });
     if (bareIdent) {
@@ -130,10 +133,24 @@ void ConstEvaluator::resolveArrayLens(Type& t) {
 
 // ---- 统一预求值：查环 + 求值 + 缓存 ----
 
+std::string ConstEvaluator::normalizePath(const std::string& name) const {
+    if (name.rfind("Self::", 0) == 0 && !currentSelfType_.empty())
+        return currentSelfType_ + name.substr(4);   // "Self::X" → "Config::X"
+    return name;
+}
+
 void ConstEvaluator::evaluateAll(const CratePtr& crate) {
     for (auto& item : crate->items) {
         if (auto cd = std::dynamic_pointer_cast<ConstDef>(item))
             consts_[cd->name] = cd;
+        // 关联常量：限定名 "Config::N" 作键，并记下所属类型供 Self 归一化
+        if (auto im = std::dynamic_pointer_cast<ImplBlock>(item)) {
+            for (auto& cd : im->consts) {
+                std::string qname = im->typeName + "::" + cd->name;
+                consts_[qname] = cd;
+                selfTypeOf_[qname] = im->typeName;
+            }
+        }
     }
     std::unordered_map<std::string, int> state;   // 0=未访问 1=求值中 2=已完成
     for (auto& [name, cd] : consts_) {
@@ -153,6 +170,10 @@ long long ConstEvaluator::evalConst(const std::string& name,
         state[name] = 2;
         return 0;
     }
+    // 求值前设置 Self 上下文（关联常量 → 所属类型名，顶层 const → 空），
+    // 求值后恢复；semaError 抛异常的路径不用恢复（整个编译随即中止）
+    std::string savedSelf = currentSelfType_;
+    currentSelfType_ = selfTypeOf_.count(name) ? selfTypeOf_[name] : "";
     state[name] = 1;              // 涂灰：开始求值
     std::vector<std::string> deps;
     collectDeps(def -> value, deps);
@@ -173,6 +194,8 @@ long long ConstEvaluator::evalConst(const std::string& name,
             semaError("无符号常量不能为负：" + name);
         }
         cache_[name] = v;
+        def -> constValue = v;          // 写回节点：关联常量经 implConsts 取值用
+        def -> hasConstValue = true;
         if (Symbol* s = symtab_.lookup(name)) {   // 写进符号表，BodyChecker 直接用
             s -> constValue = v;
             s -> hasConstValue = true;
@@ -188,6 +211,7 @@ long long ConstEvaluator::evalConst(const std::string& name,
         // 非整型常量（const B: bool = true; 等）：合法，不求值
     }
     state[name] = 2;              // 涂黑
+    currentSelfType_ = savedSelf; // 恢复 Self 上下文（必须在所有 return 之前）
     if (cache_.count(name) == 0) return 0;
     return cache_[name];
 }
@@ -208,7 +232,9 @@ bool ConstEvaluator::evalConstExpr(const ExprPtr& e, long long& out) {
         return false;
     }
     if (auto* p = dynamic_cast<PathExpr*>(e.get())) {
-        auto it = cache_.find(p -> name);
+        // 归一化后查 cache_：顶层 const 是裸名，关联常量是限定名 "Config::N"，
+        // impl 初值里的 "Self::X" 由 normalizePath 按 currentSelfType_ 改写
+        auto it = cache_.find(normalizePath(p -> name));
         if (it == cache_.end()) return false;
         out = it -> second;
         return true;
@@ -251,17 +277,16 @@ bool ConstEvaluator::evalConstExpr(const ExprPtr& e, long long& out) {
 
 // 收集表达式里引用的顶层 const 名（给 evalConst 建依赖图用）。
 // 各分支检查内容：
-//   PathExpr    —— 不含 "::"（排除 Point::new 这类路径）且符号表里确实是
-//                  Const 才记为依赖
+//   PathExpr    —— 先 normalizePath 归一化（"Self::X" → "Config::X"）；
+//                  归一化后的名字在 consts_ 里才算依赖（顶层裸名、
+//                  关联常量限定名都已被 evaluateAll 收进 consts_）
 //   BinaryExpr / UnaryExpr / CastExpr —— 递归子表达式
 //   Literal 及其余节点 —— 不引用任何名字，不贡献依赖
 void ConstEvaluator::collectDeps(const ExprPtr& e, std::vector<std::string>& out) {
     if (auto* p = dynamic_cast<const PathExpr*>(e.get())) {
-        if (p -> name.find("::") == std::string::npos) {
-            Symbol* s = symtab_.lookup(p -> name);
-            if (s && s -> kind == SymbolKind::Const) {
-                out.push_back(p -> name);
-            }
+        std::string q = normalizePath(p -> name);
+        if (consts_.find(q) != consts_.end()) {
+            out.push_back(q);
         }
         return;
     }

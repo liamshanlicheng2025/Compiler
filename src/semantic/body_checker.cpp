@@ -272,6 +272,14 @@ void BodyChecker::visit(PathExpr& node) {
             Type t; t.kind = TypeKind::Named; t.name = head;
             lastType_ = t;
         } else {
+            // struct 的关联常量（Config::NEG）：类型 = 常量的声明类型；
+            // 查不到（如关联函数 Point::new 当值用）则 Unknown 兜底
+            std::string tail = node.name.substr(node.name.find("::") + 2);
+            if (symtab_.implConsts.count(head)) {
+                for (auto& cd : symtab_.implConsts[head]) {
+                    if (cd -> name == tail) { lastType_ = cd->type; return; }
+                }
+            }
             lastType_ = Type{TypeKind::Unknown};
         }
         return;
@@ -639,13 +647,32 @@ void BodyChecker::visit(ArrayExpr& node) {
         //   2. 该 const 必须是 usize 类型（i32 常量也拒）
         //   3. 有编译期值则用它作数组长度（evaluateAll 已预求值）
         if (auto* p = dynamic_cast<PathExpr*>(node.repeatCount.get())) {
-            Symbol* s = symtab_.lookup(p -> name);
-            if (!s || s -> kind != SymbolKind::Const)
-                semaError("数组重复次数必须是常量：" + p -> name);
-            if (s -> type.kind != TypeKind::Usize)
-                semaError("数组重复次数必须是 usize 常量：" + p -> name
-                          + "，实际类型 " + s -> type.toString());
-            if (s -> hasConstValue) len = static_cast<size_t>(s -> constValue);
+            if (p -> name.find("::") != std::string::npos) {
+                // 关联常量（[1; Config::N]）：拆开查 implConsts，检查同上，
+                // 编译期值读 evaluateAll 写回 ConstDef 节点的 constValue
+                std::string head = p -> name.substr(0, p -> name.find("::"));
+                std::string tail = p -> name.substr(p -> name.find("::") + 2);
+                const ConstDef* cd = nullptr;
+                if (symtab_.implConsts.count(head)) {
+                    for (auto& c : symtab_.implConsts[head]) {
+                        if (c -> name == tail) { cd = c.get(); break; }
+                    }
+                }
+                if (!cd)
+                    semaError("数组重复次数必须是常量：" + p -> name);
+                if (cd -> type.kind != TypeKind::Usize)
+                    semaError("数组重复次数必须是 usize 常量：" + p -> name
+                              + "，实际类型 " + cd -> type.toString());
+                if (cd -> hasConstValue) len = static_cast<size_t>(cd -> constValue);
+            } else {
+                Symbol* s = symtab_.lookup(p -> name);
+                if (!s || s -> kind != SymbolKind::Const)
+                    semaError("数组重复次数必须是常量：" + p -> name);
+                if (s -> type.kind != TypeKind::Usize)
+                    semaError("数组重复次数必须是 usize 常量：" + p -> name
+                              + "，实际类型 " + s -> type.toString());
+                if (s -> hasConstValue) len = static_cast<size_t>(s -> constValue);
+            }
         }
         Type arr;
         arr.kind = TypeKind::Array;

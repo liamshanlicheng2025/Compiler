@@ -107,4 +107,13 @@ void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
         }
         existing.push_back(method);
     }
+    // 关联常量挂到 implConsts[类型名]，重复定义报错
+    auto& existingConsts = symtab_.implConsts[def->typeName];
+    for (auto& cd : def -> consts) {
+        for (auto& c : existingConsts) {
+            if (c -> name == cd -> name)
+                semaError("类型 " + def->typeName + " 的关联常量重复定义：" + cd->name);
+        }
+        existingConsts.push_back(cd);
+    }
 }

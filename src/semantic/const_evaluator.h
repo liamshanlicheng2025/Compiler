@@ -51,10 +51,20 @@ public:
 
 private:
     SymbolTable& symtab_;
-    // 已求出的常量值：名字 → 值（DFS 黑节点的结果，避免重复求值）
+    // 已求出的常量值：名字 → 值（DFS 黑节点的结果，避免重复求值）。
+    // 顶层 const 用裸名（"VALUE"），关联常量用限定名（"Config::N"）
     std::unordered_map<std::string, long long> cache_;
-    // 顶层 const 定义表：名字 → 定义节点
+    // const 定义表：键同 cache_（顶层裸名 / 关联常量限定名）
     std::unordered_map<std::string, std::shared_ptr<ConstDef>> consts_;
+    // 关联常量限定名 → 所属类型名（"Config::N" → "Config"），
+    // evalConst 据此设置 currentSelfType_
+    std::unordered_map<std::string, std::string> selfTypeOf_;
+    // 正在求值的关联常量所属类型（"Config"）；求顶层 const 时为空。
+    // 用于把初值里的 "Self::X" 归一化成 "Config::X"
+    std::string currentSelfType_;
+
+    // 路径名归一化（已实现）："Self::X" → "<currentSelfType_>::X"，其余原样返回
+    std::string normalizePath(const std::string& name) const;
 
     // ---- 以下三个待实现（逐行伪代码在 const_evaluator.cpp 对应函数体里）----
 
