@@ -1,0 +1,65 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install build deps
+        run: sudo apt-get update && sudo apt-get install -y uuid-dev
+
+      - name: Cache ANTLR 4.13.2 (tool jar + C++ runtime)
+        id: cache-antlr
+        uses: actions/cache@v4
+        with:
+          path: ~/antlr4
+          key: antlr4-4.13.2-v1
+
+      - name: Install ANTLR tool + build C++ runtime
+        if: steps.cache-antlr.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/antlr4
+          curl -L -o ~/antlr4/antlr4-complete.jar \
+            https://www.antlr4.org/download/antlr4-4.13.2-complete.jar
+          git clone --depth 1 --branch 4.13.2 https://github.com/antlr/antlr4.git /tmp/antlr4-src
+          cmake -S /tmp/antlr4-src/runtime/Cpp -B /tmp/antlr4-build \
+            -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/antlr4/runtime
+          cmake --build /tmp/antlr4-build -j"$(nproc)"
+          cmake --install /tmp/antlr4-build
+
+      - name: Build compiler
+        run: |
+          cmake -B build \
+            -DANTLR4_JAR=$HOME/antlr4/antlr4-complete.jar \
+            -DANTLR4_RUNTIME=$HOME/antlr4/runtime
+          cmake --build build -j"$(nproc)"
+
+      - name: Regression — semantic-1 / semantic-2 (expect 221/221, 50/50)
+        run: |
+          python3 scripts/regress_semantic.py | tee semantic-report.txt
+          grep -q "semantic-1: 221/221" semantic-report.txt
+          grep -q "semantic-2: 50/50" semantic-report.txt
+
+      - name: Regression — rx-compiler-testcases (baseline 154/239)
+        run: |
+          python3 scripts/regress_rx.py | tee rx-report.txt
+          total=$(grep '^TOTAL' rx-report.txt | grep -oE '[0-9]+/[0-9]+')
+          echo "rx total: $total"
+          [ "${total%/*}" -ge 154 ]
+
+      - name: Archive test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-reports
+          path: |
+            semantic-report.txt
+            rx-report.txt
