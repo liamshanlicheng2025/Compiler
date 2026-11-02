@@ -12,22 +12,26 @@
 #include "semantic/layout_checker.h"
 #include "semantic/body_checker.h"
 #include "semantic/semantic_error.h"
+#include "ir/ir_generator.h"
 
 int main(int argc, char** argv) {
-    // 用法: ./compiler <file.rs> [--tree] [--types]
-    //   --tree   只打印 ANTLR 解析树（扩展 AST 时的调试工具）
-    //   --types  语义检查后打印表达式类型旁表的条目数（调试用）
+    // 用法: ./compiler <file.rs> [--tree] [--types] [--emit-llvm]
+    //   --tree      只打印 ANTLR 解析树（扩展 AST 时的调试工具）
+    //   --types     语义检查后打印表达式类型旁表的条目数（调试用）
+    //   --emit-llvm 语义通过后把 LLVM IR 打到 stdout（替代 AST 打印）
     bool showParseTree = false;
     bool showExprTypes = false;
+    bool emitLLVM = false;
     std::string inputFile;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--tree") showParseTree = true;
         else if (arg == "--types") showExprTypes = true;
+        else if (arg == "--emit-llvm") emitLLVM = true;
         else inputFile = arg;
     }
     if (inputFile.empty()) {
-        std::cerr << "usage: " << argv[0] << " <file.rs> [--tree]" << std::endl;
+        std::cerr << "usage: " << argv[0] << " <file.rs> [--tree] [--types] [--emit-llvm]" << std::endl;
         return 1;
     }
     std::ifstream stream(inputFile);
@@ -60,6 +64,7 @@ int main(int argc, char** argv) {
     // CrateIndex（声明收集 + 签名 + 入口检查）→ ConstEvaluator（常量预求值
     // + 依赖环）→ LayoutChecker（struct 按值包含环）→ BodyChecker（函数体检查）
     SymbolTable symtab;
+    BodyChecker checker(symtab);   // exprTypes 旁表要交给 IR 阶段，声明在 try 外
     try {
         CrateIndex collector(symtab);
         collector.run(ast);          // 注册所有顶层名字 + 内建函数 + 入口检查
@@ -67,7 +72,6 @@ int main(int argc, char** argv) {
         constEval.evaluateAll(ast);  // 常量统一预求值 + 依赖环检查
         LayoutChecker layout;
         layout.run(ast);             // struct 按值包含查环（只看形状，不算大小）
-        BodyChecker checker(symtab);
         checker.run(ast);            // 名字解析 + 类型检查 + 控制流
         if (showExprTypes)           // 旁表填充情况（IR 阶段的输入）
             std::cout << "[types] exprTypes: " << checker.exprTypes().size()
@@ -77,6 +81,13 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    // ---- 阶段 4：IR 生成 ----
+    if (emitLLVM) {
+        IRGenerator irgen(symtab, checker.exprTypes());
+        std::cout << irgen.run(ast);
+        return 0;
+    }
+
     // 调试用：打印你的 AST，和预期结构对比
     if (ast) {
         ASTPrinter printer(std::cout);
@@ -84,9 +95,8 @@ int main(int argc, char** argv) {
     }
 
     // ---- 之后的阶段（先留位）----
-    // 阶段 4：IR 生成
-    // 阶段 5：RISC-V 代码生成
-    // 阶段 6：优化
+    // 阶段 5：RISC-V 代码生成（交给 clang 后端）
+    // 阶段 6：优化（交给 clang）
 
     return 0;
 }
