@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-repeated-deref-coercion-and-mutable-to-shared-coercion.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Repeated deref coercion and mutable-to-shared coercion.",
+    "io": [
+      {
+        "input": "acc-repeated-deref-coercion-and-mutable-to-shared-coercion.default.in",
+        "output": "acc-repeated-deref-coercion-and-mutable-to-shared-coercion.default.out"
+      }
+    ]
+  }
+]

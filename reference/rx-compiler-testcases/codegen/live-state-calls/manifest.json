@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-recursive-calls-preserve-32-runtime-values.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Thirty-two runtime scalar arguments remain live across recursive calls and wrapping reductions.",
+    "io": [
+      {
+        "input": "acc-recursive-calls-preserve-32-runtime-values.leaf.in",
+        "output": "acc-recursive-calls-preserve-32-runtime-values.leaf.out"
+      },
+      {
+        "input": "acc-recursive-calls-preserve-32-runtime-values.shallow.in",
+        "output": "acc-recursive-calls-preserve-32-runtime-values.shallow.out"
+      },
+      {
+        "input": "acc-recursive-calls-preserve-32-runtime-values.branched.in",
+        "output": "acc-recursive-calls-preserve-32-runtime-values.branched.out"
+      },
+      {
+        "input": "acc-recursive-calls-preserve-32-runtime-values.deep.in",
+        "output": "acc-recursive-calls-preserve-32-runtime-values.deep.out"
+      }
+    ]
+  }
+]

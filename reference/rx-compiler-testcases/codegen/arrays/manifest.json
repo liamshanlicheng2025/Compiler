@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-repeat-executes-once-copy-arrays-remain-independent-and-length-one-needs-no-copy.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Repeat executes once, Copy arrays remain independent, and length one needs no Copy.",
+    "io": [
+      {
+        "input": "acc-repeat-executes-once-copy-arrays-remain-independent-and-length-one-needs-no-copy.default.in",
+        "output": "acc-repeat-executes-once-copy-arrays-remain-independent-and-length-one-needs-no-copy.default.out"
+      }
+    ]
+  }
+]

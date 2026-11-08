@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-self-in-fields-and-recursive-derived-operations-over-vec-children.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Self in fields and recursive derived operations over Vec children.",
+    "io": [
+      {
+        "input": "acc-self-in-fields-and-recursive-derived-operations-over-vec-children.default.in",
+        "output": "acc-self-in-fields-and-recursive-derived-operations-over-vec-children.default.out"
+      }
+    ]
+  }
+]

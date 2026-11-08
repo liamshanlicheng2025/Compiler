@@ -1,0 +1,8 @@
+use rx::core::*;
+
+fn main() {
+    println_i32((2 + 3 * 4 - 5) << 1);
+    println_i32(20 / 3 / 2);
+    println_i32(10 - 3 - 2);
+    println_i32((5 as (usize) << 2u32) as i32);
+}

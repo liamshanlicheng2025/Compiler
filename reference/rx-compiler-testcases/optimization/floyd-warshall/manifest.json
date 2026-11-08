@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-floyd-warshall.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "All-pairs shortest paths with loop-carried memory dependencies and conditional updates.",
+    "io": [
+      {
+        "input": "acc-floyd-warshall.small.in",
+        "output": "acc-floyd-warshall.small.out"
+      },
+      {
+        "input": "acc-floyd-warshall.large.in",
+        "output": "acc-floyd-warshall.large.out"
+      },
+      {
+        "input": "acc-floyd-warshall.large-variant.in",
+        "output": "acc-floyd-warshall.large-variant.out"
+      }
+    ]
+  }
+]

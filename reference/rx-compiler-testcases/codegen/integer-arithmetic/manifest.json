@@ -1,0 +1,98 @@
+[
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on i32.",
+    "io": [
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.mixed.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.mixed.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.boundary.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.boundary.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.equal.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.equal.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.wrap.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-i32.wrap.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on u32.",
+    "io": [
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.mixed.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.mixed.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.boundary.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.boundary.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.equal.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.equal.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.wrap.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-u32.wrap.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on isize.",
+    "io": [
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.mixed.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.mixed.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.boundary.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.boundary.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.equal.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.equal.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.wrap.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-isize.wrap.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "All integer arithmetic, bit operations and comparisons on usize.",
+    "io": [
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.mixed.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.mixed.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.boundary.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.boundary.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.equal.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.equal.out"
+      },
+      {
+        "input": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.wrap.in",
+        "output": "acc-all-integer-arithmetic-bit-operations-and-comparisons-on-usize.wrap.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-integer-mixing.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Dependent integer mixing chains combine calls, wrapping multiplication, rotates and conditional updates.",
+    "io": [
+      {
+        "input": "acc-integer-mixing.small.in",
+        "output": "acc-integer-mixing.small.out"
+      },
+      {
+        "input": "acc-integer-mixing.large.in",
+        "output": "acc-integer-mixing.large.out"
+      },
+      {
+        "input": "acc-integer-mixing.large-variant.in",
+        "output": "acc-integer-mixing.large-variant.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-lifetimes-and-unused-valid-import-aliases-do-not-affect-rx-resolution.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Lifetimes and unused valid import aliases do not affect Rx resolution.",
+    "io": [
+      {
+        "input": "acc-lifetimes-and-unused-valid-import-aliases-do-not-affect-rx-resolution.default.in",
+        "output": "acc-lifetimes-and-unused-valid-import-aliases-do-not-affect-rx-resolution.default.out"
+      }
+    ]
+  }
+]

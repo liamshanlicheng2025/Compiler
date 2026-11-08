@@ -1,0 +1,48 @@
+use rx::core::*;
+
+#[derive(Clone, PartialEq, Eq)]
+struct Node {
+    value: i32,
+    children: Vec<Box<Node>>,
+}
+fn build(depth: i32, seed: i32) -> Node {
+    let mut n = Node {
+        value: seed % 997,
+        children: Vec::<Box<Node>>::new(),
+    };
+    if depth > 0 {
+        n.children
+            .push(Box::<Node>::new(build(depth - 1, seed * 2 + 1)));
+        n.children
+            .push(Box::<Node>::new(build(depth - 1, seed * 2 + 2)));
+    }
+    n
+}
+fn visit(n: &mut Node, salt: i32) -> i32 {
+    n.value = (n.value * 17 + salt) % 1009;
+    let mut sum = n.value;
+    let mut i = 0usize;
+    while i < n.children.len() {
+        sum += visit(&mut n.children[i], salt + 1);
+        i += 1usize;
+    }
+    sum
+}
+fn main() {
+    let depth = get_i32();
+    let rounds = get_i32();
+    let seed = get_i32();
+    let original = build(depth, seed);
+    let mut root = original.clone();
+    println_i32((root == original) as i32);
+    let mut i = 0;
+    let mut hash = 0i32;
+    while i < rounds {
+        hash = hash * 31 + visit(&mut root, i);
+        i += 1;
+    }
+    println_i32(hash);
+    println_i32(root.value);
+    println_i32(original.value);
+    println_i32((root == original) as i32);
+}

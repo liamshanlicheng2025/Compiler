@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-shared-reference-operands-produce-scalar-values.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Shared reference operands produce scalar values.",
+    "io": [
+      {
+        "input": "acc-shared-reference-operands-produce-scalar-values.default.in",
+        "output": "acc-shared-reference-operands-produce-scalar-values.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-reference-comparisons-inspect-targets-including-asymmetric-ordering-coercion.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Reference comparisons inspect targets, including asymmetric ordering coercion.",
+    "io": [
+      {
+        "input": "acc-reference-comparisons-inspect-targets-including-asymmetric-ordering-coercion.default.in",
+        "output": "acc-reference-comparisons-inspect-targets-including-asymmetric-ordering-coercion.default.out"
+      }
+    ]
+  }
+]

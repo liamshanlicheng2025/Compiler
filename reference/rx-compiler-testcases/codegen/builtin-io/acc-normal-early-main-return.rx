@@ -1,0 +1,11 @@
+use rx::core::*;
+
+fn unit_result() -> () {
+    ()
+}
+fn main() -> () {
+    unit_result();
+    println_i32(1);
+    return ();
+    println_i32(99);
+}

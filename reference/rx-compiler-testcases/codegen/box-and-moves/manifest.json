@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-owned-dereference-move-valid-partial-moves-and-reinitialization-after-move.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Owned dereference move, valid partial moves, and reinitialization after move.",
+    "io": [
+      {
+        "input": "acc-owned-dereference-move-valid-partial-moves-and-reinitialization-after-move.default.in",
+        "output": "acc-owned-dereference-move-valid-partial-moves-and-reinitialization-after-move.default.out"
+      }
+    ]
+  }
+]

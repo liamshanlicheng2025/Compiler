@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-knapsack.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Zero-one knapsack dynamic programming with descending updates and loop-carried dependencies.",
+    "io": [
+      {
+        "input": "acc-knapsack.small.in",
+        "output": "acc-knapsack.small.out"
+      },
+      {
+        "input": "acc-knapsack.large.in",
+        "output": "acc-knapsack.large.out"
+      },
+      {
+        "input": "acc-knapsack.large-variant.in",
+        "output": "acc-knapsack.large-variant.out"
+      }
+    ]
+  }
+]

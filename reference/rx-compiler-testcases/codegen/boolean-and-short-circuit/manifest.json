@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-observable-evaluation-of-each-logical-form.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Observable evaluation of each logical form.",
+    "io": [
+      {
+        "input": "acc-observable-evaluation-of-each-logical-form.default.in",
+        "output": "acc-observable-evaluation-of-each-logical-form.default.out"
+      }
+    ]
+  }
+]

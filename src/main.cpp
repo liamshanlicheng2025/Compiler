@@ -22,12 +22,14 @@ int main(int argc, char** argv) {
     bool showParseTree = false;
     bool showExprTypes = false;
     bool emitLLVM = false;
+    std::string outputFile;          // -o <file>：IR 输出到文件（评测约定）
     std::string inputFile;
     for (int i = 1; i < argc; ++i) {
         std::string arg = argv[i];
         if (arg == "--tree") showParseTree = true;
         else if (arg == "--types") showExprTypes = true;
         else if (arg == "--emit-llvm") emitLLVM = true;
+        else if (arg == "-o" && i + 1 < argc) outputFile = argv[++i];
         else inputFile = arg;
     }
     // 无文件参数时从 stdin 读（评测机约定：make run < test.rx > output.ll）
@@ -86,7 +88,13 @@ int main(int argc, char** argv) {
     // ---- 阶段 4：IR 生成 ----
     if (emitLLVM) {
         IRGenerator irgen(symtab, checker.exprTypes());
-        std::cout << irgen.run(ast);
+        std::string ir = irgen.run(ast);
+        if (outputFile.empty()) {
+            std::cout << ir;
+        } else {
+            std::ofstream out(outputFile);
+            out << ir;
+        }
         return 0;
     }
 

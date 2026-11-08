@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-graph-bfs.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Repeated breadth-first searches over an irregular graph with reusable queues and visited state.",
+    "io": [
+      {
+        "input": "acc-graph-bfs.small.in",
+        "output": "acc-graph-bfs.small.out"
+      },
+      {
+        "input": "acc-graph-bfs.large.in",
+        "output": "acc-graph-bfs.large.out"
+      },
+      {
+        "input": "acc-graph-bfs.large-variant.in",
+        "output": "acc-graph-bfs.large-variant.out"
+      }
+    ]
+  }
+]

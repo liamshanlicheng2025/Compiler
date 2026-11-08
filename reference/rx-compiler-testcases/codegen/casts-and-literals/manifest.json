@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-literal-boundaries-and-bool-casts.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Literal boundaries and bool casts.",
+    "io": [
+      {
+        "input": "acc-literal-boundaries-and-bool-casts.default.in",
+        "output": "acc-literal-boundaries-and-bool-casts.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-every-integer-cast-preserves-all-32-bits.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Every integer cast preserves all 32 bits.",
+    "io": [
+      {
+        "input": "acc-every-integer-cast-preserves-all-32-bits.default.in",
+        "output": "acc-every-integer-cast-preserves-all-32-bits.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-operator-precedence-and-left-association.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Operator precedence and left association.",
+    "io": [
+      {
+        "input": "acc-operator-precedence-and-left-association.default.in",
+        "output": "acc-operator-precedence-and-left-association.default.out"
+      }
+    ]
+  }
+]

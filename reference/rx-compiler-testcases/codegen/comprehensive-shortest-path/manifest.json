@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-nested-vector-dijkstra.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Dijkstra shortest paths checked by a Bellman-Ford oracle.",
+    "io": [
+      {
+        "input": "acc-nested-vector-dijkstra.single.in",
+        "output": "acc-nested-vector-dijkstra.single.out"
+      },
+      {
+        "input": "acc-nested-vector-dijkstra.unreachable.in",
+        "output": "acc-nested-vector-dijkstra.unreachable.out"
+      },
+      {
+        "input": "acc-nested-vector-dijkstra.relaxations.in",
+        "output": "acc-nested-vector-dijkstra.relaxations.out"
+      }
+    ]
+  }
+]

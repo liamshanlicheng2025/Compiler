@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-array-lengths-compare-by-value-associated-constants-do-not-reserve-unqualified-locals.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Array lengths compare by value; associated constants do not reserve unqualified locals.",
+    "io": [
+      {
+        "input": "acc-array-lengths-compare-by-value-associated-constants-do-not-reserve-unqualified-locals.default.in",
+        "output": "acc-array-lengths-compare-by-value-associated-constants-do-not-reserve-unqualified-locals.default.out"
+      }
+    ]
+  }
+]

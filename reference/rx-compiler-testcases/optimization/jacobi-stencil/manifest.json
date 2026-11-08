@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-jacobi-stencil.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Repeated integer five-point stencil with alternating owned buffers and unchanged boundaries.",
+    "io": [
+      {
+        "input": "acc-jacobi-stencil.small.in",
+        "output": "acc-jacobi-stencil.small.out"
+      },
+      {
+        "input": "acc-jacobi-stencil.large.in",
+        "output": "acc-jacobi-stencil.large.out"
+      },
+      {
+        "input": "acc-jacobi-stencil.large-variant.in",
+        "output": "acc-jacobi-stencil.large-variant.out"
+      }
+    ]
+  }
+]

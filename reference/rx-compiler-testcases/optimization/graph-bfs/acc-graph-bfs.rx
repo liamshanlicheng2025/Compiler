@@ -1,0 +1,63 @@
+use rx::core::*;
+
+fn next(state: &mut u32) -> u32 {
+    *state ^= *state << 13u32;
+    *state ^= *state >> 17u32;
+    *state ^= *state << 5u32;
+    *state
+}
+
+fn main() {
+    let n = get_i32() as usize;
+    let rounds = get_i32();
+    let mut seed = get_i32() as u32;
+    let mut edges = Vec::<usize>::new();
+    let mut distance = Vec::<i32>::new();
+    let mut queue = Vec::<usize>::new();
+    let mut i = 0usize;
+    while i < n {
+        let mut j = 0usize;
+        while j < 8usize {
+            edges.push((next(&mut seed) as usize) % n);
+            j += 1usize;
+        }
+        distance.push(-1);
+        queue.push(0);
+        i += 1usize;
+    }
+    let mut round = 0;
+    let mut hash = 2166136261u32;
+    while round < rounds {
+        i = 0usize;
+        while i < n {
+            distance[i] = -1;
+            i += 1usize;
+        }
+        let start = (next(&mut seed) as usize) % n;
+        let mut head = 0usize;
+        let mut tail = 1usize;
+        queue[0] = start;
+        distance[start] = 0;
+        while head < tail {
+            let from = queue[head];
+            head += 1usize;
+            let mut j = 0usize;
+            while j < 8usize {
+                let to = edges[from * 8usize + j];
+                if distance[to] < 0 {
+                    distance[to] = distance[from] + 1;
+                    queue[tail] = to;
+                    tail += 1usize;
+                }
+                j += 1usize;
+            }
+        }
+        i = 0usize;
+        while i < n {
+            hash = (hash ^ (distance[i] as u32)) * 16777619u32;
+            i += 1usize;
+        }
+        round += 1;
+    }
+    println_i32(hash as i32);
+}

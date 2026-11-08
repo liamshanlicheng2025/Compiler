@@ -1,0 +1,32 @@
+use rx::core::*;
+
+struct Holder<'a> {
+    value: &'a mut i32,
+}
+fn write(target: &mut i32) {
+    *target += 1;
+}
+fn array(values: [&mut i32; 1]) {
+    *values[0] = 2;
+    let target: &mut i32 = values[0];
+    *target += 1;
+    write(values[0]);
+}
+fn field(holder: Holder<'_>) {
+    *holder.value = 5;
+}
+fn boxed(value: Box<&mut i32>) {
+    **value = 6;
+    write(*value);
+}
+fn main() {
+    let mut a = 1;
+    array([&mut a]);
+    println_i32(a);
+    let mut b = 1;
+    field(Holder { value: &mut b });
+    println_i32(b);
+    let mut c = 1;
+    boxed(Box::<&mut i32>::new(&mut c));
+    println_i32(c);
+}

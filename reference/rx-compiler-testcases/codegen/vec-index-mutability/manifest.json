@@ -1,0 +1,98 @@
+[
+  {
+    "source": "acc-mutable-vector-supports-writes-and-mutable-borrows.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Mutable vectors permit assignment, compound assignment, explicit borrowing, annotated mutable-reference initializers, and &mut arguments.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-mutable-vector-supports-writes-and-mutable-borrows.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-immutable-binding-of-mutable-vector-reference.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "An immutable binding holding &mut Vec permits indexed writes, mutable arguments, and &mut method receivers.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-immutable-binding-of-mutable-vector-reference.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-shared-coercions-and-receivers-on-immutable-vector.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Shared coercions, explicit shared borrows, and shared method receivers need no mutable vector access.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-shared-coercions-and-receivers-on-immutable-vector.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-immutable-array-struct-and-box-preserve-stored-mutable-access.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Immutable owned arrays, structs, and Boxes permit mutation through their stored mutable references.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-immutable-array-struct-and-box-preserve-stored-mutable-access.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-mutable-reference-before-vector-indexing.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "A mutable reference reached through an immutable array or Box can supply access before indexing a vector.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-mutable-reference-before-vector-indexing.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-mutable-vector-supports-nested-projections.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Mutable vectors permit writes through nested struct fields, Boxes, arrays, and mutable vector references.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-mutable-vector-supports-nested-projections.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-moved-vectors-use-new-place-mutability.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Moving a vector to a mutable binding or temporary gives indexing the new place's mutability.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-moved-vectors-use-new-place-mutability.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-copied-and-cloned-values-have-independent-mutability.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Mutating a separate copy or explicit clone does not require mutable access to the original vector.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-copied-and-cloned-values-have-independent-mutability.default.out"
+      }
+    ]
+  }
+]

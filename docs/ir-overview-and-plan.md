@@ -109,3 +109,24 @@ IR-1 测试点就是语义阶段同一批程序（comprehensive、线段树合�
   为运行结果错（坏事）。所以每个里程碑要留几个"已知正确"的小程序和它们的预期输出。
 - **builtin 函数名**：IR-1 的 builtin.c 用的是 `printInt/printlnInt/getInt` 这些旧名
   （semantic 阶段我们注册过）。 lowering 时源语言的内建调用统一映射到这组名字。
+
+## 8. 后两个阶段（2026-11 官方仓库更新后确认）
+
+官方模板（ACMClassCourse-2025/rx-compiler）明确课程共四阶段：**Semantic →
+LLVM IR → Codegen → Optimization**。关键事实：
+
+- **统一接口是 config.mk 五条命令**：BUILD / SEMANTIC / IR / CODEGEN / RUN，
+  占位符 {source} {output} {runtime} {stdout} {profile}（我们的 `config.mk` 已按此配好）
+- **Codegen 是我们自己写后端**（.ll → RV32IM 汇编）——助教说的"结构化 IR"
+  就是为这个阶段准备的：自写 codegen 要遍历 IR 做指令选择和寄存器分配，
+  文本形式还得再 parse 一遍。当前过渡方案：CODEGEN 命令借道 clang
+- **模拟器是 REIMU**（RV32IM，ILP32 调用约定），直接提供 libc：
+  printf/scanf/malloc/free。我们的内建函数经 `runtime.c → runtime.s`
+  （预编译入库）桥接到 libc；BUILD 时拷到 {runtime} 参与链接
+- **runner 的 clang 参数**：`-S -x ir --target=riscv32-unknown-none-elf
+  -march=rv32im -mabi=ilp32 -O0 -mllvm -riscv-no-aliases`，我们的
+  target triple 和本地脚本已对齐这套参数
+- **Optimization 评分**：我们的程序运行周期数 vs Rust 基线的几何平均值，
+  >1.0 就是赢过 rustc——clang 的 mem2reg 已经替我们拿了不少分
+
+测试点已同步：`reference/rx-compiler-testcases/{codegen,optimization}`。

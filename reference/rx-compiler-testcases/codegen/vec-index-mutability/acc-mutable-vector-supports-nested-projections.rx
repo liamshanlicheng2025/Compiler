@@ -1,0 +1,40 @@
+use rx::core::*;
+
+struct Holder<'a> {
+    value: &'a mut i32,
+}
+fn fields(mut values: Vec<Holder<'_>>) {
+    *values[0].value = 2;
+}
+fn boxes(mut values: Vec<Box<&mut i32>>) {
+    **values[0] = 3;
+}
+fn arrays(mut values: Vec<[&mut i32; 1]>) {
+    *values[0][0] = 4;
+}
+fn vectors(mut values: Vec<&mut Vec<i32>>) {
+    values[0].push(5);
+}
+fn main() {
+    let mut a = 1;
+    let mut holders = Vec::<Holder<'_>>::new();
+    holders.push(Holder { value: &mut a });
+    fields(holders);
+    println_i32(a);
+    let mut b = 1;
+    let mut boxed = Vec::<Box<&mut i32>>::new();
+    boxed.push(Box::<&mut i32>::new(&mut b));
+    boxes(boxed);
+    println_i32(b);
+    let mut c = 1;
+    let mut nested = Vec::<[&mut i32; 1]>::new();
+    nested.push([&mut c]);
+    arrays(nested);
+    println_i32(c);
+    let mut inner = Vec::<i32>::new();
+    inner.push(1);
+    let mut outer = Vec::<&mut Vec<i32>>::new();
+    outer.push(&mut inner);
+    vectors(outer);
+    println_i32(inner[1]);
+}

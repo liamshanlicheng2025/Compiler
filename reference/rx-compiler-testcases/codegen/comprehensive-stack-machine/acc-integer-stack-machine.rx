@@ -1,0 +1,60 @@
+use rx::core::*;
+
+#[derive(Clone, Copy)]
+struct Instruction {
+    op: i32,
+    arg: i32,
+}
+struct Machine {
+    code: Vec<Instruction>,
+    stack: Vec<i32>,
+    pc: usize,
+}
+impl Machine {
+    fn execute(&mut self) -> i32 {
+        while self.pc < self.code.len() {
+            let instruction = self.code[self.pc];
+            self.pc += 1usize;
+            if instruction.op == 0 {
+                self.stack.push(instruction.arg);
+            } else if instruction.op == 1 {
+                let b = self.stack.remove(self.stack.len() - 1usize);
+                let a = self.stack.remove(self.stack.len() - 1usize);
+                self.stack.push(a + b);
+            } else if instruction.op == 2 {
+                let b = self.stack.remove(self.stack.len() - 1usize);
+                let a = self.stack.remove(self.stack.len() - 1usize);
+                self.stack.push(a * b);
+            } else if instruction.op == 3 {
+                let top = self.stack[self.stack.len() - 1usize];
+                self.stack.push(top);
+            } else if instruction.op == 4 {
+                let condition = self.stack.remove(self.stack.len() - 1usize);
+                if condition > 0 {
+                    self.pc = instruction.arg as usize;
+                }
+            } else {
+                break;
+            }
+        }
+        self.stack[self.stack.len() - 1usize]
+    }
+}
+fn main() {
+    let n = get_i32() as usize;
+    let mut m = Machine {
+        code: Vec::<Instruction>::new(),
+        stack: Vec::<i32>::new(),
+        pc: 0,
+    };
+    let mut i = 0usize;
+    while i < n {
+        let op = get_i32();
+        let arg = get_i32();
+        m.code.push(Instruction { op: op, arg: arg });
+        i += 1usize;
+    }
+    println_i32(m.execute());
+    println_i32(m.pc as i32);
+    println_i32(m.stack.len() as i32);
+}

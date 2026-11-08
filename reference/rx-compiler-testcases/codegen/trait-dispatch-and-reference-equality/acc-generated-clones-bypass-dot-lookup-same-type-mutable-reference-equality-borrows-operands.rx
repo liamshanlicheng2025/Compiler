@@ -1,0 +1,34 @@
+use rx::core::*;
+
+#[derive(Clone, PartialEq, Eq)]
+struct Inner {
+    value: i32,
+}
+impl Inner {
+    fn clone(&self) -> i32 {
+        self.value + 100
+    }
+}
+#[derive(Clone, PartialEq, Eq)]
+struct Outer {
+    inner: Inner,
+    items: [i32; 3],
+}
+fn main() {
+    let a = Outer {
+        inner: Inner { value: 7 },
+        items: [1, 2, 3],
+    };
+    let b = Outer::clone(&a);
+    println_i32((a == b) as i32);
+    println_i32(Inner::clone(&a.inner));
+    println_i32(b.inner.value);
+    let mut x = 9;
+    let mut y = 9;
+    let p = &mut x;
+    let q = &mut y;
+    println_i32((p == q) as i32);
+    *p = 11;
+    println_i32((p != q) as i32);
+    println_i32(*q);
+}

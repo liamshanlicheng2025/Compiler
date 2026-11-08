@@ -1,0 +1,8 @@
+use rx::core::*;
+
+fn main() {
+    let a = get_i32() as u32;
+    let b = get_i32();
+    println_i32((a << b) as i32);
+    println_i32((a >> b) as i32);
+}

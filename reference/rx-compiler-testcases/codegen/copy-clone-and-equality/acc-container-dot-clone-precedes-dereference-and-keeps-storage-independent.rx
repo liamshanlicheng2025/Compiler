@@ -1,0 +1,36 @@
+use rx::core::*;
+
+fn main() {
+    let original = Box::<i32>::new(7);
+    let mut copied: Box<i32> = original.clone();
+    *copied = 11;
+    println_i32(*original);
+    println_i32(*copied);
+    let view = &original;
+    let mut via_reference: Box<i32> = view.clone();
+    *via_reference = 13;
+    println_i32(*original);
+    println_i32(*via_reference);
+
+    let mut values = Vec::<Box<i32>>::new();
+    values.push(original);
+    values.push(Box::<i32>::new(17));
+    let mut copy: Vec<Box<i32>> = values.clone();
+    *copy[0] = 19;
+    copy.push(Box::<i32>::new(23));
+    println_i32(*values[0]);
+    println_i32(*copy[0]);
+    println_i32(values.len() as i32);
+    println_i32(copy.len() as i32);
+    let shared = &values;
+    let mut from_reference: Vec<Box<i32>> = shared.clone();
+    *from_reference[1] = 29;
+    println_i32(*values[1]);
+    println_i32(*from_reference[1]);
+
+    let nested = Box::<Box<i32>>::new(Box::<i32>::new(31));
+    let mut nested_copy: Box<Box<i32>> = nested.clone();
+    **nested_copy = 37;
+    println_i32(**nested);
+    println_i32(**nested_copy);
+}

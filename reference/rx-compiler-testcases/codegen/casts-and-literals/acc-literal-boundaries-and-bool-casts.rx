@@ -1,0 +1,13 @@
+use rx::core::*;
+
+fn main() {
+    let a = -2147483648i32;
+    let b = -(2147483648isize);
+    println_i32(a);
+    println_i32(b as i32);
+    println_i32(0xff_ffu32 as i32);
+    println_i32(0o123);
+    println_i32(0b1010_0101);
+    println_i32(true as i32);
+    println_i32(false as usize as i32);
+}

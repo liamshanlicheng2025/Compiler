@@ -1,0 +1,18 @@
+[
+  {
+    "source": "acc-large-frame-live-values.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "A 16 KiB local array and 192 named live scalar values.",
+    "io": [
+      {
+        "input": "acc-large-frame-live-values.long-branch.in",
+        "output": "acc-large-frame-live-values.long-branch.out"
+      },
+      {
+        "input": "acc-large-frame-live-values.skip-region.in",
+        "output": "acc-large-frame-live-values.skip-region.out"
+      }
+    ]
+  }
+]

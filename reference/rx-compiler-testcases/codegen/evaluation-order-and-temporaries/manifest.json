@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-ordinary-assignment-is-right-first-compound-operand-relative-order-is-not-tested.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Ordinary assignment is right-first; compound operand relative order is not tested.",
+    "io": [
+      {
+        "input": "acc-ordinary-assignment-is-right-first-compound-operand-relative-order-is-not-tested.default.in",
+        "output": "acc-ordinary-assignment-is-right-first-compound-operand-relative-order-is-not-tested.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-mutable-container-temporaries-and-extended-aggregate-borrows.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Mutable Vec and array temporaries evaluate once; returned array and struct storage stays live across statements.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-mutable-container-temporaries-and-extended-aggregate-borrows.default.out"
+      }
+    ]
+  }
+]

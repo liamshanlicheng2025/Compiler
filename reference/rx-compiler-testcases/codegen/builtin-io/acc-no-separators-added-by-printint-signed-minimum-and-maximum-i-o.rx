@@ -1,0 +1,10 @@
+use rx::core::*;
+
+fn main() {
+    let a = get_i32();
+    let b = get_i32();
+    let c = get_i32();
+    print_i32(a);
+    print_i32(b);
+    println_i32(c);
+}

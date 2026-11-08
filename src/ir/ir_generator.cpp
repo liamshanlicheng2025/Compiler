@@ -37,7 +37,7 @@ std::string IRGenerator::evalAddr(const ExprPtr& e) {
 // ============================================================
 
 void IRGenerator::visit(Crate& node) {
-    ir_.raw("target triple = \"riscv32-unknown-unknown-elf\"");
+    ir_.raw("target triple = \"riscv32-unknown-none-elf\"");
     ir_.blankLine();
     // 内建函数声明（builtin.c 提供实现；declare 了不用无害）
     ir_.raw("declare void @printInt(i32)");

@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-matrix-multiply.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Dense integer matrix multiplication with strided loads and complete-result checksum.",
+    "io": [
+      {
+        "input": "acc-matrix-multiply.small.in",
+        "output": "acc-matrix-multiply.small.out"
+      },
+      {
+        "input": "acc-matrix-multiply.large.in",
+        "output": "acc-matrix-multiply.large.out"
+      },
+      {
+        "input": "acc-matrix-multiply.large-variant.in",
+        "output": "acc-matrix-multiply.large-variant.out"
+      }
+    ]
+  }
+]

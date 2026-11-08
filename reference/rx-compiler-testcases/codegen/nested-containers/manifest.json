@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-no-clone-dot-call-has-competing-candidates.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "No clone dot call has competing candidates.",
+    "io": [
+      {
+        "input": "acc-no-clone-dot-call-has-competing-candidates.default.in",
+        "output": "acc-no-clone-dot-call-has-competing-candidates.default.out"
+      }
+    ]
+  }
+]

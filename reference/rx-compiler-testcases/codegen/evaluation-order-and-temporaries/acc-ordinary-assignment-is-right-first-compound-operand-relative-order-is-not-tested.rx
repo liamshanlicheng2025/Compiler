@@ -1,0 +1,45 @@
+use rx::core::*;
+
+struct S {
+    x: i32,
+}
+impl S {
+    fn add(&mut self, n: i32) -> i32 {
+        self.x += n;
+        self.x
+    }
+}
+fn mark(n: i32) -> i32 {
+    println_i32(n);
+    n
+}
+fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+fn dest(p: &mut i32) -> &mut i32 {
+    println_i32(20);
+    p
+}
+fn arr() -> [i32; 2] {
+    println_i32(30);
+    [8, 9]
+}
+fn idx() -> usize {
+    println_i32(31);
+    1
+}
+fn make() -> S {
+    println_i32(40);
+    S { x: 5 }
+}
+fn main() {
+    println_i32(add(mark(1), mark(2)));
+    println_i32(mark(3) * mark(4));
+    let mut x = 0;
+    *dest(&mut x) = mark(10);
+    println_i32(x);
+    println_i32(arr()[idx()]);
+    make().x = mark(41);
+    println_i32(make().add(2));
+    println_i32(*&make().x);
+}

@@ -1,0 +1,11 @@
+use rx::core::*;
+
+fn main() {
+    let depth = get_i32();
+    println_i32(depth);
+    if depth > 0 {
+        main();
+        println_i32(depth + 100);
+    }
+    println_i32(depth + 200);
+}

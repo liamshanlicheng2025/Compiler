@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-shadowing-creates-new-storage-while-prior-references-remain-valid.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Shadowing creates new storage while prior references remain valid.",
+    "io": [
+      {
+        "input": "acc-shadowing-creates-new-storage-while-prior-references-remain-valid.default.in",
+        "output": "acc-shadowing-creates-new-storage-while-prior-references-remain-valid.default.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+use rx::core::*;
+
+fn update(values: Vec<&mut i32>) {
+    let mut moved = values;
+    *moved[0] = 2;
+    let immutable = moved;
+    *({ immutable })[0] = 3;
+}
+fn boxed(mut values: Box<Vec<&mut i32>>) {
+    *values[0] = 4;
+}
+fn main() {
+    let mut a = 1;
+    let mut first = Vec::<&mut i32>::new();
+    first.push(&mut a);
+    update(first);
+    println_i32(a);
+    let mut b = 1;
+    let mut second = Vec::<&mut i32>::new();
+    second.push(&mut b);
+    boxed(Box::<Vec<&mut i32>>::new(second));
+    println_i32(b);
+}

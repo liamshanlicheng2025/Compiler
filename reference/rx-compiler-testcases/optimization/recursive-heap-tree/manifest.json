@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-recursive-heap-tree.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Deep cloning and repeated recursive mutation of a finite binary tree with nested owned containers.",
+    "io": [
+      {
+        "input": "acc-recursive-heap-tree.small.in",
+        "output": "acc-recursive-heap-tree.small.out"
+      },
+      {
+        "input": "acc-recursive-heap-tree.large.in",
+        "output": "acc-recursive-heap-tree.large.out"
+      },
+      {
+        "input": "acc-recursive-heap-tree.large-variant.in",
+        "output": "acc-recursive-heap-tree.large-variant.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,6251 @@
+use rx::core::*;
+
+fn step_0(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 1u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 35u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 69u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 103u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 137u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 171u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 205u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 239u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 273u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 307u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 341u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 375u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    x
+}
+
+fn step_1(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 263u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 297u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 331u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 365u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 399u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 433u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 467u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 501u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 535u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 569u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 603u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 637u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    x
+}
+
+fn step_2(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 525u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 559u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 593u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 627u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 661u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 695u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 729u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 763u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 797u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 831u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 865u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 899u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    x
+}
+
+fn step_3(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 787u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 821u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 855u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 889u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 923u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 957u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 991u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 1025u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 1059u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 1093u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 1127u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 1161u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    x
+}
+
+fn step_4(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 1049u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 1083u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 1117u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 1151u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 1185u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 1219u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 1253u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 1287u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 1321u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 1355u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 1389u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 1423u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    x
+}
+
+fn step_5(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 1311u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 1345u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 1379u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 1413u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 1447u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 1481u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 1515u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 1549u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 1583u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 1617u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 1651u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 1685u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    x
+}
+
+fn step_6(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 1573u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 1607u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 1641u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 1675u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 1709u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 1743u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 1777u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 1811u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 1845u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 1879u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 1913u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 1947u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    x
+}
+
+fn step_7(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 1835u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 1869u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 1903u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 1937u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 1971u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 2005u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 2039u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 2073u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 2107u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 2141u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 2175u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 2209u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    x
+}
+
+fn step_8(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 2097u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 2131u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 2165u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 2199u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 2233u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 2267u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 2301u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 2335u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 2369u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 2403u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 2437u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 2471u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    x
+}
+
+fn step_9(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 2359u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 2393u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 2427u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 2461u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 2495u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 2529u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 2563u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 2597u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 2631u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 2665u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 2699u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 2733u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    x
+}
+
+fn step_10(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 2621u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 2655u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 2689u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 2723u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 2757u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 2791u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 2825u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 2859u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 2893u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 2927u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 2961u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 2995u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    x
+}
+
+fn step_11(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 2883u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 2917u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 2951u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 2985u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 3019u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 3053u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 3087u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 3121u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 3155u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 3189u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 3223u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 3257u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    x
+}
+
+fn step_12(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 3145u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 3179u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 3213u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 3247u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 3281u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 3315u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 3349u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 3383u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 3417u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 3451u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 3485u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 3519u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    x
+}
+
+fn step_13(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 3407u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 3441u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 3475u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 3509u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 3543u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 3577u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 3611u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 3645u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 3679u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 3713u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 3747u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 3781u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    x
+}
+
+fn step_14(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 3669u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 3703u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 3737u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 3771u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 3805u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 3839u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 3873u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 3907u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 3941u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 3975u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 4009u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 4043u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    x
+}
+
+fn step_15(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 3931u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 3965u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 3999u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 4033u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 4067u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 4101u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 4135u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 4169u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 4203u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 4237u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 4271u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 4305u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    x
+}
+
+fn step_16(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 4193u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 4227u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 4261u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 4295u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 4329u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 4363u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 4397u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 4431u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 4465u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 4499u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 4533u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 4567u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    x
+}
+
+fn step_17(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 4455u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 4489u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 4523u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 4557u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 4591u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 4625u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 4659u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 4693u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 4727u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 4761u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 4795u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 4829u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    x
+}
+
+fn step_18(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 4717u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 4751u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 4785u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 4819u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 4853u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 4887u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 4921u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 4955u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 4989u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 5023u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 5057u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 5091u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    x
+}
+
+fn step_19(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 4979u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 5013u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 5047u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 5081u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 5115u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 5149u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 5183u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 5217u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 5251u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 5285u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 5319u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 5353u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    x
+}
+
+fn step_20(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 5241u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 5275u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 5309u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 5343u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 5377u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 5411u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 5445u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 5479u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 5513u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 5547u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 5581u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 5615u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    x
+}
+
+fn step_21(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 5503u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 5537u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 5571u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 5605u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 5639u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 5673u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 5707u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 5741u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 5775u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 5809u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 5843u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 5877u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    x
+}
+
+fn step_22(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 5765u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 5799u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 5833u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 5867u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 5901u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 5935u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 5969u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 6003u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 6037u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 6071u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 6105u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 6139u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    x
+}
+
+fn step_23(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 6027u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 6061u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 6095u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 6129u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 6163u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 6197u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 6231u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 6265u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 6299u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 6333u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 6367u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 6401u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    x
+}
+
+fn step_24(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 6289u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 6323u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 6357u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 6391u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 6425u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 6459u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 6493u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 6527u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 6561u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 6595u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 6629u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 6663u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    x
+}
+
+fn step_25(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 6551u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 6585u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 6619u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 6653u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 6687u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 6721u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 6755u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 6789u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 6823u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 6857u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 6891u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 6925u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    x
+}
+
+fn step_26(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 6813u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 6847u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 6881u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 6915u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 6949u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 6983u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 7017u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 7051u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 7085u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 7119u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 7153u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 7187u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    x
+}
+
+fn step_27(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 7075u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 7109u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 7143u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 7177u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 7211u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 7245u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 7279u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 7313u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 7347u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 7381u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 7415u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 7449u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    x
+}
+
+fn step_28(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 7337u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 7371u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 7405u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 7439u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 7473u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 7507u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 7541u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 7575u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 7609u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 7643u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 7677u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 7711u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    x
+}
+
+fn step_29(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 7599u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 7633u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 7667u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 7701u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 7735u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 7769u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 7803u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 7837u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 7871u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 7905u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 7939u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 7973u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    x
+}
+
+fn step_30(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 7861u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 7895u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 7929u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 7963u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 7997u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 8031u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 8065u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 8099u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 8133u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 8167u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 8201u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 8235u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    x
+}
+
+fn step_31(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 8123u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 8157u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 8191u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 8225u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 8259u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 8293u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 8327u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 8361u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 8395u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 8429u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 8463u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 8497u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    x
+}
+
+fn step_32(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 8385u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 8419u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 8453u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 8487u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 8521u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 8555u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 8589u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 8623u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 8657u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 8691u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 8725u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 8759u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    x
+}
+
+fn step_33(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 8647u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 8681u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 8715u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 8749u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 8783u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 8817u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 8851u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 8885u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 8919u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 8953u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 8987u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 9021u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    x
+}
+
+fn step_34(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 8909u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 8943u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 8977u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 9011u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 9045u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 9079u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 9113u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 9147u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 9181u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 9215u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 9249u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 9283u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    x
+}
+
+fn step_35(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 9171u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 9205u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 9239u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 9273u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 9307u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 9341u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 9375u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 9409u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 9443u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 9477u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 9511u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 9545u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    x
+}
+
+fn step_36(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 9433u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 9467u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 9501u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 9535u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 9569u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 9603u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 9637u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 9671u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 9705u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 9739u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 9773u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 9807u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    x
+}
+
+fn step_37(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 9695u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 9729u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 9763u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 9797u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 9831u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 9865u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 9899u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 9933u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 9967u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 10001u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 10035u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 10069u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    x
+}
+
+fn step_38(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 9957u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 9991u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 10025u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 10059u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 10093u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 10127u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 10161u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 10195u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 10229u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 10263u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 10297u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 10331u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    x
+}
+
+fn step_39(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 10219u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 10253u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 10287u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 10321u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 10355u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 10389u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 10423u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 10457u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 10491u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 10525u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 10559u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 10593u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    x
+}
+
+fn step_40(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 10481u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 10515u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 10549u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 10583u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 10617u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 10651u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 10685u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 10719u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 10753u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 10787u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 10821u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 10855u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    x
+}
+
+fn step_41(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 10743u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 10777u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 10811u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 10845u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 10879u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 10913u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 10947u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 10981u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 11015u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 11049u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 11083u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 11117u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    x
+}
+
+fn step_42(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 11005u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 11039u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 11073u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 11107u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 11141u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 11175u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 11209u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 11243u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 11277u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 11311u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 11345u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 11379u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    x
+}
+
+fn step_43(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 11267u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 11301u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 11335u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 11369u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 11403u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 11437u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 11471u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 11505u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 11539u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 11573u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 11607u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 11641u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    x
+}
+
+fn step_44(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 11529u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 11563u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 11597u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 11631u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 11665u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 11699u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 11733u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 11767u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 11801u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 11835u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 11869u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 11903u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    x
+}
+
+fn step_45(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 11791u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 11825u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 11859u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 11893u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 11927u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 11961u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 11995u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 12029u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 12063u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 12097u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 12131u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 12165u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    x
+}
+
+fn step_46(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 12053u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 12087u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 12121u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 12155u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 12189u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 12223u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 12257u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 12291u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 12325u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 12359u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 12393u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 12427u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    x
+}
+
+fn step_47(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 12315u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 12349u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 12383u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 12417u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 12451u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 12485u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 12519u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 12553u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 12587u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 12621u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 12655u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 12689u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    x
+}
+
+fn step_48(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 12577u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 12611u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 12645u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 12679u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 12713u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 12747u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 12781u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 12815u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 12849u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 12883u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 12917u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 12951u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    x
+}
+
+fn step_49(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 12839u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 12873u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 12907u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 12941u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 12975u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 13009u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 13043u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 13077u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 13111u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 13145u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 13179u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 13213u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    x
+}
+
+fn step_50(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 13101u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 13135u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 13169u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 13203u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 13237u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 13271u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 13305u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 13339u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 13373u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 13407u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 13441u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 13475u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    x
+}
+
+fn step_51(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 13363u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 13397u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 13431u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 13465u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 13499u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 13533u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 13567u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 13601u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 13635u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 13669u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 13703u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 13737u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    x
+}
+
+fn step_52(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 13625u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 13659u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 13693u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 13727u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 13761u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 13795u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 13829u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 13863u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 13897u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 13931u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 13965u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 13999u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    x
+}
+
+fn step_53(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 13887u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 13921u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 13955u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 13989u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 14023u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 14057u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 14091u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 14125u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 14159u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 14193u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 14227u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 14261u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    x
+}
+
+fn step_54(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 14149u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 14183u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 14217u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 14251u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 14285u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 14319u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 14353u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 14387u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 14421u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 14455u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 14489u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 14523u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    x
+}
+
+fn step_55(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 14411u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 14445u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 14479u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 14513u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 14547u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 14581u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 14615u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 14649u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 14683u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 14717u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 14751u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 14785u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    x
+}
+
+fn step_56(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 14673u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 14707u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 14741u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 14775u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 14809u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 14843u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 14877u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 14911u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 14945u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 14979u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 15013u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 15047u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    x
+}
+
+fn step_57(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 14935u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 14969u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 15003u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 15037u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 15071u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 15105u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 15139u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 15173u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 15207u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 15241u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 15275u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 15309u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    x
+}
+
+fn step_58(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 15197u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 15231u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 15265u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 15299u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 15333u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 15367u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 15401u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 15435u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 15469u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 15503u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 15537u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 15571u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    x
+}
+
+fn step_59(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 15459u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 15493u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 15527u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 15561u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 15595u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 15629u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 15663u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 15697u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 15731u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 15765u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 15799u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 15833u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    x
+}
+
+fn step_60(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 15721u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 15755u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 15789u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 15823u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 15857u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 15891u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 15925u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 15959u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 15993u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 16027u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 16061u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 16095u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    x
+}
+
+fn step_61(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 15983u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 16017u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 16051u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 16085u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 16119u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 16153u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 16187u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 16221u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 16255u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 16289u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 16323u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 16357u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    x
+}
+
+fn step_62(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 16245u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 16279u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 16313u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 16347u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 16381u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 16415u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 16449u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 16483u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 16517u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 16551u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 16585u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 16619u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    x
+}
+
+fn step_63(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 16507u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 16541u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 16575u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 16609u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 16643u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 16677u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 16711u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 16745u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 16779u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 16813u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 16847u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 16881u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    x
+}
+
+fn step_64(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 16769u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 16803u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 16837u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 16871u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 16905u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 16939u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 16973u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 17007u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 17041u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 17075u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 17109u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 17143u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    x
+}
+
+fn step_65(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 17031u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 17065u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 17099u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 17133u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 17167u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 17201u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 17235u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 17269u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 17303u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 17337u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 17371u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 17405u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    x
+}
+
+fn step_66(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 17293u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 17327u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 17361u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 17395u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 17429u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 17463u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 17497u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 17531u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 17565u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 17599u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 17633u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 17667u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    x
+}
+
+fn step_67(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 17555u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 17589u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 17623u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 17657u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 17691u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 17725u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 17759u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 17793u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 17827u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 17861u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 17895u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 17929u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    x
+}
+
+fn step_68(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 17817u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 17851u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 17885u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 17919u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 17953u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 17987u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 18021u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 18055u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 18089u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 18123u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 18157u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 18191u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    x
+}
+
+fn step_69(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 18079u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 18113u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 18147u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 18181u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 18215u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 18249u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 18283u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 18317u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 18351u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 18385u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 18419u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 18453u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    x
+}
+
+fn step_70(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 18341u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 18375u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 18409u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 18443u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 18477u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 18511u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 18545u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 18579u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 18613u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 18647u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 18681u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 18715u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    x
+}
+
+fn step_71(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 18603u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 18637u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 18671u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 18705u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 18739u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 18773u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 18807u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 18841u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 18875u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 18909u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 18943u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 18977u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    x
+}
+
+fn step_72(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 18865u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 18899u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 18933u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 18967u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 19001u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 19035u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 19069u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 19103u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 19137u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 19171u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 19205u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 19239u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    x
+}
+
+fn step_73(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 19127u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 19161u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 19195u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 19229u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 19263u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 19297u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 19331u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 19365u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 19399u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 19433u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 19467u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 19501u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    x
+}
+
+fn step_74(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 19389u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 19423u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 19457u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 19491u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 19525u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 19559u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 19593u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 19627u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 19661u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 19695u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 19729u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 19763u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    x
+}
+
+fn step_75(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 19651u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 19685u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 19719u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 19753u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 19787u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 19821u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 19855u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 19889u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 19923u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 19957u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 19991u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 20025u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    x
+}
+
+fn step_76(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 19913u32 + key;
+    } else {
+        x = (x >> 15u32) ^ (x << 17u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 19947u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 19981u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 20015u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 20049u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 20083u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 20117u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 20151u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 20185u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 20219u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 20253u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 20287u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    x
+}
+
+fn step_77(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 20175u32 + key;
+    } else {
+        x = (x >> 16u32) ^ (x << 16u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 20209u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 20243u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 20277u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 20311u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 20345u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 20379u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 20413u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 20447u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 20481u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 20515u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 20549u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    x
+}
+
+fn step_78(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 20437u32 + key;
+    } else {
+        x = (x >> 17u32) ^ (x << 15u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 20471u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 20505u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 20539u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 20573u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 20607u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 20641u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 20675u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 20709u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 20743u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 20777u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 20811u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    x
+}
+
+fn step_79(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 20699u32 + key;
+    } else {
+        x = (x >> 18u32) ^ (x << 14u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 20733u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 20767u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 20801u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 20835u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 20869u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 20903u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 20937u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 20971u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 21005u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 21039u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 21073u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    x
+}
+
+fn step_80(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 20961u32 + key;
+    } else {
+        x = (x >> 19u32) ^ (x << 13u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 20995u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 21029u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 21063u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 21097u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 21131u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 21165u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 21199u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 21233u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 21267u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 21301u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 21335u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    x
+}
+
+fn step_81(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 21223u32 + key;
+    } else {
+        x = (x >> 20u32) ^ (x << 12u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 21257u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 21291u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 21325u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 21359u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 21393u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 21427u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 21461u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 21495u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 21529u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 21563u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 21597u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    x
+}
+
+fn step_82(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 21485u32 + key;
+    } else {
+        x = (x >> 21u32) ^ (x << 11u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 21519u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 21553u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 21587u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 21621u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 21655u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 21689u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 21723u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 21757u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 21791u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 21825u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 21859u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    x
+}
+
+fn step_83(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 21747u32 + key;
+    } else {
+        x = (x >> 22u32) ^ (x << 10u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 21781u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 21815u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 21849u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 21883u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 21917u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 21951u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 21985u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 22019u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 22053u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 22087u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 22121u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    x
+}
+
+fn step_84(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 22009u32 + key;
+    } else {
+        x = (x >> 23u32) ^ (x << 9u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 22043u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 22077u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 22111u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 22145u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 22179u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 22213u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 22247u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 22281u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 22315u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 22349u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 22383u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    x
+}
+
+fn step_85(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 22271u32 + key;
+    } else {
+        x = (x >> 24u32) ^ (x << 8u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 22305u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 22339u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 22373u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 22407u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 22441u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 22475u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 22509u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 22543u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 22577u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 22611u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 22645u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    x
+}
+
+fn step_86(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 22533u32 + key;
+    } else {
+        x = (x >> 25u32) ^ (x << 7u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 22567u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 22601u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 22635u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 22669u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 22703u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 22737u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 22771u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 22805u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 22839u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 22873u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 22907u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    x
+}
+
+fn step_87(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 22795u32 + key;
+    } else {
+        x = (x >> 26u32) ^ (x << 6u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 22829u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 22863u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 22897u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 22931u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 22965u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 22999u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 23033u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 23067u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 23101u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 23135u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 23169u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    x
+}
+
+fn step_88(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 23057u32 + key;
+    } else {
+        x = (x >> 27u32) ^ (x << 5u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 23091u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 23125u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 23159u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 23193u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 23227u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 23261u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 23295u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 23329u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 23363u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 23397u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 23431u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    x
+}
+
+fn step_89(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 23319u32 + key;
+    } else {
+        x = (x >> 28u32) ^ (x << 4u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 23353u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 23387u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 23421u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 23455u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 23489u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 23523u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 23557u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 23591u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 23625u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 23659u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 23693u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    x
+}
+
+fn step_90(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 23581u32 + key;
+    } else {
+        x = (x >> 29u32) ^ (x << 3u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 23615u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 23649u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 23683u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 23717u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 23751u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 23785u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 23819u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 23853u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 23887u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 23921u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 23955u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    x
+}
+
+fn step_91(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 23843u32 + key;
+    } else {
+        x = (x >> 30u32) ^ (x << 2u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 23877u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 23911u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 23945u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 23979u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 24013u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 24047u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 24081u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 24115u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 24149u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 24183u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 24217u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    x
+}
+
+fn step_92(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 24105u32 + key;
+    } else {
+        x = (x >> 31u32) ^ (x << 1u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 24139u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 24173u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 24207u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 24241u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 24275u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 24309u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 24343u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 24377u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 24411u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 24445u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 24479u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    x
+}
+
+fn step_93(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 24367u32 + key;
+    } else {
+        x = (x >> 1u32) ^ (x << 31u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 24401u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 24435u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 24469u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 24503u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 24537u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 24571u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 24605u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 24639u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 24673u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 24707u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 24741u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    x
+}
+
+fn step_94(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 24629u32 + key;
+    } else {
+        x = (x >> 2u32) ^ (x << 30u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 24663u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 24697u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 24731u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 24765u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 24799u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 24833u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 24867u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 24901u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 24935u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 24969u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 25003u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    x
+}
+
+fn step_95(mut x: u32, key: u32) -> u32 {
+    if (x & 1u32) == 0u32 {
+        x = x * 24891u32 + key;
+    } else {
+        x = (x >> 3u32) ^ (x << 29u32) ^ key;
+    }
+    if (x & 2u32) == 0u32 {
+        x = x * 24925u32 + key;
+    } else {
+        x = (x >> 4u32) ^ (x << 28u32) ^ key;
+    }
+    if (x & 4u32) == 0u32 {
+        x = x * 24959u32 + key;
+    } else {
+        x = (x >> 5u32) ^ (x << 27u32) ^ key;
+    }
+    if (x & 8u32) == 0u32 {
+        x = x * 24993u32 + key;
+    } else {
+        x = (x >> 6u32) ^ (x << 26u32) ^ key;
+    }
+    if (x & 16u32) == 0u32 {
+        x = x * 25027u32 + key;
+    } else {
+        x = (x >> 7u32) ^ (x << 25u32) ^ key;
+    }
+    if (x & 32u32) == 0u32 {
+        x = x * 25061u32 + key;
+    } else {
+        x = (x >> 8u32) ^ (x << 24u32) ^ key;
+    }
+    if (x & 64u32) == 0u32 {
+        x = x * 25095u32 + key;
+    } else {
+        x = (x >> 9u32) ^ (x << 23u32) ^ key;
+    }
+    if (x & 128u32) == 0u32 {
+        x = x * 25129u32 + key;
+    } else {
+        x = (x >> 10u32) ^ (x << 22u32) ^ key;
+    }
+    if (x & 256u32) == 0u32 {
+        x = x * 25163u32 + key;
+    } else {
+        x = (x >> 11u32) ^ (x << 21u32) ^ key;
+    }
+    if (x & 512u32) == 0u32 {
+        x = x * 25197u32 + key;
+    } else {
+        x = (x >> 12u32) ^ (x << 20u32) ^ key;
+    }
+    if (x & 1024u32) == 0u32 {
+        x = x * 25231u32 + key;
+    } else {
+        x = (x >> 13u32) ^ (x << 19u32) ^ key;
+    }
+    if (x & 2048u32) == 0u32 {
+        x = x * 25265u32 + key;
+    } else {
+        x = (x >> 14u32) ^ (x << 18u32) ^ key;
+    }
+    x
+}
+fn main() {
+    let rounds = get_i32();
+    let mut x = get_i32() as u32;
+    let key = get_i32() as u32;
+    let mut i = 0;
+    while i < rounds {
+        x = step_0(x, key + (i as u32));
+        x = step_1(x, key + (i as u32));
+        x = step_2(x, key + (i as u32));
+        x = step_3(x, key + (i as u32));
+        x = step_4(x, key + (i as u32));
+        x = step_5(x, key + (i as u32));
+        x = step_6(x, key + (i as u32));
+        x = step_7(x, key + (i as u32));
+        x = step_8(x, key + (i as u32));
+        x = step_9(x, key + (i as u32));
+        x = step_10(x, key + (i as u32));
+        x = step_11(x, key + (i as u32));
+        x = step_12(x, key + (i as u32));
+        x = step_13(x, key + (i as u32));
+        x = step_14(x, key + (i as u32));
+        x = step_15(x, key + (i as u32));
+        x = step_16(x, key + (i as u32));
+        x = step_17(x, key + (i as u32));
+        x = step_18(x, key + (i as u32));
+        x = step_19(x, key + (i as u32));
+        x = step_20(x, key + (i as u32));
+        x = step_21(x, key + (i as u32));
+        x = step_22(x, key + (i as u32));
+        x = step_23(x, key + (i as u32));
+        x = step_24(x, key + (i as u32));
+        x = step_25(x, key + (i as u32));
+        x = step_26(x, key + (i as u32));
+        x = step_27(x, key + (i as u32));
+        x = step_28(x, key + (i as u32));
+        x = step_29(x, key + (i as u32));
+        x = step_30(x, key + (i as u32));
+        x = step_31(x, key + (i as u32));
+        x = step_32(x, key + (i as u32));
+        x = step_33(x, key + (i as u32));
+        x = step_34(x, key + (i as u32));
+        x = step_35(x, key + (i as u32));
+        x = step_36(x, key + (i as u32));
+        x = step_37(x, key + (i as u32));
+        x = step_38(x, key + (i as u32));
+        x = step_39(x, key + (i as u32));
+        x = step_40(x, key + (i as u32));
+        x = step_41(x, key + (i as u32));
+        x = step_42(x, key + (i as u32));
+        x = step_43(x, key + (i as u32));
+        x = step_44(x, key + (i as u32));
+        x = step_45(x, key + (i as u32));
+        x = step_46(x, key + (i as u32));
+        x = step_47(x, key + (i as u32));
+        x = step_48(x, key + (i as u32));
+        x = step_49(x, key + (i as u32));
+        x = step_50(x, key + (i as u32));
+        x = step_51(x, key + (i as u32));
+        x = step_52(x, key + (i as u32));
+        x = step_53(x, key + (i as u32));
+        x = step_54(x, key + (i as u32));
+        x = step_55(x, key + (i as u32));
+        x = step_56(x, key + (i as u32));
+        x = step_57(x, key + (i as u32));
+        x = step_58(x, key + (i as u32));
+        x = step_59(x, key + (i as u32));
+        x = step_60(x, key + (i as u32));
+        x = step_61(x, key + (i as u32));
+        x = step_62(x, key + (i as u32));
+        x = step_63(x, key + (i as u32));
+        x = step_64(x, key + (i as u32));
+        x = step_65(x, key + (i as u32));
+        x = step_66(x, key + (i as u32));
+        x = step_67(x, key + (i as u32));
+        x = step_68(x, key + (i as u32));
+        x = step_69(x, key + (i as u32));
+        x = step_70(x, key + (i as u32));
+        x = step_71(x, key + (i as u32));
+        x = step_72(x, key + (i as u32));
+        x = step_73(x, key + (i as u32));
+        x = step_74(x, key + (i as u32));
+        x = step_75(x, key + (i as u32));
+        x = step_76(x, key + (i as u32));
+        x = step_77(x, key + (i as u32));
+        x = step_78(x, key + (i as u32));
+        x = step_79(x, key + (i as u32));
+        x = step_80(x, key + (i as u32));
+        x = step_81(x, key + (i as u32));
+        x = step_82(x, key + (i as u32));
+        x = step_83(x, key + (i as u32));
+        x = step_84(x, key + (i as u32));
+        x = step_85(x, key + (i as u32));
+        x = step_86(x, key + (i as u32));
+        x = step_87(x, key + (i as u32));
+        x = step_88(x, key + (i as u32));
+        x = step_89(x, key + (i as u32));
+        x = step_90(x, key + (i as u32));
+        x = step_91(x, key + (i as u32));
+        x = step_92(x, key + (i as u32));
+        x = step_93(x, key + (i as u32));
+        x = step_94(x, key + (i as u32));
+        x = step_95(x, key + (i as u32));
+        i += 1;
+    }
+    println_i32(x as i32);
+}

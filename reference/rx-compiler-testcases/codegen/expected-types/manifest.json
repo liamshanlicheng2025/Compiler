@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-no-inference-through-operators-or-borrows-is-required.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "No inference through operators or borrows is required.",
+    "io": [
+      {
+        "input": "acc-no-inference-through-operators-or-borrows-is-required.default.in",
+        "output": "acc-no-inference-through-operators-or-borrows-is-required.default.out"
+      }
+    ]
+  }
+]

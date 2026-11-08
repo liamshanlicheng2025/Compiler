@@ -1,0 +1,34 @@
+[
+  {
+    "source": "acc-recursive-quicksort.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Recursive quicksort over dynamic input.",
+    "io": [
+      {
+        "input": "acc-recursive-quicksort.empty.in",
+        "output": "acc-recursive-quicksort.empty.out"
+      },
+      {
+        "input": "acc-recursive-quicksort.single.in",
+        "output": "acc-recursive-quicksort.single.out"
+      },
+      {
+        "input": "acc-recursive-quicksort.duplicates.in",
+        "output": "acc-recursive-quicksort.duplicates.out"
+      },
+      {
+        "input": "acc-recursive-quicksort.sorted.in",
+        "output": "acc-recursive-quicksort.sorted.out"
+      },
+      {
+        "input": "acc-recursive-quicksort.reverse.in",
+        "output": "acc-recursive-quicksort.reverse.out"
+      },
+      {
+        "input": "acc-recursive-quicksort.boundaries.in",
+        "output": "acc-recursive-quicksort.boundaries.out"
+      }
+    ]
+  }
+]

@@ -15,9 +15,11 @@ BUILTIN=reference/RCompiler-Testcases/IR-1/builtin/builtin.c
 TEMPDIR=$(mktemp -d -p /tmp ir.XXXXXXXXXX)
 trap 'rm -rf "$TEMPDIR"' EXIT
 
-# .ll → RISC-V 汇编；builtin.c 同 target 编译（-O2 -fno-builtin 照官方）
-$CLANG -S --target=riscv32-unknown-elf "$LL" -o "$TEMPDIR/test.s.source"
-$CLANG -S --target=riscv32-unknown-elf -O2 -fno-builtin "$BUILTIN" -o "$TEMPDIR/builtin.s.source"
+# .ll → RISC-V 汇编；与评测 runner 完全一致的 clang 参数（rv32im/ilp32/去别名）
+$CLANG -S -x ir --target=riscv32-unknown-none-elf -march=rv32im -mabi=ilp32 \
+    -O0 -mllvm -riscv-no-aliases "$LL" -o "$TEMPDIR/test.s.source"
+$CLANG -S --target=riscv32-unknown-none-elf -march=rv32im -mabi=ilp32 \
+    -O2 -fno-builtin -mllvm -riscv-no-aliases "$BUILTIN" -o "$TEMPDIR/builtin.s.source"
 # ravel 不认 @plt 后缀，剥掉
 sed 's/@plt//g' "$TEMPDIR/test.s.source" > "$TEMPDIR/test.s"
 sed 's/@plt//g' "$TEMPDIR/builtin.s.source" > "$TEMPDIR/builtin.s"

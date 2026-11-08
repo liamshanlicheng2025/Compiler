@@ -1,0 +1,25 @@
+use rx::core::*;
+
+fn main() {
+    let mut rows = Vec::<Vec<i32>>::new();
+    let mut row = Vec::<i32>::new();
+    row.push(3);
+    row.push(4);
+    rows.push(row);
+    let mut copied = Vec::<Vec<i32>>::clone(&rows);
+    copied[0][1] = 9;
+    println_i32(rows[0][1]);
+    println_i32(copied[0][1]);
+    println_i32((rows == copied) as i32);
+    let mut boxed = Box::<Vec<Vec<i32>>>::new(rows);
+    boxed[0][0] = 8;
+    let r = &mut boxed;
+    r[0][1] = 10;
+    println_i32(r[0][0] + r[0][1]);
+    let mut a = Box::<[i32; 3]>::new([1, 2, 3]);
+    a[1] = 7;
+    println_i32(a[1]);
+    let e1 = Vec::<i32>::new();
+    let e2 = Vec::<i32>::clone(&e1);
+    println_i32((e1 == e2) as i32);
+}
