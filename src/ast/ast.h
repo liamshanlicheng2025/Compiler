@@ -59,6 +59,10 @@ class Expr : public Node {};   // 表达式：字面量、二元运算……
 class Crate : public Node {
 public:
     std::vector<ItemPtr> items;
+    // 方言标记：源文件含 use 声明（Rx 测试集的 rx::core 导入）时置真。
+    // Rx 方言按标准 Rust 语义检查（if/while 条件不要求括号）；
+    // 旧课程规范要求条件带括号（expr12/20/25/30 是这条的拒绝用例）
+    bool rxDialect = false;
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -171,7 +175,8 @@ public:
     BlockPtr thenBlock;
     BlockPtr elseBlock;          // 空指针 = 无 else；else if 链 = elseBlock 里包一个
                                  // 只含尾表达式 IfExpr 的 Block
-    bool condGrouped = true;     // 条件是否带括号（课程规范要求带，expr12/20/25/30）
+    bool condGrouped = true;     // 条件是否带括号（旧课程规范要求带，expr12/20/25/30；
+                                 // Rx 方言豁免，见 Crate::rxDialect）
     void accept(ASTVisitor& visitor) override;
 };
 

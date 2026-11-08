@@ -24,6 +24,7 @@ void BodyChecker::evalExpr(const ExprPtr& e) {
 }
 
 void BodyChecker::visit(Crate& node) {
+    rxDialect_ = node.rxDialect;   // Rx 方言下 if/while 条件不要求括号
     // 顶层条目里只有函数有"体"要检查；const/static 的初值也要查
     for (auto& item : node.items) item->accept(*this);
 }
@@ -349,7 +350,8 @@ void BodyChecker::visit(UnaryExpr& node) {
 
 // if 表达式：条件必须 bool；有 else 时两分支类型一致（值 = 分支类型），无 else 值为 ()
 void BodyChecker::visit(IfExpr& node) {
-    if (!node.condGrouped) semaError("if 条件缺少括号");
+    // 条件括号是旧课程规范的要求；Rx 方言按标准 Rust 语义，不要求
+    if (!rxDialect_ && !node.condGrouped) semaError("if 条件缺少括号");
     evalExpr(node.cond);
     if (lastType_.kind != TypeKind::Bool && lastType_.kind != TypeKind::Never)
         semaError("if 条件必须是 bool，实际 " + lastType_.toString());
@@ -371,7 +373,7 @@ void BodyChecker::visit(IfExpr& node) {
 // while 循环：条件必须 bool（Never 放行）；值为 ()。
 // 体内的带值 break 不上传（Rust 不允许 while 带值 break），进出时保存/恢复
 void BodyChecker::visit(WhileExpr& node) {
-    if (!node.condGrouped) semaError("while 条件缺少括号");
+    if (!rxDialect_ && !node.condGrouped) semaError("while 条件缺少括号");
     evalExpr(node.cond);
     if (lastType_.kind != TypeKind::Bool && lastType_.kind != TypeKind::Never)
         semaError("while 条件必须是 bool，实际 " + lastType_.toString());

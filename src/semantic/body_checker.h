@@ -77,6 +77,8 @@ private:
     bool allowI32MinLit_ = false;  // 一元 - 直接作用时允许字面量 2147483648（i32 MIN）
     std::string currentImplType_;  // 当前所在 impl 的目标类型名（visit(ImplBlock)
                                    // 进入时设置、离开时清空；方法里注册 self 用）
+    bool rxDialect_ = false;   // Rx 方言（源文件含 use 声明）：放宽旧规范的
+                               // 条件括号要求，按标准 Rust 语义检查
 
     std::unordered_map<const Expr*, Type> exprTypes_;   // 表达式类型旁表
     // 求值子表达式并登记其类型：所有表达式参数的统一入口

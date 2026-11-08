@@ -104,6 +104,12 @@ Type AstBuilder::parseTypeNoBounds(RustParser::TypeNoBoundsContext* ctx) {
 std::any AstBuilder::visitCrate(RustParser::CrateContext* ctx) {
     auto node = std::make_shared<Crate>();
     for (auto* itemCtx : ctx -> item()){
+        // use 声明不在简化子集内：静默跳过，并据此把整份文件标记为 Rx 方言
+        //（Rx 测试集每个文件都以 use rx::core::*; 开头）
+        if (itemCtx->start && itemCtx->start->getType() == RustParser::KW_USE) {
+            node -> rxDialect = true;
+            continue;
+        }
         auto result = visit(itemCtx);
         // 防御：未覆盖的条目会产生空 any，报警告跳过而不是让 any_cast 崩掉
         if (!result.has_value()) {
