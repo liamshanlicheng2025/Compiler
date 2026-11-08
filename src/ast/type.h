@@ -38,6 +38,8 @@ struct Type {
     std::string arrayLenExpr;          // Array：长度表达式原文（非常量字面量时
                                        // 由语义阶段解析，如 const 名；为空=无）
     bool isMut = false;                // Ref：是否 &mut
+    bool hasGenericArgs = false;       // Named：原文带了 <...> 泛型实参（Rx 的
+                                       // struct 没有类型参数，语义阶段据此拒绝）
 
     // 打印用："i32"、"&mut [i32; 5]"、"Point"（已实现，ASTPrinter 依赖）
     std::string toString() const;

@@ -21,14 +21,22 @@ void SymbolTable::exitScope() {
 
 
 bool Scope::insert(const Symbol& sym) {
-    if (symbols_.find(sym.name) != symbols_.end()) return false;
-    symbols_[sym.name] = sym;
+    auto& m = (sym.kind == SymbolKind::StructType || sym.kind == SymbolKind::EnumType)
+              ? typeSymbols_ : symbols_;
+    if (m.find(sym.name) != m.end()) return false;
+    m[sym.name] = sym;
     return true;
 }
 
 Symbol* Scope::lookupLocal(const std::string& name) {
     auto it = symbols_.find(name);
     if (it == symbols_.end()) return nullptr;
+    return &it -> second;
+}
+
+Symbol* Scope::lookupLocalType(const std::string& name) {
+    auto it = typeSymbols_.find(name);
+    if (it == typeSymbols_.end()) return nullptr;
     return &it -> second;
 }
 
@@ -40,6 +48,15 @@ Symbol* SymbolTable::lookup(const std::string& name) {
     auto scope = current_;
     while (scope){
         if (auto* s = scope -> lookupLocal(name)) return s;
+        scope = scope -> parent();
+    }
+    return nullptr;
+}
+
+Symbol* SymbolTable::lookupType(const std::string& name) {
+    auto scope = current_;
+    while (scope){
+        if (auto* s = scope -> lookupLocalType(name)) return s;
         scope = scope -> parent();
     }
     return nullptr;

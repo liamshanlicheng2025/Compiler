@@ -3,6 +3,16 @@
 #include "../ast/type.h"
 #include "semantic/semantic_error.h"
 
+#include <unordered_set>
+
+// 内建/保留类型名：用户不能用这些名字定义 struct/enum（如 struct i32）
+static bool isProtectedTypeName(const std::string& n) {
+    static const char* names[] = {"i32", "u32", "isize", "usize",
+                                  "f32", "f64", "bool", "char", "str", "String"};
+    for (auto* x : names) if (n == x) return true;
+    return false;
+}
+
 
 void CrateIndex::run(const CratePtr& crate) {
     symtab_.registerBuiltins();   // 内建函数先于一切注册
@@ -24,6 +34,8 @@ void CrateIndex::visit(Crate& node) {
         // enum 只注册名字（SymbolKind::EnumType）：变体 PathExpr 的类型 =
         // 该名字的 Named，不做更深入的检查
         else if (auto en = std::dynamic_pointer_cast<EnumDef>(item)) {
+            if (isProtectedTypeName(en->name))
+                semaError("内建类型名不可占用：" + en->name);
             Symbol sym;
             sym.kind = SymbolKind::EnumType;
             sym.name = en->name;
@@ -51,6 +63,9 @@ void CrateIndex::checkEntryPoint(const CratePtr& crate) {
 
 // 注册函数签名：参数类型表 + 返回类型（无标注 = Unit），重复定义报错
 void CrateIndex::registerFunction(const FunctionPtr& fn) {
+    // 顶层函数不能带 receiver（self 参数只属于 impl 方法）
+    if (fn -> isMethod)
+        semaError("顶层函数不能有 receiver（self 参数）：" + fn->name);
     Symbol sym;
     sym.kind = SymbolKind::Function;
     sym.name = fn -> name;
@@ -64,6 +79,13 @@ void CrateIndex::registerFunction(const FunctionPtr& fn) {
 
 // 注册 struct 类型：Symbol 里回指定义节点（Pass 2 查字段用）
 void CrateIndex::registerStruct(const std::shared_ptr<StructDef>& def) {
+    if (isProtectedTypeName(def->name))
+        semaError("内建类型名不可占用：" + def->name);
+    // 字段名查重（g4 不拦，语义阶段负责）
+    std::unordered_set<std::string> seen;
+    for (auto& f : def->fields)
+        if (!seen.insert(f.name).second)
+            semaError("struct " + def->name + " 的字段重复定义：" + f.name);
     Symbol sym;
     sym.kind = SymbolKind::StructType;
     sym.name = def -> name;
@@ -92,7 +114,7 @@ void CrateIndex::registerStatic(const std::shared_ptr<StaticDef>& def) {
 // 注册 impl：校验目标是已定义的 struct，方法挂到 implMethods[类型名]，
 // 返回类型里的 Self 归一化为具体类型名
 void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
-    auto* target = symtab_.lookup(def -> typeName);
+    auto* target = symtab_.lookupType(def -> typeName);
     if (!target) semaError("impl 的目标类型未定义：" + def->typeName);
     if (target->kind != SymbolKind::StructType)
         semaError("impl 的目标不是 struct 类型：" + def->typeName);
@@ -105,6 +127,11 @@ void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
             if (m->name == method->name)
                 semaError("类型 " + def->typeName + " 的方法重复定义：" + method->name);
         }
+        // 方法与关联常量共享同一个命名空间（可以跨 impl 块冲突）
+        for (auto& c : symtab_.implConsts[def->typeName]) {
+            if (c->name == method->name)
+                semaError("类型 " + def->typeName + " 的关联值重复定义：" + method->name);
+        }
         existing.push_back(method);
     }
     // 关联常量挂到 implConsts[类型名]，重复定义报错
@@ -113,6 +140,11 @@ void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
         for (auto& c : existingConsts) {
             if (c -> name == cd -> name)
                 semaError("类型 " + def->typeName + " 的关联常量重复定义：" + cd->name);
+        }
+        // 与方法同名也算冲突（共享命名空间）
+        for (auto& m : symtab_.implMethods[def->typeName]) {
+            if (m->name == cd->name)
+                semaError("类型 " + def->typeName + " 的关联值重复定义：" + cd->name);
         }
         existingConsts.push_back(cd);
     }

@@ -29,11 +29,35 @@ void BodyChecker::visit(Crate& node) {
     for (auto& item : node.items) item->accept(*this);
 }
 
+// 把类型里的 Self 归一化为当前 impl 的目标类型名；impl 外出现 Self 报错
+void BodyChecker::resolveSelfType(Type& t) {
+    if (t.kind == TypeKind::Named && t.name == "Self") {
+        if (currentImplType_.empty())
+            semaError("Self 只能在 impl 块内使用");
+        t.name = currentImplType_;
+    }
+    if (t.elem) resolveSelfType(*t.elem);
+}
+
+// 类型合法性检查：具名类型必须已注册（值命名空间的同名符号不算数）；
+// 带泛型实参使用时，该 struct 必须确实声明了泛型参数（S<i32> 但 S 无泛型要拦）
+void BodyChecker::checkTypeResolvable(const Type& t) {
+    if (t.kind == TypeKind::Named) {
+        Symbol* s = symtab_.lookupType(t.name);
+        if (!s) semaError("未解析的类型：" + t.name);
+        if (t.hasGenericArgs && !(s->structDef && s->structDef->hasGenericParams))
+            semaError("类型 " + t.name + " 没有类型参数");
+    }
+    if (t.elem) checkTypeResolvable(*t.elem);
+}
+
 void BodyChecker::visit(Function& node) {
     // 记录返回类型（嵌套函数会覆盖它，进出时保存/恢复）、开作用域、
     // 注册 self（方法）和参数、查函数体、收尾比对
     Type savedRetType = currentFnRetType_;
     currentFnRetType_ = node.returnType ? *node.returnType : Type{TypeKind::Unit};
+    resolveSelfType(currentFnRetType_);
+    checkTypeResolvable(currentFnRetType_);
     constEval_.resolveArrayLens(currentFnRetType_);   // fn make_table(n) -> [[i32; n]; n] 之类要拦
     symtab_.enterScope();
     if (node.isMethod){
@@ -54,9 +78,11 @@ void BodyChecker::visit(Function& node) {
     for (auto& p : node.params) {
         // 可变参数（fn f(mut n: i32)）的 isMut 由 builder 从 pattern 取出
         Type pt = p.type;
+        resolveSelfType(pt);
+        checkTypeResolvable(pt);
         constEval_.resolveArrayLens(pt);              // 参数里的数组长度同样要解析
         Symbol sym{SymbolKind::Variable, p.name, pt, p.isMut};
-        symtab_.insert(sym);
+        if (!symtab_.insert(sym)) semaError("重复的参数名：" + p.name);
     }
     evalExpr(node.body);
     if (!lastType_.equal(currentFnRetType_)) semaError("函数 " + node.name + " 返回类型不匹配：声明 " + currentFnRetType_.toString() + "，实际 " + lastType_.toString());
@@ -81,12 +107,27 @@ void BodyChecker::visit(Block& node) {
         }
     }
     Type lastStmtType{TypeKind::Unit};
-    for (auto& stmt : node.statements) {
+    bool diverged = false;   // 是否有语句发散（return/break/不停 loop）：其后代码不可达
+    for (size_t i = 0; i < node.statements.size(); ++i) {
+        auto& stmt = node.statements[i];
         stmt->accept(*this);
         lastStmtType = lastType_;   // 语句的类型（ExprStmt 会留下其中表达式的类型）
+        if (lastDiverges_) diverged = true;
+        // 非末尾位置的无分号表达式语句必须没有值（() 或 Never）：
+        // { 1 } println_i32(2); 这种形态要拦
+        bool isLast = (i + 1 == node.statements.size());
+        if (auto* es = dynamic_cast<ExprStmt*>(stmt.get())) {
+            if (!es->hasSemi && (!isLast || node.tailExpr)
+                && lastStmtType.kind != TypeKind::Unit
+                && lastStmtType.kind != TypeKind::Never)
+                semaError("块中间的无分号表达式语句必须返回 ()，实际 "
+                          + lastStmtType.toString());
+        }
     }
     if (node.tailExpr) {
         evalExpr(node.tailExpr);   // 块的类型 = 尾表达式类型
+        // 发散传播：任何语句发散（其后代码不可达）或尾表达式发散，块都发散
+        lastDiverges_ = diverged || lastDiverges_;
     } else {
         // 末尾是"无分号的带块表达式语句"（if/match/loop/裸块）时，它就是块的值
         //（函数体末尾的 if (k == p) { a[p] } else ... 这类形态）
@@ -103,11 +144,14 @@ void BodyChecker::visit(Block& node) {
         }
         if (lastIsValue) {
             lastType_ = lastStmtType;
-        } else if (lastStmtType.kind == TypeKind::Never) {
-            // 末尾语句发散（return/break）：块类型是 Never，兼容任何声明返回类型
-            lastType_ = lastStmtType;
+            lastDiverges_ = diverged;
+        } else if (diverged) {
+            // 中途有语句发散：块本身发散（Never），兼容任何上下文
+            lastType_ = Type{TypeKind::Never};
+            lastDiverges_ = true;
         } else {
             lastType_ = Type{TypeKind::Unit};
+            lastDiverges_ = false;
         }
     }
     symtab_.exitScope();
@@ -122,6 +166,8 @@ void BodyChecker::visit(LetStmt& node) {
         Type initType = lastType_;          // 立刻存走——之后的 visit 会覆盖它
         if (node.type) {
             Type ann = *node.type;
+            resolveSelfType(ann);
+            checkTypeResolvable(ann);
             constEval_.resolveArrayLens(ann);         // 标注里的数组长度（[i32; ARR] 等）
             if (!initType.equal(ann))
                 semaError("let " + node.name + " 类型不匹配：标注 "
@@ -141,6 +187,7 @@ void BodyChecker::visit(LetStmt& node) {
     // Rust 允许同作用域 let 遮蔽；重复定义检查
     // 只针对函数/类型/常量等顶层名字（CrateIndex 那边仍报错）
     symtab_.insertOrShadow(sym);
+    lastDiverges_ = false;
 }
 
 void BodyChecker::visit(ExprStmt& node) {
@@ -194,7 +241,9 @@ void BodyChecker::visit(Literal& node) {
             lastType_ = r;
             break;
         }
+        case LiteralKind::Unit: lastType_ = Type{TypeKind::Unit}; break;
     }
+    lastDiverges_ = false;
 }
 
 // 二元运算：按 op 分五类——赋值 / 复合赋值 / 算术位运算 / 比较 / 逻辑
@@ -230,9 +279,26 @@ void BodyChecker::visit(BinaryExpr& node) {
                 }
                 return;
             }
+            if (auto* u = dynamic_cast<UnaryExpr*>(cur.get())) {
+                if (u->op == "*") {
+                    // 通过引用赋值：途经的每一层引用都必须可写（&mut）。
+                    // let p = &x; *p = 2;（共享引用）和
+                    // let q = &p; **q = 2;（外层共享）都要拦
+                    ExprPtr op = u->operand;
+                    while (true) {
+                        evalExpr(op);
+                        if (lastType_.kind != TypeKind::Ref || !lastType_.isMut)
+                            semaError("通过不可变引用赋值");
+                        auto* uu = dynamic_cast<UnaryExpr*>(op.get());
+                        if (!uu || uu->op != "*") break;
+                        op = uu->operand;
+                    }
+                    return;
+                }
+            }
             if (auto* f = dynamic_cast<FieldExpr*>(cur.get())) { cur = f->object; continue; }
             if (auto* ix = dynamic_cast<IndexExpr*>(cur.get())) { cur = ix->array; continue; }
-            return;   // 解引用等形态：可变性由引用本身保证，不查
+            return;   // 其他形态（如函数调用返回的 &mut）：可变性由类型保证，不查
         }
     };
 
@@ -248,8 +314,30 @@ void BodyChecker::visit(BinaryExpr& node) {
             semaError("复合赋值要求两边都是相同整型：左 " + lhsT.toString()
                       + "，右 " + rhsT.toString());
         lastType_ = Type{TypeKind::Unit};
+    } else if (node.op == "&=" || node.op == "|=" || node.op == "^=") {
+        // 复合位运算赋值：整型同型，或 bool 两边（b &= false 是合法 Rx）
+        checkAssignable(node.lhs);
+        bool intOk  = isInt(lhsT) && lhsT.equal(rhsT);
+        bool boolOk = lhsT.kind == TypeKind::Bool && rhsT.kind == TypeKind::Bool;
+        if (!intOk && !boolOk)
+            semaError("复合位运算赋值要求两边同为整型或同为 bool：左 "
+                      + lhsT.toString() + "，右 " + rhsT.toString());
+        lastType_ = Type{TypeKind::Unit};
+    } else if (node.op == "<<=" || node.op == ">>=") {   // 移位赋值：同移位规则
+        checkAssignable(node.lhs);
+        if (!isInt(lhsT) || !isInt(rhsT))
+            semaError("移位赋值要求两边都是整型：左 " + lhsT.toString()
+                      + "，右 " + rhsT.toString());
+        lastType_ = Type{TypeKind::Unit};
     } else if (node.op == "+" || node.op == "-" || node.op == "*" || node.op == "/"
             || node.op == "%" || node.op == "&" || node.op == "|" || node.op == "^") {
+        // bool 的 & | ^ 是合法（非短路）逻辑运算，结果仍 bool
+        if ((node.op == "&" || node.op == "|" || node.op == "^")
+            && lhsT.kind == TypeKind::Bool && rhsT.kind == TypeKind::Bool) {
+            lastType_ = Type{TypeKind::Bool};
+            lastDiverges_ = false;
+            return;
+        }
         if (!isInt(lhsT) || !lhsT.equal(rhsT))
             semaError("算术/位运算要求两边都是相同整型：左 " + lhsT.toString()
                       + "，右 " + rhsT.toString());
@@ -272,6 +360,7 @@ void BodyChecker::visit(BinaryExpr& node) {
                       + "，右 " + rhsT.toString());
         lastType_ = Type{TypeKind::Bool};
     }
+    lastDiverges_ = false;
 }
 
 // 路径表达式：查符号表，把名字的类型写进 lastType_
@@ -280,7 +369,7 @@ void BodyChecker::visit(PathExpr& node) {
     // Named(枚举名)；struct 关联函数当值用给 Unknown 兜底
     if (node.name.find("::") != std::string::npos) {
         std::string head = node.name.substr(0, node.name.find("::"));
-        Symbol* s = symtab_.lookup(head);
+        Symbol* s = symtab_.lookupType(head);
         if (!s || (s->kind != SymbolKind::StructType && s->kind != SymbolKind::EnumType))
             semaError("未声明的名字：" + node.name);
         if (s->kind == SymbolKind::EnumType) {
@@ -292,11 +381,16 @@ void BodyChecker::visit(PathExpr& node) {
             std::string tail = node.name.substr(node.name.find("::") + 2);
             if (symtab_.implConsts.count(head)) {
                 for (auto& cd : symtab_.implConsts[head]) {
-                    if (cd -> name == tail) { lastType_ = cd->type; return; }
+                    if (cd -> name == tail) {
+                        lastType_ = cd->type;
+                        lastDiverges_ = false;
+                        return;
+                    }
                 }
             }
             lastType_ = Type{TypeKind::Unknown};
         }
+        lastDiverges_ = false;
         return;
     }
     Symbol* sym = symtab_.lookup(node.name);
@@ -308,6 +402,7 @@ void BodyChecker::visit(PathExpr& node) {
         // Function / StructType 不当值用：给 Unknown 兜底（equal 对 Unknown 放行）
         lastType_ = Type{TypeKind::Unknown};
     }
+    lastDiverges_ = false;
 }
 
 // 一元运算：-（整型取负）、!（bool 取反）、&/&mut（引用）、*（解引用）
@@ -321,7 +416,10 @@ void BodyChecker::visit(UnaryExpr& node) {
     allowI32MinLit_ = savedAllow;
     Type t = lastType_;
     if (node.op == "-") {
-        if (!isInt(t)) semaError("一元 - 要求整型，实际 " + t.toString());
+        // 只有有符号整型能取负（-1u32 要拦）
+        if (t.kind != TypeKind::I32 && t.kind != TypeKind::Isize
+            && t.kind != TypeKind::IntLit)
+            semaError("一元 - 只适用于有符号整型，实际 " + t.toString());
         lastType_ = t;
     } else if (node.op == "!") {
         // bool 取反得 bool；整型的 ! 是按位取反（Rust 语义，c29），类型不变
@@ -346,9 +444,11 @@ void BodyChecker::visit(UnaryExpr& node) {
         if (t.kind != TypeKind::Ref) semaError("对非引用类型解引用：" + t.toString());
         lastType_ = *t.elem;
     }
+    lastDiverges_ = false;
 }
 
-// if 表达式：条件必须 bool；有 else 时两分支类型一致（值 = 分支类型），无 else 值为 ()
+// if 表达式：条件必须 bool；有 else 时两分支类型一致（值 = 分支类型），
+// 无 else 时 then 块必须没有值（() 或发散），整个 if 值为 ()
 void BodyChecker::visit(IfExpr& node) {
     // 条件括号是旧课程规范的要求；Rx 方言按标准 Rust 语义，不要求
     if (!rxDialect_ && !node.condGrouped) semaError("if 条件缺少括号");
@@ -357,6 +457,7 @@ void BodyChecker::visit(IfExpr& node) {
         semaError("if 条件必须是 bool，实际 " + lastType_.toString());
     evalExpr(node.thenBlock);
     Type thenT = lastType_;
+    bool thenDiverges = lastDiverges_;
     if (node.elseBlock) {
         evalExpr(node.elseBlock);
         Type elseT = lastType_;
@@ -365,8 +466,13 @@ void BodyChecker::visit(IfExpr& node) {
                       + "，else " + elseT.toString());
         // 一侧发散（return/break）时，结果取另一侧的类型
         lastType_ = (thenT.kind == TypeKind::Never) ? elseT : thenT;
+        // 只有两侧都发散（且都有 else 覆盖所有情况）整个 if 才发散
+        lastDiverges_ = thenDiverges && lastDiverges_;
     } else {
+        if (thenT.kind != TypeKind::Unit && thenT.kind != TypeKind::Never)
+            semaError("没有 else 的 if 分支必须返回 ()，实际 " + thenT.toString());
         lastType_ = Type{TypeKind::Unit};
+        lastDiverges_ = false;   // 条件为假时正常走完，不发散
     }
 }
 
@@ -374,7 +480,12 @@ void BodyChecker::visit(IfExpr& node) {
 // 体内的带值 break 不上传（Rust 不允许 while 带值 break），进出时保存/恢复
 void BodyChecker::visit(WhileExpr& node) {
     if (!rxDialect_ && !node.condGrouped) semaError("while 条件缺少括号");
+    // 条件不属于循环体：条件里的 break/continue 不允许绑定到任何循环
+    //（loop { while continue {} } 要拦）
+    int savedDepth = loopDepth_;
+    loopDepth_ = 0;
     evalExpr(node.cond);
+    loopDepth_ = savedDepth;
     if (lastType_.kind != TypeKind::Bool && lastType_.kind != TypeKind::Never)
         semaError("while 条件必须是 bool，实际 " + lastType_.toString());
     ++loopDepth_;
@@ -383,10 +494,17 @@ void BodyChecker::visit(WhileExpr& node) {
     hasLoopBreakValue_ = false;
     hasAnyBreak_ = false;
     evalExpr(node.body);
+    Type bodyT = lastType_;
+    bool tookBreakValue = hasLoopBreakValue_;
     hasLoopBreakValue_ = savedHas; loopBreakType_ = savedT;
     hasAnyBreak_ = savedAny;
     --loopDepth_;
+    if (tookBreakValue)
+        semaError("while 循环不接受带值 break");
+    if (bodyT.kind != TypeKind::Unit && bodyT.kind != TypeKind::Never)
+        semaError("while 循环体必须返回 ()，实际 " + bodyT.toString());
     lastType_ = Type{TypeKind::Unit};
+    lastDiverges_ = false;   // 条件不成立时正常退出，while 本身不发散
 }
 
 // loop 无限循环：值 = 体内带值 break 的类型；无 break 时只能靠 return 离开，
@@ -398,9 +516,15 @@ void BodyChecker::visit(LoopExpr& node) {
     hasLoopBreakValue_ = false;
     hasAnyBreak_ = false;
     evalExpr(node.body);
+    Type bodyT = lastType_;
+    if (bodyT.kind != TypeKind::Unit && bodyT.kind != TypeKind::Never)
+        semaError("loop 循环体必须返回 ()，实际 " + bodyT.toString());
+    bool anyBreak = hasAnyBreak_;
     if (hasLoopBreakValue_) lastType_ = loopBreakType_;
-    else if (!hasAnyBreak_) lastType_ = Type{TypeKind::Never};
+    else if (!anyBreak) lastType_ = Type{TypeKind::Never};
     else lastType_ = Type{TypeKind::Unit};
+    // 没有任何 break 的 loop 只能靠 return 离开：发散
+    lastDiverges_ = !anyBreak;
     hasLoopBreakValue_ = savedHas; loopBreakType_ = savedT;
     hasAnyBreak_ = savedAny;
     --loopDepth_;
@@ -419,6 +543,7 @@ void BodyChecker::visit(ReturnExpr& node) {
                       + "，但 return 没有返回值");
     }
     lastType_ = Type{TypeKind::Never};   // 发散：equal 对 Never 放行，兼容一切上下文
+    lastDiverges_ = true;
 }
 
 // break/continue：必须在循环内（loopDepth_ > 0）；自身类型 Never
@@ -432,11 +557,13 @@ void BodyChecker::visit(BreakExpr& node) {
         hasLoopBreakValue_ = true;
     }
     lastType_ = Type{TypeKind::Never};
+    lastDiverges_ = true;
 }
 
 void BodyChecker::visit(ContinueExpr& node) {
     if (loopDepth_ == 0) semaError("continue 不在循环内");
     lastType_ = Type{TypeKind::Never};
+    lastDiverges_ = true;
 }
 
 // 函数调用：callee 必须是 PathExpr。两种形态：
@@ -471,6 +598,7 @@ void BodyChecker::visit(CallExpr& node) {
             evalExpr(node.args[0]);
             Type t; t.kind = TypeKind::Named; t.name = "String";
             lastType_ = t;
+            lastDiverges_ = false;
             return;
         }
         // Self::method()：当前 impl 目标类型
@@ -483,6 +611,7 @@ void BodyChecker::visit(CallExpr& node) {
                     for (auto& p : m->params) params.push_back(p.type);
                     Type ret = m->returnType ? *m->returnType : Type{TypeKind::Unit};
                     checkArgs(callee->name, params, ret);
+                    lastDiverges_ = false;
                     return;
                 }
             }
@@ -493,6 +622,7 @@ void BodyChecker::visit(CallExpr& node) {
     if (!sym || sym->kind != SymbolKind::Function)
         semaError("未声明的函数：" + callee->name);
     checkArgs(callee->name, sym->paramTypes, sym->type);
+    lastDiverges_ = false;
 }
 
 // 字段访问 p.x：object 必须是 Named 类型；按类型名查 StructType 符号，
@@ -505,7 +635,7 @@ void BodyChecker::visit(FieldExpr& node) {
     }
     if (objT.kind != TypeKind::Named)
         semaError("对非 struct 类型取字段：" + objT.toString());
-    Symbol* sym = symtab_.lookup(objT.name);
+    Symbol* sym = symtab_.lookupType(objT.name);
     if (!sym || sym->kind != SymbolKind::StructType)
         semaError("类型 " + objT.name + " 不是 struct");
     if (!sym->structDef)
@@ -513,6 +643,7 @@ void BodyChecker::visit(FieldExpr& node) {
     for (auto& f : sym->structDef->fields) {
         if (f.name == node.field) {
             lastType_ = f.type;
+            lastDiverges_ = false;
             return;
         }
     }
@@ -531,6 +662,7 @@ void BodyChecker::visit(MethodCallExpr& node) {
     if (recvT.kind == TypeKind::Array && node.method == "len") {
         if (!node.args.empty()) semaError("len() 不接受参数");
         lastType_ = Type{TypeKind::Usize};
+        lastDiverges_ = false;
         return;
     }
     if (recvT.kind == TypeKind::Str
@@ -541,11 +673,13 @@ void BodyChecker::visit(MethodCallExpr& node) {
         else if (node.method == "to_string") { ret.kind = TypeKind::Named; ret.name = "String"; }
         else semaError("字符串类型不支持方法 " + node.method);
         lastType_ = ret;
+        lastDiverges_ = false;
         return;
     }
     if (isInt(recvT) && node.method == "to_string") {
         Type t; t.kind = TypeKind::Named; t.name = "String";
         lastType_ = t;
+        lastDiverges_ = false;
         return;
     }
     if (recvT.kind != TypeKind::Named)
@@ -554,6 +688,10 @@ void BodyChecker::visit(MethodCallExpr& node) {
     if (it != symtab_.implMethods.end()) {
         for (auto& m : it->second) {
             if (m->name == node.method) {
+                // 关联函数（没有 self 参数）不能通过 . 调用，只能 Type::f() 走
+                if (!m->isMethod)
+                    semaError(node.method + " 是关联函数（无 self 参数），"
+                              "不能通过 . 调用，请用 " + recvT.name + "::" + node.method + "()");
                 if (node.args.size() != m->params.size())
                     semaError("方法 " + node.method + " 参数个数不对：期望 "
                               + std::to_string(m->params.size()) + " 个，实际 "
@@ -569,7 +707,9 @@ void BodyChecker::visit(MethodCallExpr& node) {
                 }
                 // &mut self 方法要求 receiver 可写：沿 Field/Index/解引用走到
                 // 根变量查符号（self.heap.push() 在 &mut self 方法里合法——
-                // 根 self 的 isMut 来自方法的 selfMut）
+                // 根 self 的 isMut 来自方法的 selfMut）。
+                // receiver 是临时值（make().add(2)）时直接放行：
+                // 临时值本身就是可写的
                 if (m->selfMut) {
                     ExprPtr cur = node.receiver;
                     Symbol* s = nullptr;
@@ -585,13 +725,14 @@ void BodyChecker::visit(MethodCallExpr& node) {
                         }
                         break;
                     }
-                    bool ok = s && (s->isMut
+                    bool ok = !s || (s->isMut
                         || (s->type.kind == TypeKind::Ref && s->type.isMut));
                     if (!ok)
                         semaError("&mut self 方法 " + node.method
                                   + " 的 receiver 必须是可变变量");
                 }
                 lastType_ = m->returnType ? *m->returnType : Type{TypeKind::Unit};
+                lastDiverges_ = false;
                 return;
             }
         }
@@ -602,7 +743,7 @@ void BodyChecker::visit(MethodCallExpr& node) {
 // 结构体字面量 Point { x: 1, y: 2 }：名字必须是已注册 struct；
 // 字段不缺不多、每个初值类型匹配；类型为 Named(结构体名)
 void BodyChecker::visit(StructLiteralExpr& node) {
-    Symbol* sym = symtab_.lookup(node.name);
+    Symbol* sym = symtab_.lookupType(node.name);
     if (!sym || sym->kind != SymbolKind::StructType)
         semaError("未定义的 struct：" + node.name);
     if (node.fields.size() != sym->structDef->fields.size())
@@ -624,6 +765,7 @@ void BodyChecker::visit(StructLiteralExpr& node) {
     }
     lastType_ = Type{TypeKind::Named};
     lastType_.name = node.name;
+    lastDiverges_ = false;
 }
 
 // 数组字面量两种形态：列举 [1, 2, 3]（repeatValue 为空）与重复 [0; 5]
@@ -646,6 +788,7 @@ void BodyChecker::visit(ArrayExpr& node) {
         arr.elem = std::make_shared<Type>(firstT);
         arr.arrayLen = node.elements.size();
         lastType_ = arr;
+        lastDiverges_ = false;
     } else {
         // ---- 重复形式 [0; 5] ----
         evalExpr(node.repeatValue);
@@ -695,6 +838,7 @@ void BodyChecker::visit(ArrayExpr& node) {
         arr.elem = std::make_shared<Type>(elemT);
         arr.arrayLen = len;
         lastType_ = arr;
+        lastDiverges_ = false;
     }
 }
 
@@ -707,7 +851,14 @@ void BodyChecker::visit(IndexExpr& node) {
     Type elemT = *lastType_.elem;        // 先存走元素类型
     size_t arrLen = lastType_.arrayLen;  // 已知长度（0 = 未知）留给越界检查
     evalExpr(node.index);
-    if (!isInt(lastType_)) semaError("数组下标必须是整型");
+    // Rx 方言下标必须是 usize（字面量 IntLit 可推导为 usize）；
+    // 旧规范只要求整型
+    if (rxDialect_) {
+        if (lastType_.kind != TypeKind::Usize && lastType_.kind != TypeKind::IntLit)
+            semaError("数组下标必须是 usize，实际 " + lastType_.toString());
+    } else {
+        if (!isInt(lastType_)) semaError("数组下标必须是整型");
+    }
     // 常量下标越界检查（如 grid[3][3]，grid 是 [[i32; 3]; 3]）
     long long idx;
     if (arrLen != 0 && ConstEvaluator::evalIntLiteral(node.index, idx)
@@ -715,6 +866,7 @@ void BodyChecker::visit(IndexExpr& node) {
         semaError("数组下标越界：下标 " + std::to_string(idx)
                   + "，长度 " + std::to_string(arrLen));
     lastType_ = elemT;
+    lastDiverges_ = false;
 }
 
 void BodyChecker::visit(ConstDef& node) {
@@ -777,6 +929,7 @@ void BodyChecker::visit(CastExpr& node) {
     if (!ok)
         semaError("不支持的类型转换：" + src.toString() + " as " + dst.toString());
     lastType_ = dst;
+    lastDiverges_ = false;
 }
 
 // 块内条目：嵌套 fn / 局部 const/static——注册进当前作用域并检查体
@@ -808,6 +961,7 @@ void BodyChecker::visit(ItemStmt& node) {
         sym.structDef = st;
         if (!symtab_.insert(sym)) semaError("重复定义：" + sym.name);
     }
+    lastDiverges_ = false;
 }
 
 // 顶层不会出现这些，防御性留空

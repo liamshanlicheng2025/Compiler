@@ -30,7 +30,7 @@ class Block;
 class Function;
 class ConstDef;
 
-enum class LiteralKind {Int, Float, Bool, Char, Str};
+enum class LiteralKind {Int, Float, Bool, Char, Str, Unit};
 
 using NodePtr  = std::shared_ptr<Node>;
 using ItemPtr  = std::shared_ptr<Item>;
@@ -229,6 +229,8 @@ class StructDef : public Item {
 public:
     std::string name;
     std::vector<Param> fields;   // 字段复用 Param（也是"名字+类型"）
+    bool hasGenericParams = false;  // 带 <'a>/<T> 声明（泛型本身的语义不检查，
+                                    // 但使用时带不带泛型实参的匹配要靠它判断）
     void accept(ASTVisitor& visitor) override;
 };
 

@@ -57,20 +57,26 @@ class Scope {
 public:
     explicit Scope(std::shared_ptr<Scope> parent) : parent_(std::move(parent)) {}
 
-    // name 已在 symbols_ 里 → 返回 false（重复定义，调用方报错）；否则插入返回 true
+    // name 已在本层对应命名空间 → 返回 false（重复定义，调用方报错）；否则插入返回 true。
+    // 类型符号（StructType/EnumType）进类型命名空间，其余进值命名空间——
+    // 两者互不冲突：struct Same 和 fn Same 可以共存（Rust 的命名空间规则）
     bool insert(const Symbol& sym);
 
     // 同层重名直接覆盖（Rust 允许同作用域 let 遮蔽，comprehensive2）
     void upsert(const Symbol& sym) { symbols_[sym.name] = sym; }
 
-    // 只查当前层，找到返回指针，没有返回 nullptr
+    // 只查当前层的值命名空间，找到返回指针，没有返回 nullptr
     Symbol* lookupLocal(const std::string& name);
+
+    // 只查当前层的类型命名空间
+    Symbol* lookupLocalType(const std::string& name);
 
     std::shared_ptr<Scope> parent() const { return parent_; }
 
 private:
     std::shared_ptr<Scope> parent_;
-    std::unordered_map<std::string, Symbol> symbols_;
+    std::unordered_map<std::string, Symbol> symbols_;      // 值命名空间：变量/函数/常量
+    std::unordered_map<std::string, Symbol> typeSymbols_;  // 类型命名空间：struct/enum
 };
 
 class SymbolTable {
@@ -89,6 +95,10 @@ public:
 
     // 从当前作用域开始沿 parent 链逐层向外找；全部没有返回 nullptr
     Symbol* lookup(const std::string& name);
+
+    // 同上，但查类型命名空间（struct/enum 定义）。类型位置
+    //（标注、impl 目标、结构体字面量、A::B 路径首段）必须用这个方法
+    Symbol* lookupType(const std::string& name);
 
     // 向全局作用域注册内建函数与内建类型（String），CrateIndex 开始前调用一次：
     //   printlnInt(i32) -> unit / printInt(i32) -> unit / getInt() -> i32 / exit(i32) -> unit

@@ -68,6 +68,8 @@ private:
     ConstEvaluator constEval_;   // 常量求值（数组长度、const 初值、越界下标）
 
     Type lastType_;            // 最近一个表达式的求值类型（读完立刻存走）
+    bool lastDiverges_ = false;  // 最近一个表达式是否发散（return/break/不停 loop）：
+                                 // Block 用它判定不可达代码与块的 Never 类型
     Type currentFnRetType_;    // 当前函数的声明返回类型（return 语句比对用）
     int loopDepth_ = 0;        // 循环嵌套深度，break/continue 要求 > 0
     Type loopBreakType_;       // 最近一层 loop 里带值 break 的值类型
@@ -83,4 +85,7 @@ private:
     std::unordered_map<const Expr*, Type> exprTypes_;   // 表达式类型旁表
     // 求值子表达式并登记其类型：所有表达式参数的统一入口
     void evalExpr(const ExprPtr& e);
+    // Self 类型归一化（impl 外使用报错）与具名类型存在性检查，见 .cpp
+    void resolveSelfType(Type& t);
+    void checkTypeResolvable(const Type& t);
 };

@@ -92,7 +92,11 @@ Type AstBuilder::parseTypeNoBounds(RustParser::TypeNoBoundsContext* ctx) {
         else if (n == "bool")   t.kind = TypeKind::Bool;
         else if (n == "char")   t.kind = TypeKind::Char;
         else if (n == "str")    t.kind = TypeKind::Str;
-        else { t.kind = TypeKind::Named; t.name = n; }
+        else {
+            t.kind = TypeKind::Named;
+            t.hasGenericArgs = (n.find('<') != std::string::npos);
+            t.name = n.substr(0, n.find('<'));   // 剥掉泛型实参（View<'a> → View）
+        }
         return t;
     }
 
@@ -295,6 +299,17 @@ std::any AstBuilder::visitGroupedExpression(RustParser::GroupedExpressionContext
     return visit(ctx->expression());
 }
 
+// 元组表达式：空元组 () 是 unit 字面量；多元素元组不在课程范围
+std::any AstBuilder::visitTupleExpression(RustParser::TupleExpressionContext* ctx) {
+    if (!ctx->tupleElements()) {
+        auto node = std::make_shared<Literal>();
+        node->kind = LiteralKind::Unit;
+        node->text = "()";
+        return ExprPtr(node);
+    }
+    throw std::runtime_error("[ast] 元组表达式不在课程范围: " + ctx->getText());
+}
+
 // 表达式语句：普通表达式（带分号）和 if/while/loop 等带块表达式（分号可选）
 // 统一包成 ExprStmt
 std::any AstBuilder::visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) {
@@ -401,6 +416,7 @@ std::any AstBuilder::visitCallExpression(RustParser::CallExpressionContext* ctx)
 std::any AstBuilder::visitStructStruct(RustParser::StructStructContext* ctx) {
     auto node = std::make_shared<StructDef>();
     node -> name = ctx -> identifier() -> getText();
+    node -> hasGenericParams = (ctx -> genericParams() != nullptr);
     if (ctx -> structFields()){
         for (auto* field : ctx -> structFields() -> structField()){
             Param param;
@@ -415,7 +431,10 @@ std::any AstBuilder::visitStructStruct(RustParser::StructStructContext* ctx) {
 // impl 块：目标类型 + 方法列表 + 关联常量
 std::any AstBuilder::visitInherentImpl(RustParser::InherentImplContext* ctx) {
     auto node = std::make_shared<ImplBlock>();
-    node -> typeName = ctx -> type_() -> getText();
+    // 目标类型走完整的类型解析：括号穿透（impl (S)）、泛型实参剥离（impl View<'a>）
+    Type target = parseType(ctx -> type_());
+    node -> typeName = (target.kind == TypeKind::Named)
+                       ? target.name : ctx -> type_() -> getText();
     for (auto* item : ctx -> associatedItem()){
         if (item -> function_()){
             auto result = std::any_cast<ItemPtr>(visit(item -> function_()));
@@ -508,11 +527,23 @@ std::any AstBuilder::visitIndexExpression(RustParser::IndexExpressionContext* ct
 }
 
 // 引用：&x / &mut x，复用 UnaryExpr
+// &&x 是双重借用的合并词法（g4: (AND|ANDAND) KW_MUT?）：展开成两嵌套借用，
+// KW_MUT 属于内层（&&mut x = &(&mut x)）
 std::any AstBuilder::visitBorrowExpression(RustParser::BorrowExpressionContext* ctx) {
+    ExprPtr operand = toExpr(visit(ctx -> expression()));
+    if (ctx -> ANDAND()) {
+        auto inner = std::make_shared<UnaryExpr>();
+        inner->op = ctx->KW_MUT() ? "&mut" : "&";
+        inner->operand = operand;
+        auto outer = std::make_shared<UnaryExpr>();
+        outer->op = "&";
+        outer->operand = ExprPtr(inner);
+        return ExprPtr(outer);
+    }
     auto node = std::make_shared<UnaryExpr>();
     node -> op = "&";
     if (ctx -> KW_MUT()) node -> op = "&mut";
-    node -> operand = toExpr(visit(ctx -> expression()));
+    node -> operand = operand;
     return ExprPtr(node);
 }
 

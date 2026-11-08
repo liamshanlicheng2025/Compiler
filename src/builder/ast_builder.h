@@ -53,6 +53,7 @@ public:
     std::any visitExpressionStatement(RustParser::ExpressionStatementContext* ctx) override;
     // 括号表达式穿透：(expr) → 内层节点
     std::any visitGroupedExpression(RustParser::GroupedExpressionContext* ctx) override;
+    std::any visitTupleExpression(RustParser::TupleExpressionContext* ctx) override;
 
     // ---- 第 2 波：控制流 ----
     std::any visitIfExpression(RustParser::IfExpressionContext* ctx) override;
