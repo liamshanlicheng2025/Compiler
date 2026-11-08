@@ -87,4 +87,5 @@ private:
 
     Type typeOf(const Expr& e) const;          // 查 exprTypes 旁表
     std::string evalExpr(const ExprPtr& e);    // visit 子表达式并取走 lastValue_
+    std::string evalAddr(const ExprPtr& e);    // 求左值表达式的地址（不 load）
 };

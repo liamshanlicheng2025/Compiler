@@ -155,10 +155,15 @@ void BodyChecker::visit(Literal& node) {
             // 无后缀按 i32 判断，但一元 - 正下方允许 2147483648（i32 MIN）
             std::string digits = node.text;
             long long limit = 2147483647LL;
+            TypeKind suffixKind = TypeKind::Unknown;
             for (const char* suf : {"usize", "isize", "i32", "u32"}) {
                 auto p = digits.rfind(suf);
                 if (p != std::string::npos && p + std::strlen(suf) == digits.size()) {
                     if (suf[0] == 'u') limit = 4294967295LL;   // u32/usize
+                    if (std::strcmp(suf, "i32") == 0)   suffixKind = TypeKind::I32;
+                    if (std::strcmp(suf, "u32") == 0)   suffixKind = TypeKind::U32;
+                    if (std::strcmp(suf, "isize") == 0) suffixKind = TypeKind::Isize;
+                    if (std::strcmp(suf, "usize") == 0) suffixKind = TypeKind::Usize;
                     digits = digits.substr(0, p);
                     break;
                 }
@@ -171,7 +176,10 @@ void BodyChecker::visit(Literal& node) {
             }
             if (v > limit && !(allowI32MinLit_ && v == 2147483648LL))
                 semaError("整数字面量溢出（超出范围）：" + node.text);
-            lastType_ = Type{TypeKind::IntLit};   // 未定型整数字面量
+            // 带后缀的字面量类型当场定型（let x: isize = 1i32; 要报不匹配）；
+            // 无后缀保持 IntLit，由上下文归一化
+            lastType_ = suffixKind == TypeKind::Unknown
+                      ? Type{TypeKind::IntLit} : Type{suffixKind};
             break;
         }
         case LiteralKind::Float: lastType_ = Type{TypeKind::F64}; break;
@@ -743,9 +751,30 @@ void BodyChecker::visit(MacroStmt& node) {
 }
 
 // as 类型转换：检查子表达式后，结果类型就是目标类型（数值间转换直接放行）
+// as 类型转换：只允许数值标量之间的转换——整型互转、整型↔浮点、
+// bool/char → 整型；其余组合报错（int→bool、引用→整型、struct 参与等）
 void BodyChecker::visit(CastExpr& node) {
     evalExpr(node.expr);
-    lastType_ = node.target;
+    Type src = lastType_;
+    const Type& dst = node.target;
+    auto intLike = [](TypeKind k) {
+        return k == TypeKind::I32 || k == TypeKind::U32
+            || k == TypeKind::Isize || k == TypeKind::Usize
+            || k == TypeKind::IntLit;
+    };
+    auto floaty = [](TypeKind k) {
+        return k == TypeKind::F32 || k == TypeKind::F64;
+    };
+    bool ok;
+    if (src.kind == TypeKind::Unknown) ok = true;   // 出错兜底，不级联误报
+    else if (intLike(src.kind) && (intLike(dst.kind) || floaty(dst.kind))) ok = true;
+    else if (floaty(src.kind) && (intLike(dst.kind) || floaty(dst.kind))) ok = true;
+    else if (src.kind == TypeKind::Bool && intLike(dst.kind)) ok = true;
+    else if (src.kind == TypeKind::Char && intLike(dst.kind)) ok = true;
+    else ok = false;
+    if (!ok)
+        semaError("不支持的类型转换：" + src.toString() + " as " + dst.toString());
+    lastType_ = dst;
 }
 
 // 块内条目：嵌套 fn / 局部 const/static——注册进当前作用域并检查体

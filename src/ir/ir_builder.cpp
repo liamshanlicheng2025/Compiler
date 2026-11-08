@@ -3,7 +3,8 @@
 #include <cstdio>
 
 std::string IRBuilder::freshReg() {
-    return "%" + std::to_string(++regNo_);
+    // LLVM 要求匿名寄存器从 %0 开始连续编号（命名值如 %x.addr 不占号）
+    return "%" + std::to_string(regNo_++);
 }
 
 std::string IRBuilder::freshLabel(const std::string& base) {

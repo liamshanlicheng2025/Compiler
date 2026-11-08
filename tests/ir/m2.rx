@@ -1,0 +1,6 @@
+fn main() {
+    let x = 1 + 2;
+    let mut y = x * 3;
+    y += 4;
+    printlnInt(y);
+}

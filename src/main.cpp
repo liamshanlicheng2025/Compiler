@@ -30,18 +30,20 @@ int main(int argc, char** argv) {
         else if (arg == "--emit-llvm") emitLLVM = true;
         else inputFile = arg;
     }
-    if (inputFile.empty()) {
-        std::cerr << "usage: " << argv[0] << " <file.rs> [--tree] [--types] [--emit-llvm]" << std::endl;
-        return 1;
-    }
-    std::ifstream stream(inputFile);
-    if (!stream) {
-        std::cerr << "cannot open file: " << argv[1] << std::endl;
-        return 1;
+    // 无文件参数时从 stdin 读（评测机约定：make run < test.rx > output.ll）
+    std::ifstream fileStream;
+    std::istream* in = &std::cin;
+    if (!inputFile.empty()) {
+        fileStream.open(inputFile);
+        if (!fileStream) {
+            std::cerr << "cannot open file: " << inputFile << std::endl;
+            return 1;
+        }
+        in = &fileStream;
     }
 
     // ---- 阶段 1：ANTLR 解析（已就绪，不用动）----
-    antlr4::ANTLRInputStream input(stream);
+    antlr4::ANTLRInputStream input(*in);
     RustLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
     RustParser parser(&tokens);

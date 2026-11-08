@@ -48,12 +48,12 @@ jobs:
           grep -q "semantic-1: 221/221" semantic-report.txt
           grep -q "semantic-2: 50/50" semantic-report.txt
 
-      - name: Regression — rx-compiler-testcases (baseline 154/239)
+      - name: Regression — rx-compiler-testcases (baseline 165/239)
         run: |
           python3 scripts/regress_rx.py | tee rx-report.txt
           total=$(grep '^TOTAL' rx-report.txt | grep -oE '[0-9]+/[0-9]+')
           echo "rx total: $total"
-          [ "${total%/*}" -ge 154 ]
+          [ "${total%/*}" -ge 165 ]
 
       - name: Archive test reports
         if: always()

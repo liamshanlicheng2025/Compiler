@@ -1,0 +1,4 @@
+# RxOJ 评测配置：C/C++ 项目，依赖（antlr4-runtime）评测机已预装，
+# 不做在线拉取；构建走根目录 Makefile（make build / make run）
+[dependencies]
+enabled = false
