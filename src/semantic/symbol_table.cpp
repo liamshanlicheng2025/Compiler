@@ -97,5 +97,16 @@ void SymbolTable::registerBuiltins() {
     Symbol strType;
     strType.kind = SymbolKind::StructType;
     strType.name = "String";
+    strType.isClone = true;
     global_ -> insert(strType);
+    // 内建容器 Vec/Box：元素类型存在 Type::elem 上（见 ast/type.h 的 vecOf/boxOf），
+    // 这里只注册名字与能力标记；方法在 BodyChecker 里按名字特判
+    for (const char* container : {"Vec", "Box"}) {
+        Symbol c;
+        c.kind = SymbolKind::StructType;
+        c.name = container;
+        c.isClone = true;
+        c.hasPartialEq = true;
+        global_ -> insert(c);
+    }
 }

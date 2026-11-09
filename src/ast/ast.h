@@ -154,6 +154,8 @@ public:
 class PathExpr : public Expr {
 public:
     std::string name;
+    // turbofish 泛型实参（Vec::<i32>::new 里的 i32）；无则为空
+    std::shared_ptr<Type> genericArg;
     void accept(ASTVisitor& visitor) override;
 };
 
@@ -231,6 +233,7 @@ public:
     std::vector<Param> fields;   // 字段复用 Param（也是"名字+类型"）
     bool hasGenericParams = false;  // 带 <'a>/<T> 声明（泛型本身的语义不检查，
                                     // 但使用时带不带泛型实参的匹配要靠它判断）
+    std::vector<std::string> derives;  // #[derive(Copy, Clone, ...)] 请求的 trait 名
     void accept(ASTVisitor& visitor) override;
 };
 

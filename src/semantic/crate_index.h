@@ -73,4 +73,13 @@ private:
     //   无参数、无返回类型标注（或显式 -> ()）、不能是方法/泛型。
     //   新官方测试集 semantic/entry/ 有 4 个 rej 用例对应这些规则。
     void checkEntryPoint(const CratePtr& crate);
+
+    // ---- derive 校验（#[derive(Copy, Clone, PartialEq, Eq)]）----
+    // run() 的第二遍里对每个带 derive 的 struct 调用 validateDerives。
+    // validateDerives 的规则实现留给同学完成；下面的 typeSupports 系列是
+    // 递归判定"某个类型是否天生满足某 trait"的辅助函数（已实现）
+    void validateDerives(const StructDef& def, Symbol& sym);
+    bool typeSupportsCopy(const Type& t);
+    bool typeSupportsClone(const Type& t);
+    bool typeSupportsPartialEq(const Type& t);
 };

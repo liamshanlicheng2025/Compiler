@@ -1,9 +1,17 @@
 # A 类特性骨架：Rx 完整特性扩展路线
 
-> 现状：rx-compiler-testcases/semantic **195/239**。剩余 44 个失败点全部属于本文档
-> 列出的特性。是否实现取决于课程计分范围——动手前先和助教确认。
+> **状态（2026-11-09）**：已全部落地，rx 套件 **223/239**，旧套件满分。
+> 剩余 16 个点精确对应三个留给同学完成的函数：
 >
-> 每条特性给出：要动的文件、数据结构骨架、检查点位置、对应测试点。
+> | 函数 | 位置 | 解锁的测试点 |
+> |---|---|---|
+> | `CrateIndex::validateDerives` | src/semantic/crate_index.cpp | copy-clone 套件 8 个、recursive-traits 2 个、comprehensive-owned-tree、trait-dispatch acc（共 12 个） |
+> | `BodyChecker::coercible` | src/semantic/body_checker.cpp | reference-coercions 2 个 |
+> | `BodyChecker::lub`（第 3 条引用合并） | 同上 | reference-lub、runtime-value-merges（共 2 个） |
+>
+> 三个函数都只有伪代码骨架（TODO 注释里写清了规则），填完即可 239/239。
+>
+> 下面是当初的设计骨架，实现与其一致，留档参考。
 
 ---
 

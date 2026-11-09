@@ -51,6 +51,12 @@ struct Symbol {
     // 仅 Const 用：初值是整数字面量时记下编译期值（数组长度常量解析用）
     bool hasConstValue = false;
     long long constValue = 0;
+
+    // 仅 StructType 用：derive 而来的能力标记（CrateIndex 校验 derive 列表后打勾）。
+    // 内建容器 Vec/Box 注册时直接置 isClone/hasPartialEq
+    bool isCopy = false;        // derive(Copy)：赋值/传参后原值仍可用
+    bool isClone = false;       // derive(Clone)：可以 .clone() / Type::clone(&v)
+    bool hasPartialEq = false;  // derive(PartialEq)：可以 ==/!=
 };
 
 class Scope {

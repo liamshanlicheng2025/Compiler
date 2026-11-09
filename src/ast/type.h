@@ -48,3 +48,28 @@ struct Type {
 
     bool equal(const Type& other) const;
 };
+
+// ---- Vec<T> / Box<T> 内建容器 ----
+// 复用 Named 表示：name 固定 "Vec"/"Box"，elem 存元素类型。
+// 这样 Ref/Array 的既有递归逻辑（equal、toString、解引用）可以直通。
+
+inline bool isVecType(const Type& t) {
+    return t.kind == TypeKind::Named && t.name == "Vec";
+}
+inline bool isBoxType(const Type& t) {
+    return t.kind == TypeKind::Named && t.name == "Box";
+}
+inline Type vecOf(Type elem) {
+    Type t;
+    t.kind = TypeKind::Named;
+    t.name = "Vec";
+    t.elem = std::make_shared<Type>(std::move(elem));
+    return t;
+}
+inline Type boxOf(Type elem) {
+    Type t;
+    t.kind = TypeKind::Named;
+    t.name = "Box";
+    t.elem = std::make_shared<Type>(std::move(elem));
+    return t;
+}

@@ -82,7 +82,20 @@ Type AstBuilder::parseTypeNoBounds(RustParser::TypeNoBoundsContext* ctx) {
     if (auto* tro = ctx->traitObjectTypeOneBound())
         if (auto* tb = tro->traitBound()) tp = tb->typePath();
     if (tp) {
+        auto* segs = tp->typePathSegment(0);
         std::string n = tp->getText();
+        // Vec<T>/Box<T>：解析泛型实参作为元素类型存进 elem；
+        // 参数个数不为 1 时 elem 留空，由 checkTypeResolvable 报错
+        std::string head = segs->pathIdentSegment()->getText();
+        if ((head == "Vec" || head == "Box") && segs->genericArgs()
+            && segs->genericArgs()->genericArgsTypes()) {
+            auto types = segs->genericArgs()->genericArgsTypes()->type_();
+            t.kind = TypeKind::Named;
+            t.name = head;
+            if (types.size() == 1)
+                t.elem = std::make_shared<Type>(parseType(types[0]));
+            return t;
+        }
         if (n == "i32")   t.kind = TypeKind::I32;
         else if (n == "u32")    t.kind = TypeKind::U32;
         else if (n == "isize")  t.kind = TypeKind::Isize;
@@ -246,13 +259,19 @@ std::any AstBuilder::visitLazyBooleanExpression(
     return ExprPtr(node);
 }
 
-// 路径表达式（变量/函数引用）：遍历所有段用 :: 拼接，支持 Point::new 等多段路径
+// 路径表达式（变量/函数引用）：遍历所有段用 :: 拼接，支持 Point::new 等多段路径。
+// 段名只取标识符部分；turbofish 泛型实参（Vec::<i32>::new）单独存进 genericArg
 std::any AstBuilder::visitPathExpression_(RustParser::PathExpression_Context* ctx) {
     auto node = std::make_shared<PathExpr>();
     std::string path;
     for (auto* seg : ctx->pathExpression()->pathInExpression()->pathExprSegment()) {
         if (!path.empty()) path += "::";
-        path += seg->getText();
+        path += seg->pathIdentSegment()->getText();
+        if (!node->genericArg && seg->genericArgs()
+            && seg->genericArgs()->genericArgsTypes()
+            && !seg->genericArgs()->genericArgsTypes()->type_().empty())
+            node->genericArg = std::make_shared<Type>(
+                parseType(seg->genericArgs()->genericArgsTypes()->type_(0)));
     }
     node->name = path;
     return ExprPtr(node);
@@ -412,11 +431,31 @@ std::any AstBuilder::visitCallExpression(RustParser::CallExpressionContext* ctx)
     return ExprPtr(node);
 }
 
-// struct 定义：名字 + 字段列表（字段复用 Param 结构）
+// struct 定义：名字 + 字段列表（字段复用 Param 结构）+ #[derive(...)] 收集
 std::any AstBuilder::visitStructStruct(RustParser::StructStructContext* ctx) {
     auto node = std::make_shared<StructDef>();
     node -> name = ctx -> identifier() -> getText();
     node -> hasGenericParams = (ctx -> genericParams() != nullptr);
+    // derive 属性挂在外层 item 节点上（g4: item → outerAttribute* ...），
+    // 沿父链找上去解析 #[derive(A, B)] 的 trait 名列表
+    for (antlr4::tree::ParseTree* p = ctx->parent; p; p = p->parent) {
+        auto* itemCtx = dynamic_cast<RustParser::ItemContext*>(p);
+        if (!itemCtx) continue;
+        for (auto* attr : itemCtx->outerAttribute()) {
+            std::string text = attr->getText();          // #[derive(Clone,Copy)]
+            if (text.rfind("#[derive(", 0) != 0) continue;
+            std::string inner = text.substr(9, text.size() - 11);  // 剥掉 "#[derive(" 和 ")]"
+            size_t pos = 0;
+            while (pos <= inner.size()) {
+                size_t comma = inner.find(',', pos);
+                node->derives.push_back(inner.substr(pos, comma == std::string::npos
+                                                     ? comma : comma - pos));
+                if (comma == std::string::npos) break;
+                pos = comma + 1;
+            }
+        }
+        break;
+    }
     if (ctx -> structFields()){
         for (auto* field : ctx -> structFields() -> structField()){
             Param param;

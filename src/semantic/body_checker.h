@@ -88,4 +88,33 @@ private:
     // Self 类型归一化（impl 外使用报错）与具名类型存在性检查，见 .cpp
     void resolveSelfType(Type& t);
     void checkTypeResolvable(const Type& t);
+
+    // 隐式类型转换（coercion）：src 的值能否隐式当作 dst 用。
+    // 用于 let 初值→标注、赋值右值→左值、实参→形参、return 值→返回类型。
+    // 规则实现见 .cpp（同学完成）
+    bool coercible(const Type& src, const Type& dst);
+    // 类型合并（最小上界）：if 两臂、数组元素、loop 多个 break 值的合并。
+    // 无法合并返回 false。规则实现见 .cpp（同学完成）
+    bool lub(const Type& a, const Type& b, Type& out);
+
+    // Clone/PartialEq 能力查询（derive 标记 + 内建规则），供 .clone()/== 用
+    bool isCloneableType(const Type& t);
+    bool hasPartialEqType(const Type& t);
+    // Copy 能力查询：标量、共享引用、元素可 Copy 的数组、derive(Copy) 的
+    // struct；Vec/Box/String 不可 Copy。供数组重复形式 [v; N] 检查用
+    bool isCopyType(const Type& t);
+    // ---- 位置可写性 / 可变重借（简化借用检查）----
+    // placeWritable(e)：位置 e 能否被整体写入（赋值目标、&mut 借用、
+    //   Vec::push 的 receiver）。沿 Field/Index/解引用往根走；遇到引用层
+    //   由引用自身的可变性决定；根变量必须是可变绑定。
+    // reborrowOk(place)：存放在 place 里的 &mut 值能否被可变使用（通过它
+    //   写入 / 当右值再借出）。Vec 元素不绕过 Vec 自身的可变性
+    //  （vec-index-mutability 系列 rej）；数组/struct/Box 容器保持内部
+    //  &mut 的写能力（preserve 系列 acc）。
+    bool placeWritable(const ExprPtr& e);
+    bool reborrowOk(const ExprPtr& e);
+    bool reborrowContainerOk(const ExprPtr& expr, const Type& containerType);
+    // 把存放在某个位置里的 &mut 值当右值用时调用（let 初值、实参）：
+    // 位置形状的表达式（Field/Index/解引用）且类型是 &mut 时才涉及重借
+    void checkReborrowUse(const ExprPtr& e);
 };

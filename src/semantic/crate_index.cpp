@@ -17,6 +17,15 @@ static bool isProtectedTypeName(const std::string& n) {
 void CrateIndex::run(const CratePtr& crate) {
     symtab_.registerBuiltins();   // 内建函数先于一切注册
     crate->accept(*this);
+    // 第二遍：derive 校验。所有 struct 符号都已就位，
+    // 字段类型里出现的后声明 struct 也能查到（支持递归类型）
+    for (auto& item : crate->items) {
+        if (auto def = std::dynamic_pointer_cast<StructDef>(item)) {
+            if (def->derives.empty()) continue;
+            Symbol* sym = symtab_.lookupType(def->name);
+            if (sym) validateDerives(*def, *sym);
+        }
+    }
     checkEntryPoint(crate);
 }
 
@@ -81,6 +90,14 @@ void CrateIndex::registerFunction(const FunctionPtr& fn) {
 void CrateIndex::registerStruct(const std::shared_ptr<StructDef>& def) {
     if (isProtectedTypeName(def->name))
         semaError("内建类型名不可占用：" + def->name);
+    // 字段类型里的 Self 归一化为 struct 本名（如 children: Vec<Self>）
+    for (auto& f : def->fields) {
+        Type* t = &f.type;
+        while (t) {
+            if (t->kind == TypeKind::Named && t->name == "Self") t->name = def->name;
+            t = t->elem.get();
+        }
+    }
     // 字段名查重（g4 不拦，语义阶段负责）
     std::unordered_set<std::string> seen;
     for (auto& f : def->fields)
@@ -118,6 +135,9 @@ void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
     if (!target) semaError("impl 的目标类型未定义：" + def->typeName);
     if (target->kind != SymbolKind::StructType)
         semaError("impl 的目标不是 struct 类型：" + def->typeName);
+    // 内建容器/类型没有定义体，不能给它们写 inherent impl
+    if (!target->structDef)
+        semaError("impl 的目标必须是用户定义的 struct：" + def->typeName);
     auto& existing = symtab_.implMethods[def->typeName];
     for (auto& method : def -> methods) {
         if (method->returnType && method->returnType->kind == TypeKind::Named
@@ -148,4 +168,116 @@ void CrateIndex::registerImpl(const std::shared_ptr<ImplBlock>& def) {
         }
         existingConsts.push_back(cd);
     }
+}
+
+// ============================================================
+// derive 能力判定辅助（typeSupports 系列）
+//
+// 判定"类型本身是否满足某个 trait"，供 validateDerives 逐字段检查。
+// 递归规则：
+//   - 标量（整型/浮点/bool/char）：Copy、Clone、PartialEq 都满足
+//   - &T（共享引用）：Copy/Clone 满足；&mut T：都不满足
+//   - [T; N]：元素满足则数组满足
+//   - Vec/Box：Clone、PartialEq 满足，Copy 不满足（堆容器不能按位复制）
+//   - String：Clone 满足
+//   - 用户 struct：derives 列表里请求了该 trait，且其全部字段递归满足
+//    （递归 struct 的环只会经过 Vec/Box——它们在上面已经返回，不会死循环）
+// ============================================================
+
+namespace {
+// trait 三选一，避免三份几乎一样的递归
+enum class DeriveTrait { Copy, Clone, PartialEq };
+
+bool structSupports(const StructDef& def, DeriveTrait trait,
+                    SymbolTable& symtab, std::unordered_set<std::string>& visiting);
+
+bool typeSupports(const Type& t, DeriveTrait trait,
+                  SymbolTable& symtab, std::unordered_set<std::string>& visiting) {
+    switch (t.kind) {
+        case TypeKind::I32: case TypeKind::U32: case TypeKind::Isize:
+        case TypeKind::Usize: case TypeKind::IntLit:
+        case TypeKind::F32: case TypeKind::F64:
+        case TypeKind::Bool: case TypeKind::Char:
+            return true;   // 标量三种能力俱全
+        case TypeKind::Ref:
+            if (t.isMut) return false;                 // &mut 不可复制不可克隆
+            return trait != DeriveTrait::PartialEq     // &T：Copy/Clone 可以；
+                || typeSupports(*t.elem, trait, symtab, visiting);  // PartialEq 看目标
+        case TypeKind::Array:
+            return typeSupports(*t.elem, trait, symtab, visiting);
+        case TypeKind::Named: {
+            if (isVecType(t) || isBoxType(t))
+                return trait != DeriveTrait::Copy;     // 堆容器：Clone/PartialEq 可，Copy 不可
+            Symbol* s = symtab.lookupType(t.name);
+            if (!s || s->kind != SymbolKind::StructType) return false;
+            if (t.name == "String") return trait != DeriveTrait::Copy;
+            if (!s->structDef) return false;           // 内建无定义体，兜底
+            return structSupports(*s->structDef, trait, symtab, visiting);
+        }
+        default:
+            return false;
+    }
+}
+
+bool structSupports(const StructDef& def, DeriveTrait trait,
+                    SymbolTable& symtab, std::unordered_set<std::string>& visiting) {
+    if (!visiting.insert(def.name).second) return false;   // 防御：环
+    const char* want = trait == DeriveTrait::Copy ? "Copy"
+                     : trait == DeriveTrait::Clone ? "Clone" : "PartialEq";
+    bool requested = false;
+    for (auto& d : def.derives) if (d == want) requested = true;
+    bool ok = requested;
+    if (ok) {
+        for (auto& f : def.fields) {
+            if (!typeSupports(f.type, trait, symtab, visiting)) { ok = false; break; }
+        }
+    }
+    visiting.erase(def.name);
+    return ok;
+}
+} // namespace
+
+bool CrateIndex::typeSupportsCopy(const Type& t) {
+    std::unordered_set<std::string> visiting;
+    return typeSupports(t, DeriveTrait::Copy, symtab_, visiting);
+}
+bool CrateIndex::typeSupportsClone(const Type& t) {
+    std::unordered_set<std::string> visiting;
+    return typeSupports(t, DeriveTrait::Clone, symtab_, visiting);
+}
+bool CrateIndex::typeSupportsPartialEq(const Type& t) {
+    std::unordered_set<std::string> visiting;
+    return typeSupports(t, DeriveTrait::PartialEq, symtab_, visiting);
+}
+
+// TODO(同学完成)：derive 列表的合法性校验 + 给符号打能力标记。
+//
+// 输入：def 是 struct 的 AST 节点（def.derives 是 #[derive(...)] 请求的
+//       trait 名列表，例如 {"Clone", "Copy"}；def.fields 是字段表）；
+//       sym 是该 struct 在符号表里的符号（结果要写回它的
+//       isCopy / isClone / hasPartialEq 三个布尔位）。
+//
+// 规则（每条都对应 rx 测试集里的一个 rej 用例）：
+//   1. derives 里同一个 trait 出现两次 → 报错
+//      （#[derive(Clone, Clone)]，以及拆成两个 #[derive(Clone)] 属性——
+//      builder 已把它们合并进同一个 derives 列表，在这里统一查重即可）
+//   2. 请求了 Copy 但没请求 Clone → 报错（Copy 必须以 Clone 为前提）
+//   3. 请求了 Eq 但没请求 PartialEq → 报错（同理）
+//   4. 请求了 Copy：每个字段类型都要满足 typeSupportsCopy(f.type)，
+//      否则报错（Box 字段、Vec 字段都过不了这关）
+//   5. 请求了 Clone：每个字段都要满足 typeSupportsClone（&mut 字段过不了）
+//   6. 请求了 PartialEq：每个字段都要满足 typeSupportsPartialEq
+//      （字段是没 derive(PartialEq) 的用户 struct 时过不了）
+//   7. 全部通过后写回标记：
+//        sym.isCopy        = derives 里有 Copy
+//        sym.isClone       = derives 里有 Clone
+//        sym.hasPartialEq  = derives 里有 PartialEq
+//      （Eq 不需要记录，后续检查用不到）
+//
+// 报错用 semaError("...")（头文件 semantic/semantic_error.h 已包含），
+// 消息自拟，建议带上 struct 名和字段名方便定位。
+// typeSupportsCopy/Clone/PartialEq 是本类的成员函数，直接调用。
+void CrateIndex::validateDerives(const StructDef& def, Symbol& sym) {
+    // TODO: 按上方规则实现
+    (void)def; (void)sym;
 }

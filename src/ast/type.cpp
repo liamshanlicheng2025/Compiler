@@ -17,7 +17,9 @@ std::string Type::toString() const {
         case TypeKind::Unit:   return "()";
         case TypeKind::Never:  return "!";
         case TypeKind::Unknown:return "?";
-        case TypeKind::Named:  return name;
+        case TypeKind::Named:
+            // Vec/Box 带元素类型（Vec<i32>），其余只有名字
+            return elem ? name + "<" + elem->toString() + ">" : name;
         case TypeKind::Array:
             return "[" + (elem ? elem->toString() : "?") + "; " + std::to_string(arrayLen) + "]";
         case TypeKind::Ref:
@@ -56,6 +58,11 @@ bool Type::equal(const Type& other) const {
         if (!elem || !other.elem) return elem == other.elem;
         return elem->equal(*other.elem);
     }
-    if (kind == TypeKind::Named) return name == other.name;
+    if (kind == TypeKind::Named) {
+        if (name != other.name) return false;
+        // Vec<T>/Box<T> 的元素类型也要一致；普通 Named 两边都没有 elem，直通
+        if (!elem || !other.elem) return elem == other.elem;
+        return elem->equal(*other.elem);
+    }
     return true;
 }
