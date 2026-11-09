@@ -46,9 +46,45 @@ static Type peelOneRef(Type t){
 //      上面的规则天然满足：derefChain 只穿 Box，不动 Ref 层）
 //   3. 其他情况 → false
 bool BodyChecker::coercible(const Type& src, const Type& dst) {
-    // TODO: 按上方规则实现
-    (void)src; (void)dst;
-    return src.equal(dst);   // 占位：先只有基础相等，写完后删掉这行
+    // 引用→引用走专属路径：外层可变性兼容（&mut 可以当 & 用），
+    // 目标类型沿 Box 解引用链可达
+    if (src.kind == TypeKind::Ref && dst.kind == TypeKind::Ref) {
+        if (!src.isMut && dst.isMut) return false;   // & 不能当 &mut 用
+        // derefChain(from, to)：from 与 to 严格相同（不能用 equal——
+        // 它对引用内层也有 &mut→& 放行，会误放 rej-inner-reference-mutability）；
+        // from 是 Box<X> 则递归穿一层
+        auto strictSame = [](const Type& a, const Type& b, auto& self) -> bool {
+            // IntLit 兼容任何具体整型（&mut [0; 7] 可以当 &mut [i32; 7] 用）；
+            // Unknown/Never 通配兜底
+            auto concreteInt = [](TypeKind k) {
+                return k == TypeKind::I32 || k == TypeKind::U32
+                    || k == TypeKind::Isize || k == TypeKind::Usize;
+            };
+            if (a.kind == TypeKind::IntLit && concreteInt(b.kind)) return true;
+            if (b.kind == TypeKind::IntLit && concreteInt(a.kind)) return true;
+            if (a.kind == TypeKind::Unknown || a.kind == TypeKind::Never
+                || b.kind == TypeKind::Unknown || b.kind == TypeKind::Never) return true;
+            if (a.kind != b.kind) return false;
+            if (a.kind == TypeKind::Named && a.name != b.name) return false;
+            if (a.kind == TypeKind::Ref && a.isMut != b.isMut) return false;
+            if (a.kind == TypeKind::Array && a.arrayLen != 0 && b.arrayLen != 0
+                && a.arrayLen != b.arrayLen) return false;
+            if (static_cast<bool>(a.elem) != static_cast<bool>(b.elem)) return false;
+            if (a.elem) return self(*a.elem, *b.elem, self);
+            return true;
+        };
+        const Type* from = src.elem.get();
+        const Type* to = dst.elem.get();
+        while (true) {
+            if (strictSame(*from, *to, strictSame)) return true;
+            if (isBoxType(*from) && from->elem) {
+                from = from->elem.get();
+                continue;
+            }
+            return false;
+        }
+    }
+    return src.equal(dst);
 }
 
 // TODO(同学完成)：类型合并（最小上界 LUB）。
@@ -66,10 +102,17 @@ bool BodyChecker::coercible(const Type& src, const Type& dst) {
 //      （&mut i32 和 &i32 合并成 &i32；两个 &mut 合并还是 &mut）
 //   4. 无法合并 → 返回 false（out 不用管）
 bool BodyChecker::lub(const Type& a, const Type& b, Type& out) {
-    // TODO: 按上方规则实现（下面已写好第 1、2 条，第 3 条引用合并留给你）
     if (a.kind == TypeKind::Never) { out = b; return true; }
     if (b.kind == TypeKind::Never) { out = a; return true; }
     if (a.equal(b)) { out = a; return true; }
+    // 两边都是引用且 elem 相等：合并成更共享的一侧
+    //（&mut i32 和 &i32 合并成 &i32；两个 &mut 合并还是 &mut）
+    if (a.kind == TypeKind::Ref && b.kind == TypeKind::Ref
+        && a.elem && b.elem && a.elem->equal(*b.elem)) {
+        out = a;
+        out.isMut = a.isMut && b.isMut;
+        return true;
+    }
     return false;
 }
 

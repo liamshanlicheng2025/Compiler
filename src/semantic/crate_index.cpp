@@ -278,6 +278,35 @@ bool CrateIndex::typeSupportsPartialEq(const Type& t) {
 // 消息自拟，建议带上 struct 名和字段名方便定位。
 // typeSupportsCopy/Clone/PartialEq 是本类的成员函数，直接调用。
 void CrateIndex::validateDerives(const StructDef& def, Symbol& sym) {
-    // TODO: 按上方规则实现
-    (void)def; (void)sym;
+    auto has = [&](const char* t) {
+        for (auto& d : def.derives) if (d == t) return true;
+        return false;
+    };
+    // 1. derives 查重（同一 trait 出现两次即报错）
+    std::unordered_set<std::string> seen;
+    for (auto& d : def.derives)
+        if (!seen.insert(d).second)
+            semaError("struct " + def.name + " 重复 derive：" + d);
+    // 2. Copy 必须以 Clone 为前提
+    if (has("Copy") && !has("Clone"))
+        semaError("struct " + def.name + " derive(Copy) 必须同时 derive(Clone)");
+    // 3. Eq 必须以 PartialEq 为前提
+    if (has("Eq") && !has("PartialEq"))
+        semaError("struct " + def.name + " derive(Eq) 必须同时 derive(PartialEq)");
+    // 4~6. 逐字段检查被请求的 trait 是否被字段类型支持
+    for (auto& f : def.fields) {
+        if (has("Copy") && !typeSupportsCopy(f.type))
+            semaError("struct " + def.name + " 的字段 " + f.name + "（"
+                      + f.type.toString() + "）不支持 Copy，不能 derive(Copy)");
+        if (has("Clone") && !typeSupportsClone(f.type))
+            semaError("struct " + def.name + " 的字段 " + f.name + "（"
+                      + f.type.toString() + "）不支持 Clone，不能 derive(Clone)");
+        if (has("PartialEq") && !typeSupportsPartialEq(f.type))
+            semaError("struct " + def.name + " 的字段 " + f.name + "（"
+                      + f.type.toString() + "）不支持 PartialEq，不能 derive(PartialEq)");
+    }
+    // 7. 校验通过：写回能力标记
+    sym.isCopy = has("Copy");
+    sym.isClone = has("Clone");
+    sym.hasPartialEq = has("PartialEq");
 }
