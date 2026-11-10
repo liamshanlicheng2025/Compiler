@@ -62,6 +62,7 @@ add_executable(compiler
     src/ir/ir_builder.cpp
     src/ir/type_map.cpp
     src/ir/ir_generator.cpp
+    src/ir/ll.cpp
     grammar/cpp/RustLexerBase.cpp
     grammar/cpp/RustParserBase.cpp
     ${GENERATED_SRCS})
