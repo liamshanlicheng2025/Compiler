@@ -222,3 +222,52 @@ fn foo() -> i32 {                                            // 函数多 return
 新官方 Rx 测试集按标准 Rust 语义**不要求括号**。我们编译器用
 `Crate::rxDialect` 区分（文件含 `use` 声明即 Rx 方言）。小测若考 SPEC
 原文，以"带括号"为准。
+
+---
+
+## 附录：Semantic 阶段 ↔ SPEC 章节原文对照表
+
+> 所有路径相对 `reference/RCompiler-Spec/src/`。左边是复习主题，中间是 spec 原文，
+> 右边是我们编译器里的实现位置。
+
+### 核心必读（语义规则主要来源）
+
+| 主题 | SPEC 原文 | 我们的实现 |
+|---|---|---|
+| 类型总览/递归类型 | `types.md`、`types/*.md` | `ast/type.h` |
+| **coercion + LUB** | `type-coercions.md`（§ Coercion sites / § Coercion types / § Least upper bound coercions） | `BodyChecker::coercible/lub` |
+| 子类型（coercion 的自反情形） | `subtyping.md` | `Type::equal`（ast/type.cpp） |
+| 语句/let/分号规则 | `statements.md` | `visit(LetStmt)`、`visit(Block)` |
+| 块表达式 | `expressions/block-expr.md` | `visit(Block)` |
+| if 表达式 | `expressions/if-expr.md` | `visit(IfExpr)` |
+| 循环/break/continue | `expressions/loop-expr.md` | `visit(WhileExpr)`、`visit(LoopExpr)`、`visit(BreakExpr)` |
+| 运算符全表/溢出/短路/赋值右先 | `expressions/operator-expr.md` | `visit(BinaryExpr)`、`visit(UnaryExpr)` |
+| 表达式求值顺序 | `expressions.md` § Evaluation order of operands | —（IR 阶段） |
+| **place/value 语境、可变性、隐式借用** | `expressions.md` § Place Expressions and Value Expressions / § Mutability / § Implicit Borrows | `placeWritable/reborrowOk/checkReborrowUse` |
+| 字面量/路径/调用/方法/字段/结构体/数组 | `expressions/literal-expr.md`、`path-expr.md`、`call-expr.md`、`method-call-expr.md`、`field-expr.md`、`struct-expr.md`、`array-expr.md`、`grouped-expr.md`、`return-expr.md` | 对应同名 visit 函数 |
+
+### 名字与条目（CrateIndex/符号表的依据）
+
+| 主题 | SPEC 原文 | 我们的实现 |
+|---|---|---|
+| **命名空间**（类型/值/宏分开的依据） | `names/namespaces.md` | `Scope` 双 map + `lookupType` |
+| 名字解析 | `names/name-resolution.md` | `SymbolTable::lookup` |
+| 作用域 | `names/scopes.md` | `enterScope/exitScope/insertOrShadow` |
+| 函数/main 入口 | `items/functions.md` | `CrateIndex::registerFunction/checkEntryPoint` |
+| struct 定义 | `items/structs.md` | `registerStruct` |
+| impl / Self | `items/implementations.md` | `registerImpl`、`resolveSelfType` |
+| 方法/关联常量/receiver | `items/associated-items.md` | `visit(MethodCallExpr)`、`implConsts` |
+| const/static | `items/constant-items.md`、`items/static-items.md` | `registerConst/registerStatic` |
+| **常量求值** | `const_eval.md` | `ConstEvaluator` |
+| **derive** | `attributes/derive.md` | `validateDerives` + `typeSupports*` |
+| 变量与可变性 | `variables.md` | `Symbol::isMut`、`placeWritable` |
+
+### 明确不在 semantic 阶段范围（看到不用背）
+
+- `items/traits.md`（超出 derive 的 trait 系统）、`items/generics.md`、泛型
+- `patterns.md`、`expressions/match-expr.md`、`items/enumerations.md`（助教确认 enum/match 不要求）
+- 宏：`macros.md`、`macros-by-example.md`
+- 生命周期语义：`lifetime-elision.md`（标注只需穿透解析）
+- 闭包：`expressions/closure-expr.md`、`types/closure.md`
+- FFI/链接：`linkage.md`、`abi.md`、`items/external-blocks.md`
+- 词法细节（小测归 lexer 阶段）：`lexical-structure.md`、`tokens.md` 等
