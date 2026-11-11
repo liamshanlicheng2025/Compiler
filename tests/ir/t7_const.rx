@@ -1,0 +1,5 @@
+const N: i32 = 42;
+fn main() {
+    let x = N;
+    printlnInt(x);
+}

@@ -31,12 +31,15 @@ static const char* opName(OpCode op) {
         case OpCode::Sub:  return "sub";
         case OpCode::Mul:  return "mul";
         case OpCode::SDiv: return "sdiv";
+        case OpCode::UDiv: return "udiv";
         case OpCode::SRem: return "srem";
+        case OpCode::URem: return "urem";
         case OpCode::And:  return "and";
         case OpCode::Or:   return "or";
         case OpCode::Xor:  return "xor";
         case OpCode::Shl:  return "shl";
         case OpCode::AShr: return "ashr";
+        case OpCode::LShr: return "lshr";
         default:           return "?";
     }
 }
@@ -59,9 +62,10 @@ void Instr::emit(std::ostringstream& out) const {
             out << "store " << type << " " << operands[0] << ", ptr " << operands[1];
             break;
         case OpCode::Add: case OpCode::Sub: case OpCode::Mul:
-        case OpCode::SDiv: case OpCode::SRem:
+        case OpCode::SDiv: case OpCode::UDiv:
+        case OpCode::SRem: case OpCode::URem:
         case OpCode::And: case OpCode::Or: case OpCode::Xor:
-        case OpCode::Shl: case OpCode::AShr:
+        case OpCode::Shl: case OpCode::AShr: case OpCode::LShr:
             out << opName(op) << " " << type << " " << operands[0]
                 << ", " << operands[1];
             break;
@@ -208,12 +212,15 @@ void LLBuilder::emitBinary(const std::string& name, const std::string& result,
     else if (name == "sub") op = OpCode::Sub;
     else if (name == "mul") op = OpCode::Mul;
     else if (name == "sdiv") op = OpCode::SDiv;
+    else if (name == "udiv") op = OpCode::UDiv;
     else if (name == "srem") op = OpCode::SRem;
+    else if (name == "urem") op = OpCode::URem;
     else if (name == "and") op = OpCode::And;
     else if (name == "or") op = OpCode::Or;
     else if (name == "xor") op = OpCode::Xor;
     else if (name == "shl") op = OpCode::Shl;
     else if (name == "ashr") op = OpCode::AShr;
+    else if (name == "lshr") op = OpCode::LShr;
     append({op, result, type, "", {l, r}, {}});
 }
 

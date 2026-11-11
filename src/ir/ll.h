@@ -32,8 +32,8 @@ namespace ll {
 enum class OpCode {
     Comment,                                // 伪指令：注释行（; ...）
     Alloca, Load, Store,
-    Add, Sub, Mul, SDiv, SRem,
-    And, Or, Xor, Shl, AShr,
+    Add, Sub, Mul, SDiv, UDiv, SRem, URem,
+    And, Or, Xor, Shl, AShr, LShr,
     ICmp,                                   // aux = 谓词（eq/ne/slt/sle/sgt/sge）
     ZExt,                                   // type = 源类型，aux = 目标类型
     Call,                                   // args 用 (类型, 值) 对

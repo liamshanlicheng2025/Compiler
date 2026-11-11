@@ -19,7 +19,7 @@
 
 #include "ast/ast.h"
 #include "ast/ast_visitor.h"
-#include "ir/ir_builder.h"
+#include "ir/ll.h"
 #include "ir/type_map.h"
 
 #include <string>
@@ -69,7 +69,7 @@ public:
 private:
     SymbolTable& symtab_;
     const std::unordered_map<const Expr*, Type>& exprTypes_;
-    IRBuilder ir_;
+    ll::LLBuilder ir_;
 
     // 最近一个表达式 lower 出的值：寄存器名（%5）或常量文本（42 / null）
     // 传递模式与 BodyChecker::lastType_ 相同：用完立刻取走

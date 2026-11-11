@@ -59,7 +59,6 @@ add_executable(compiler
     src/semantic/const_evaluator.cpp
     src/semantic/layout_checker.cpp
     src/semantic/body_checker.cpp
-    src/ir/ir_builder.cpp
     src/ir/type_map.cpp
     src/ir/ir_generator.cpp
     src/ir/ll.cpp
