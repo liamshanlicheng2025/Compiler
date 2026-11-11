@@ -14,13 +14,17 @@
 //       └── BasicBlock（标签名 + 指令列表）
 //           └── Instr（枚举 OpCode + 结构化操作数）
 //
-// emit() 负责把对象树打印回标准 .ll 文本，输出与旧的 IRBuilder
-// 逐字节一致（迁移期可对每个测试用例 diff 验证）。
+// 叶子也是结构化的，codegen 全程不需要解析任何文本：
+//   Value：Reg（%5）/ Imm（42）/ Global（@.str.0）三态，按 kind 分派
+//   Type：枚举 kind + size()（字节数），数组递归、struct 查布局表
+// 字符串只出现在两处：叶子的 text 载荷（名字/数字原文），
+// 以及 emit() 打印 .ll 文本——后者只是给 clang 和肉眼看的输出格式。
 //
-// 类型仍用字符串表示（i32/i8/ptr/[N x T]/%struct.X）：类型是叶子标签，
-// codegen 按字符串分派即可，不值得再建一套类型对象。
+// IR 阶段与 codegen 的接口是 const ll::Module&（完整对象树）；
+// emit() 输出与旧的字符串拼装器逐字节一致（已对 8 个用例 diff 验证）。
 // ============================================================
 
+#include <memory>
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -29,28 +33,69 @@
 
 namespace ll {
 
+// 值：三态叶子。text 保留原文（"%5" / "42" / "@.str.0"），
+// 但 codegen 只按 kind 分派，不解析 text
+struct Value {
+    enum class Kind { Reg, Imm, Global } kind = Kind::Reg;
+    std::string text;
+
+    static Value reg(std::string name)    { return {Kind::Reg, std::move(name)}; }
+    static Value imm(std::string num)     { return {Kind::Imm, std::move(num)}; }
+    static Value global(std::string name) { return {Kind::Global, std::move(name)}; }
+
+    bool isReg() const { return kind == Kind::Reg; }
+    bool isImm() const { return kind == Kind::Imm; }
+    bool isGlobal() const { return kind == Kind::Global; }
+    int immValue() const { return std::stoi(text); }   // 仅 Imm 用
+    const std::string& str() const { return text; }    // emit 用
+};
+
+// 类型：枚举 kind + 负载。codegen 关心的是 kind 和 size()（字节数）
+struct Type {
+    enum class Kind { Void, I1, I8, I32, F32, F64, Ptr, Array, Struct } kind = Kind::Void;
+    int arrayLen = 0;                  // Array：元素个数
+    std::shared_ptr<Type> elem;        // Array：元素类型
+    std::string structName;            // Struct：名字（布局表的键）
+    int structBytes = -1;              // Struct：字节数；-1 = 未定，codegen 查布局表
+
+    static Type voidT() { return {}; }
+    static Type i1()  { Type t; t.kind = Kind::I1;  return t; }
+    static Type i8()  { Type t; t.kind = Kind::I8;  return t; }
+    static Type i32() { Type t; t.kind = Kind::I32; return t; }
+    static Type f32() { Type t; t.kind = Kind::F32; return t; }
+    static Type f64() { Type t; t.kind = Kind::F64; return t; }
+    static Type ptr() { Type t; t.kind = Kind::Ptr; return t; }
+    static Type array(Type elem, int n);
+    static Type struct_(std::string name, int bytes = -1);
+
+    int size() const;                  // 字节数；Struct 未定返回 -1
+    std::string str() const;           // emit 用文本（i32/ptr/[N x T]/%struct.X）
+};
+
 enum class OpCode {
     Comment,                                // 伪指令：注释行（; ...）
     Alloca, Load, Store,
     Add, Sub, Mul, SDiv, UDiv, SRem, URem,
     And, Or, Xor, Shl, AShr, LShr,
-    ICmp,                                   // aux = 谓词（eq/ne/slt/sle/sgt/sge）
-    ZExt,                                   // type = 源类型，aux = 目标类型
+    ICmp,                                   // auxStr = 谓词（eq/ne/slt/...）
+    ZExt,                                   // type = 源类型，auxType = 目标类型
     Call,                                   // args 用 (类型, 值) 对
     Ret, RetVoid,
     Br, BrCond,
-    GEP                                     // aux = 容器类型（[N x T]/%struct.X）
+    GEP                                     // auxType = 容器类型（Array/Struct）
 };
 
 struct Instr {
     OpCode op;
-    std::string result;                     // 目标寄存器（store/br/ret 等无结果指令为空）
-    std::string type;                       // 主类型：alloca 的分配类型、load/store 的值类型、
-                                            // 二元/icmp 的操作数类型、zext 源类型、call 返回类型
-    std::string aux;                        // icmp 谓词 / zext 目标类型 / GEP 容器类型
-    std::vector<std::string> operands;      // 位置化操作数（因指令而异，见 ll.cpp emit）
-    // Call 专用：实参表 (类型, 值)；首元素是 callee（类型为空）
-    std::vector<std::pair<std::string, std::string>> args;
+    Value result;                               // 目标寄存器；无结果指令 text 为空
+    Type type;                                  // 主类型：alloca 的分配类型、load/store 的值类型、
+                                                // 二元/icmp 的操作数类型、zext 源类型、call 返回类型
+    std::string auxStr;                         // icmp 谓词 / Comment 文本
+    Type auxType;                               // zext 目标类型 / GEP 容器类型
+    std::vector<Value> operands;                // 位置化操作数（因指令而异，见 ll.cpp emit）
+    std::vector<std::string> labels;            // Br / BrCond 的目标块名
+    // Call 专用：实参表 (类型, 值)；首元素是 callee（Value::Global）
+    std::vector<std::pair<Type, Value>> args;
 
     void emit(std::ostringstream& out) const;   // 打印一行（含两格缩进）
 };
@@ -62,9 +107,9 @@ struct BasicBlock {
 };
 
 struct Function {
-    std::string retType;
+    Type retType;
     std::string name;
-    std::vector<std::pair<std::string, std::string>> params;  // (类型, 名字)
+    std::vector<std::pair<Type, std::string>> params;  // (类型, 名字)
     std::vector<BasicBlock> blocks;
     void emit(std::ostringstream& out) const;
 };
@@ -77,51 +122,54 @@ struct Module {
 };
 
 // LLBuilder：在 Module 上维护"当前函数/当前块"游标，提供结构化发射接口。
-// 编号规则与旧 IRBuilder 相同：寄存器 %0 %1 ... 函数内连续；
+// 编号规则：寄存器 %0 %1 ... 函数内连续；
 // 标签首用基名，之后 基名.1 .2 ...；两者都在 beginFunction 时重置。
 class LLBuilder {
 public:
     // ---- 编号器 ----
-    std::string freshReg();
+    Value freshReg();
     std::string freshLabel(const std::string& base);
-    std::string addString(const std::string& content);   // 返回 "@.str.N"
+    Value addString(const std::string& content);   // 返回 Value::global("@.str.N")
 
     // ---- 模块区 ----
     void raw(const std::string& line);                   // 顶格行（target/declare/%struct）
 
     // ---- 函数 ----
-    void beginFunction(const std::string& retType, const std::string& name,
-                       std::vector<std::pair<std::string, std::string>> params);
+    void beginFunction(const Type& retType, const std::string& name,
+                       std::vector<std::pair<Type, std::string>> params);
     void endFunction();
     void label(const std::string& name);                 // 结束当前块，开新块
 
     // ---- 指令发射（追加到当前块尾部）----
     void comment(const std::string& text);
-    void emitAlloca(const std::string& result, const std::string& type);
-    void emitLoad(const std::string& result, const std::string& type,
-              const std::string& ptr);
-    void emitStore(const std::string& type, const std::string& value,
-               const std::string& ptr);
-    // 整数二元运算：op 为 "add"/"sub"/"mul"/"sdiv"/"srem"/"and"/"or"/"xor"/"shl"/"ashr"
-    void emitBinary(const std::string& opName, const std::string& result,
-                const std::string& type, const std::string& l, const std::string& r);
-    void emitIcmp(const std::string& pred, const std::string& result,
-              const std::string& type, const std::string& l, const std::string& r);
-    void emitZext(const std::string& result, const std::string& fromTy,
-              const std::string& toTy, const std::string& v);
-    // result 传空串 = void 返回不接管
-    void emitCall(const std::string& result, const std::string& retType,
+    void emitAlloca(const Value& result, const Type& type);
+    void emitLoad(const Value& result, const Type& type, const Value& ptr);
+    void emitStore(const Type& type, const Value& value, const Value& ptr);
+    // 整数二元运算：opName 为 "add"/"sub"/"mul"/"sdiv"/"udiv"/"srem"/"urem"
+    //   /"and"/"or"/"xor"/"shl"/"ashr"/"lshr"
+    void emitBinary(const std::string& opName, const Value& result,
+                const Type& type, const Value& l, const Value& r);
+    void emitIcmp(const std::string& pred, const Value& result,
+              const Type& type, const Value& l, const Value& r);
+    void emitZext(const Value& result, const Type& fromTy,
+              const Type& toTy, const Value& v);
+    // 有返回值用 emitCall，void 用 emitCallVoid
+    void emitCall(const Value& result, const Type& retType,
               const std::string& fnName,
-              const std::vector<std::pair<std::string, std::string>>& args);
-    void emitRet(const std::string& type, const std::string& value);
+              const std::vector<std::pair<Type, Value>>& args);
+    void emitCallVoid(const std::string& fnName,
+              const std::vector<std::pair<Type, Value>>& args);
+    void emitRet(const Type& type, const Value& value);
     void emitRetVoid();
     void emitBr(const std::string& labelName);
-    void emitBrCond(const std::string& cond, const std::string& thenLabel,
+    void emitBrCond(const Value& cond, const std::string& thenLabel,
                 const std::string& elseLabel);
-    // GEP：indices 一律按 i32 打印；elemType 是容器类型（[N x T] 或 %struct.X）
-    void emitGep(const std::string& result, const std::string& elemType,
-             const std::string& ptr, const std::vector<std::string>& indices);
+    // GEP：indices 一律按 i32 打印；container 是容器类型（Array/Struct）
+    void emitGep(const Value& result, const Type& container,
+             const Value& ptr, const std::vector<Value>& indices);
 
+    // codegen 的入口：完整对象树
+    const Module& module() const { return module_; }
     std::string str() const { return module_.emit(); }
 
 private:

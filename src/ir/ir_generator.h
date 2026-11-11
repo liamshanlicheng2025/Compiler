@@ -33,7 +33,8 @@ public:
     IRGenerator(SymbolTable& symtab,
                 const std::unordered_map<const Expr*, Type>& exprTypes);
 
-    std::string run(const CratePtr& crate);   // 生成完整 .ll 文本
+    std::string run(const CratePtr& crate);        // 生成完整 .ll 文本（CLI 用）
+    const ll::Module& module() const;              // codegen 的入口：完整对象树
 
     void visit(Crate& node) override;
     void visit(Block& node) override;
@@ -71,13 +72,13 @@ private:
     const std::unordered_map<const Expr*, Type>& exprTypes_;
     ll::LLBuilder ir_;
 
-    // 最近一个表达式 lower 出的值：寄存器名（%5）或常量文本（42 / null）
+    // 最近一个表达式 lower 出的值：寄存器（%5）/ 立即数（42）/ 全局名
     // 传递模式与 BodyChecker::lastType_ 相同：用完立刻取走
-    std::string lastValue_;
+    ll::Value lastValue_ = ll::Value::imm("");
 
-    // 局部变量地址表：变量名 → alloca 栈槽指针（"%x.addr"）
+    // 局部变量地址表：变量名 → alloca 栈槽指针（%x.addr）
     // let 遮蔽 = 同名新槽覆盖旧槽（与语义阶段的遮蔽语义一致）
-    std::unordered_map<std::string, std::string> locals_;
+    std::unordered_map<std::string, ll::Value> locals_;
 
     // 循环标签栈：{continue 目标, break 目标}，进循环压栈、出循环弹栈
     // break/continue 查栈顶决定 br 去哪（嵌套循环天然正确）
@@ -85,7 +86,7 @@ private:
 
     Type currentFnRetType_;   // 当前函数返回类型（ReturnExpr 发 ret 时用）
 
-    Type typeOf(const Expr& e) const;          // 查 exprTypes 旁表
-    std::string evalExpr(const ExprPtr& e);    // visit 子表达式并取走 lastValue_
-    std::string evalAddr(const ExprPtr& e);    // 求左值表达式的地址（不 load）
+    Type typeOf(const Expr& e) const;            // 查 exprTypes 旁表
+    ll::Value evalExpr(const ExprPtr& e);        // visit 子表达式并取走 lastValue_
+    ll::Value evalAddr(const ExprPtr& e);        // 求左值表达式的地址（不 load）
 };

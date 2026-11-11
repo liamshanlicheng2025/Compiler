@@ -4,11 +4,63 @@
 
 // ============================================================
 // ll 实现：结构化指令 → 标准 .ll 文本
-// 输出格式与旧 IRBuilder 逐字节一致（指令两格缩进、标签顶格带冒号、
+// 输出格式与旧的字符串拼装器逐字节一致（指令两格缩进、标签顶格带冒号、
 // define 头尾格式、字符串常量区格式相同），迁移期可 diff 验证。
 // ============================================================
 
 namespace ll {
+
+// ---- Type ----
+
+Type Type::array(Type elem, int n) {
+    Type t;
+    t.kind = Kind::Array;
+    t.arrayLen = n;
+    t.elem = std::make_shared<Type>(std::move(elem));
+    return t;
+}
+
+Type Type::struct_(std::string name, int bytes) {
+    Type t;
+    t.kind = Kind::Struct;
+    t.structName = std::move(name);
+    t.structBytes = bytes;
+    return t;
+}
+
+int Type::size() const {
+    switch (kind) {
+        case Kind::I1:
+        case Kind::I8:     return 1;
+        case Kind::I32:
+        case Kind::F32:
+        case Kind::Ptr:    return 4;
+        case Kind::F64:    return 8;
+        case Kind::Array:  return arrayLen * (elem ? elem->size() : 0);
+        case Kind::Struct: return structBytes;   // 可能是 -1（未定，查布局表）
+        case Kind::Void:   return 0;
+    }
+    return 0;
+}
+
+std::string Type::str() const {
+    switch (kind) {
+        case Kind::Void:   return "void";
+        case Kind::I1:     return "i1";
+        case Kind::I8:     return "i8";
+        case Kind::I32:    return "i32";
+        case Kind::F32:    return "float";
+        case Kind::F64:    return "double";
+        case Kind::Ptr:    return "ptr";
+        case Kind::Array:
+            return "[" + std::to_string(arrayLen) + " x "
+                 + (elem ? elem->str() : "void") + "]";
+        case Kind::Struct: return "%struct." + structName;
+    }
+    return "void";
+}
+
+// ---- emit ----
 
 // LLVM c"..." 字符串转义：不可打印字符、引号、反斜杠都写成 \XX（十六进制）
 static std::string escapeString(const std::string& s) {
@@ -46,62 +98,65 @@ static const char* opName(OpCode op) {
 
 void Instr::emit(std::ostringstream& out) const {
     if (op == OpCode::Comment) {
-        out << "  ; " << operands[0] << "\n";
+        out << "  ; " << auxStr << "\n";
         return;
     }
     out << "  ";
-    if (!result.empty()) out << result << " = ";
+    if (!result.text.empty()) out << result.text << " = ";
     switch (op) {
         case OpCode::Alloca:
-            out << "alloca " << type;
+            out << "alloca " << type.str();
             break;
         case OpCode::Load:
-            out << "load " << type << ", ptr " << operands[0];
+            out << "load " << type.str() << ", ptr " << operands[0].text;
             break;
         case OpCode::Store:
-            out << "store " << type << " " << operands[0] << ", ptr " << operands[1];
+            out << "store " << type.str() << " " << operands[0].text
+                << ", ptr " << operands[1].text;
             break;
         case OpCode::Add: case OpCode::Sub: case OpCode::Mul:
         case OpCode::SDiv: case OpCode::UDiv:
         case OpCode::SRem: case OpCode::URem:
         case OpCode::And: case OpCode::Or: case OpCode::Xor:
         case OpCode::Shl: case OpCode::AShr: case OpCode::LShr:
-            out << opName(op) << " " << type << " " << operands[0]
-                << ", " << operands[1];
+            out << opName(op) << " " << type.str() << " " << operands[0].text
+                << ", " << operands[1].text;
             break;
         case OpCode::ICmp:
-            out << "icmp " << aux << " " << type << " " << operands[0]
-                << ", " << operands[1];
+            out << "icmp " << auxStr << " " << type.str() << " "
+                << operands[0].text << ", " << operands[1].text;
             break;
         case OpCode::ZExt:
-            out << "zext " << type << " " << operands[0] << " to " << aux;
+            out << "zext " << type.str() << " " << operands[0].text
+                << " to " << auxType.str();
             break;
         case OpCode::Call: {
-            out << "call " << type << " @" << args[0].second << "(";
+            out << "call " << type.str() << " @" << args[0].second.text << "(";
             for (size_t i = 1; i < args.size(); ++i) {
                 if (i > 1) out << ", ";
-                out << args[i].first << " " << args[i].second;
+                out << args[i].first.str() << " " << args[i].second.text;
             }
             out << ")";
             break;
         }
         case OpCode::Ret:
-            out << "ret " << type << " " << operands[0];
+            out << "ret " << type.str() << " " << operands[0].text;
             break;
         case OpCode::RetVoid:
             out << "ret void";
             break;
         case OpCode::Br:
-            out << "br label %" << operands[0];
+            out << "br label %" << labels[0];
             break;
         case OpCode::BrCond:
-            out << "br i1 " << operands[0] << ", label %" << operands[1]
-                << ", label %" << operands[2];
+            out << "br i1 " << operands[0].text << ", label %" << labels[0]
+                << ", label %" << labels[1];
             break;
         case OpCode::GEP:
-            out << "getelementptr inbounds " << aux << ", ptr " << operands[0];
+            out << "getelementptr inbounds " << auxType.str() << ", ptr "
+                << operands[0].text;
             for (size_t i = 1; i < operands.size(); ++i)
-                out << ", i32 " << operands[i];
+                out << ", i32 " << operands[i].text;
             break;
         case OpCode::Comment:
             break;   // 上面已处理
@@ -115,14 +170,14 @@ void BasicBlock::emit(std::ostringstream& out) const {
 }
 
 void Function::emit(std::ostringstream& out) const {
-    out << "define " << retType << " @" << name << "(";
+    out << "define " << retType.str() << " @" << name << "(";
     for (size_t i = 0; i < params.size(); ++i) {
         if (i > 0) out << ", ";
-        out << params[i].first << " %" << params[i].second;
+        out << params[i].first.str() << " %" << params[i].second;
     }
     out << ") {\n";
     for (const auto& b : blocks) b.emit(out);
-    out << "}\n";   // 与旧 IRBuilder 一致：函数间无空行，文件以 } 收尾
+    out << "}\n";   // 函数间无空行，文件以 } 收尾
 }
 
 std::string Module::emit() const {
@@ -140,8 +195,8 @@ std::string Module::emit() const {
 
 // ------------------------------------------------------------
 
-std::string LLBuilder::freshReg() {
-    return "%" + std::to_string(regNo_++);
+Value LLBuilder::freshReg() {
+    return Value::reg("%" + std::to_string(regNo_++));
 }
 
 std::string LLBuilder::freshLabel(const std::string& base) {
@@ -149,10 +204,10 @@ std::string LLBuilder::freshLabel(const std::string& base) {
     return n++ == 0 ? base : base + "." + std::to_string(n - 1);
 }
 
-std::string LLBuilder::addString(const std::string& content) {
+Value LLBuilder::addString(const std::string& content) {
     std::string name = "@.str." + std::to_string(strNo_++);
     module_.globals.emplace_back(name, content);
-    return name;
+    return Value::global(name);
 }
 
 void LLBuilder::raw(const std::string& line) {
@@ -160,8 +215,8 @@ void LLBuilder::raw(const std::string& line) {
 }
 
 void LLBuilder::beginFunction(
-    const std::string& retType, const std::string& name,
-    std::vector<std::pair<std::string, std::string>> params) {
+    const Type& retType, const std::string& name,
+    std::vector<std::pair<Type, std::string>> params) {
     regNo_ = 0;
     labelUse_.clear();
     Function f;
@@ -187,26 +242,41 @@ void LLBuilder::append(Instr i) {
 }
 
 void LLBuilder::comment(const std::string& text) {
-    append({OpCode::Comment, "", "", "", {text}, {}});
+    Instr i;
+    i.op = OpCode::Comment;
+    i.auxStr = text;
+    append(std::move(i));
 }
 
-void LLBuilder::emitAlloca(const std::string& result, const std::string& type) {
-    append({OpCode::Alloca, result, type, "", {}, {}});
+void LLBuilder::emitAlloca(const Value& result, const Type& type) {
+    Instr i;
+    i.op = OpCode::Alloca;
+    i.result = result;
+    i.type = type;
+    append(std::move(i));
 }
 
-void LLBuilder::emitLoad(const std::string& result, const std::string& type,
-                     const std::string& ptr) {
-    append({OpCode::Load, result, type, "", {ptr}, {}});
+void LLBuilder::emitLoad(const Value& result, const Type& type,
+                     const Value& ptr) {
+    Instr i;
+    i.op = OpCode::Load;
+    i.result = result;
+    i.type = type;
+    i.operands = {ptr};
+    append(std::move(i));
 }
 
-void LLBuilder::emitStore(const std::string& type, const std::string& value,
-                      const std::string& ptr) {
-    append({OpCode::Store, "", type, "", {value, ptr}, {}});
+void LLBuilder::emitStore(const Type& type, const Value& value,
+                      const Value& ptr) {
+    Instr i;
+    i.op = OpCode::Store;
+    i.type = type;
+    i.operands = {value, ptr};
+    append(std::move(i));
 }
 
-void LLBuilder::emitBinary(const std::string& name, const std::string& result,
-                       const std::string& type, const std::string& l,
-                       const std::string& r) {
+void LLBuilder::emitBinary(const std::string& name, const Value& result,
+                       const Type& type, const Value& l, const Value& r) {
     OpCode op = OpCode::Add;
     if (name == "add") op = OpCode::Add;
     else if (name == "sub") op = OpCode::Sub;
@@ -221,58 +291,91 @@ void LLBuilder::emitBinary(const std::string& name, const std::string& result,
     else if (name == "shl") op = OpCode::Shl;
     else if (name == "ashr") op = OpCode::AShr;
     else if (name == "lshr") op = OpCode::LShr;
-    append({op, result, type, "", {l, r}, {}});
+    Instr i;
+    i.op = op;
+    i.result = result;
+    i.type = type;
+    i.operands = {l, r};
+    append(std::move(i));
 }
 
-void LLBuilder::emitIcmp(const std::string& pred, const std::string& result,
-                     const std::string& type, const std::string& l,
-                     const std::string& r) {
-    append({OpCode::ICmp, result, type, pred, {l, r}, {}});
+void LLBuilder::emitIcmp(const std::string& pred, const Value& result,
+                     const Type& type, const Value& l, const Value& r) {
+    Instr i;
+    i.op = OpCode::ICmp;
+    i.result = result;
+    i.type = type;
+    i.auxStr = pred;
+    i.operands = {l, r};
+    append(std::move(i));
 }
 
-void LLBuilder::emitZext(const std::string& result, const std::string& fromTy,
-                     const std::string& toTy, const std::string& v) {
-    append({OpCode::ZExt, result, fromTy, toTy, {v}, {}});
+void LLBuilder::emitZext(const Value& result, const Type& fromTy,
+                     const Type& toTy, const Value& v) {
+    Instr i;
+    i.op = OpCode::ZExt;
+    i.result = result;
+    i.type = fromTy;
+    i.auxType = toTy;
+    i.operands = {v};
+    append(std::move(i));
 }
 
-void LLBuilder::emitCall(const std::string& result, const std::string& retType,
+void LLBuilder::emitCall(const Value& result, const Type& retType,
                      const std::string& fnName,
-                     const std::vector<std::pair<std::string, std::string>>& args) {
+                     const std::vector<std::pair<Type, Value>>& args) {
     Instr i;
     i.op = OpCode::Call;
     i.result = result;
     i.type = retType;
     i.args = args;
-    i.args.insert(i.args.begin(), {"", fnName});
+    i.args.insert(i.args.begin(), {Type::voidT(), Value::global(fnName)});
     append(std::move(i));
 }
 
-void LLBuilder::emitRet(const std::string& type, const std::string& value) {
-    append({OpCode::Ret, "", type, "", {value}, {}});
+void LLBuilder::emitCallVoid(const std::string& fnName,
+                     const std::vector<std::pair<Type, Value>>& args) {
+    emitCall(Value::reg(""), Type::voidT(), fnName, args);
+}
+
+void LLBuilder::emitRet(const Type& type, const Value& value) {
+    Instr i;
+    i.op = OpCode::Ret;
+    i.type = type;
+    i.operands = {value};
+    append(std::move(i));
 }
 
 void LLBuilder::emitRetVoid() {
-    append({OpCode::RetVoid, "", "", "", {}, {}});
+    Instr i;
+    i.op = OpCode::RetVoid;
+    append(std::move(i));
 }
 
 void LLBuilder::emitBr(const std::string& labelName) {
-    append({OpCode::Br, "", "", "", {labelName}, {}});
+    Instr i;
+    i.op = OpCode::Br;
+    i.labels = {labelName};
+    append(std::move(i));
 }
 
-void LLBuilder::emitBrCond(const std::string& cond, const std::string& thenLabel,
+void LLBuilder::emitBrCond(const Value& cond, const std::string& thenLabel,
                        const std::string& elseLabel) {
-    append({OpCode::BrCond, "", "", "", {cond, thenLabel, elseLabel}, {}});
+    Instr i;
+    i.op = OpCode::BrCond;
+    i.operands = {cond};
+    i.labels = {thenLabel, elseLabel};
+    append(std::move(i));
 }
 
-void LLBuilder::emitGep(const std::string& result, const std::string& elemType,
-                    const std::string& ptr,
-                    const std::vector<std::string>& indices) {
+void LLBuilder::emitGep(const Value& result, const Type& container,
+                    const Value& ptr, const std::vector<Value>& indices) {
     Instr i;
     i.op = OpCode::GEP;
     i.result = result;
-    i.aux = elemType;
+    i.auxType = container;
     i.operands.push_back(ptr);
-    for (auto& idx : indices) i.operands.push_back(idx);
+    for (const auto& idx : indices) i.operands.push_back(idx);
     append(std::move(i));
 }
 

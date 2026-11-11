@@ -14,22 +14,26 @@ std::string IRGenerator::run(const CratePtr& crate) {
     return ir_.str();
 }
 
+const ll::Module& IRGenerator::module() const {
+    return ir_.module();
+}
+
 Type IRGenerator::typeOf(const Expr& e) const {
     auto it = exprTypes_.find(&e);
     return it == exprTypes_.end() ? Type{TypeKind::Unknown} : it->second;
 }
 
-std::string IRGenerator::evalExpr(const ExprPtr& e) {
+ll::Value IRGenerator::evalExpr(const ExprPtr& e) {
     e->accept(*this);
     return lastValue_;
 }
 
 // 地址通道：左值表达式（赋值左边、& 取引用）要的是地址，不能 load
-std::string IRGenerator::evalAddr(const ExprPtr& e) {
+ll::Value IRGenerator::evalAddr(const ExprPtr& e) {
     if (auto p = std::dynamic_pointer_cast<PathExpr>(e))
         return locals_.at(p->name);   // 变量的地址 = let 时登记的栈槽
     // TODO(M5)：FieldExpr → gep 字段；IndexExpr → gep 下标；"*" → evalExpr（指针值即地址）
-    return "";
+    return ll::Value::reg("");
 }
 
 // ============================================================
@@ -64,7 +68,7 @@ void IRGenerator::visit(StructDef& node) {
     std::string line = "%struct." + node.name + " = type {";
     for (size_t i = 0; i < node.fields.size(); ++i) {
         if (i) line += ",";
-        line += " " + irtypes::llvmType(node.fields[i].type);
+        line += " " + irtypes::llvmType(node.fields[i].type).str();
     }
     line += " }";
     ir_.raw(line);
@@ -81,26 +85,26 @@ void IRGenerator::visit(Function& node) {
     // 调用约定：main 对外是 C 入口，必须 ret i32（模拟器把返回值当退出码），
     // 源语言的 main 返回 ()，统一 ret i32 0
     bool isMain = (node.name == "main");
-    std::vector<std::pair<std::string, std::string>> params;
+    std::vector<std::pair<ll::Type, std::string>> params;
     for (auto& p : node.params)
         params.emplace_back(irtypes::llvmType(p.type), p.name);
     // TODO(M4)：isMethod 时第一个参数是 self（&self → ptr，按值 self → %struct.X）
-    ir_.beginFunction(isMain ? "i32" : irtypes::llvmType(currentFnRetType_),
+    ir_.beginFunction(isMain ? ll::Type::i32() : irtypes::llvmType(currentFnRetType_),
                       node.name, params);
 
     // 参数落槽：传入的 SSA 值 %p 不可写，和 let 一样给栈槽，统一走 load/store
     for (auto& p : node.params) {
-        std::string ty = irtypes::llvmType(p.type);
-        std::string slot = "%" + p.name + ".addr";
+        ll::Type ty = irtypes::llvmType(p.type);
+        ll::Value slot = ll::Value::reg("%" + p.name + ".addr");
         ir_.emitAlloca(slot, ty);
-        ir_.emitStore(ty, "%" + p.name, slot);
+        ir_.emitStore(ty, ll::Value::reg("%" + p.name), slot);
         locals_[p.name] = slot;
     }
     // 函数体：块类型是 Unit 则 ret void，否则尾表达式的值即返回值
     // TODO(M3)：显式 ReturnExpr 之后的死代码处理
     visit(*node.body);
     if (isMain) {
-        ir_.emitRet("i32", "0");
+        ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
     } else if (typeOf(*node.body).kind == TypeKind::Unit) {
         ir_.emitRetVoid();
     } else {
@@ -128,10 +132,10 @@ void IRGenerator::visit(Block& node) {
 // let：alloca 栈槽 + store 初值 + 登记 locals_（遮蔽 = 同名新槽覆盖）
 void IRGenerator::visit(LetStmt& node) {
     Type ty = node.type ? *node.type : typeOf(*node.init);
-    std::string slot = "%" + node.name + ".addr";
+    ll::Value slot = ll::Value::reg("%" + node.name + ".addr");
     ir_.emitAlloca(slot, irtypes::llvmType(ty));
     if (node.init) {
-        std::string val = evalExpr(node.init);
+        ll::Value val = evalExpr(node.init);
         ir_.emitStore(irtypes::llvmType(ty), val, slot);
     }
     locals_[node.name] = slot;
@@ -146,21 +150,22 @@ void IRGenerator::visit(ExprStmt& node) {
 // 字符串登记为全局常量后 gep 取首元素指针
 void IRGenerator::visit(Literal& node) {
     if (node.kind == LiteralKind::Int || node.kind == LiteralKind::Float) {
-        lastValue_ = node.text;
+        lastValue_ = ll::Value::imm(node.text);
     }
     if (node.kind == LiteralKind::Bool) {
-        if (node.text == "true") lastValue_ = "1";
-        else if (node.text == "false") lastValue_ = "0";
+        if (node.text == "true") lastValue_ = ll::Value::imm("1");
+        else if (node.text == "false") lastValue_ = ll::Value::imm("0");
     }
     if (node.kind == LiteralKind::Char) {
-        lastValue_ = std::to_string((unsigned char)node.text[1]);
+        lastValue_ = ll::Value::imm(std::to_string((unsigned char)node.text[1]));
     }
     if (node.kind == LiteralKind::Str) {
         std::string content = node.text.substr(1, node.text.size() - 2);
-        std::string name = ir_.addString(content);
-        std::string p = ir_.freshReg();
+        ll::Value name = ir_.addString(content);
+        ll::Value p = ir_.freshReg();
         int len = content.size() + 1;
-        ir_.emitGep(p, "[" + std::to_string(len) + " x i8]", name, {"0", "0"});
+        ir_.emitGep(p, ll::Type::array(ll::Type::i8(), len), name,
+                    {ll::Value::imm("0"), ll::Value::imm("0")});
         lastValue_ = p;
     }
 }
@@ -169,7 +174,7 @@ void IRGenerator::visit(Literal& node) {
 // 关联常量 Type::N → ConstDef 上的 constValue。左值场景走 evalAddr，不经这里
 void IRGenerator::visit(PathExpr& node) {
     if (locals_.find(node.name) != locals_.end()) {
-        std::string p = ir_.freshReg();
+        ll::Value p = ir_.freshReg();
         ir_.emitLoad(p, irtypes::llvmType(typeOf(node)),
                      locals_.find(node.name)->second);
         lastValue_ = p;
@@ -177,7 +182,7 @@ void IRGenerator::visit(PathExpr& node) {
     }
     Symbol* sym = symtab_.lookup(node.name);
     if (sym && sym -> kind == SymbolKind::Const && sym -> hasConstValue) {
-        lastValue_ = std::to_string(sym -> constValue);
+        lastValue_ = ll::Value::imm(std::to_string(sym -> constValue));
         return;
     }
     auto pos = node.name.find("::");
@@ -188,7 +193,7 @@ void IRGenerator::visit(PathExpr& node) {
         if (it != symtab_.implConsts.end()) {
             for (auto& cd : it->second) {
                 if (cd->name == cName && cd->hasConstValue) {
-                    lastValue_ = std::to_string(cd->constValue);
+                    lastValue_ = ll::Value::imm(std::to_string(cd->constValue));
                     return;
                 }
             }
@@ -199,9 +204,9 @@ void IRGenerator::visit(PathExpr& node) {
 void IRGenerator::visit(BinaryExpr& node) {
     // 赋值类先分流：lhs 走 evalAddr（不 load），rhs 走 evalExpr
     if (node.op == "=") {
-        std::string addr = evalAddr(node.lhs);
-        std::string val = evalExpr(node.rhs);
-        std::string ty = irtypes::llvmType(typeOf(*node.lhs));
+        ll::Value addr = evalAddr(node.lhs);
+        ll::Value val = evalExpr(node.rhs);
+        ll::Type ty = irtypes::llvmType(typeOf(*node.lhs));
         ir_.emitStore(ty, val, addr);
         // 赋值表达式的值是 ()，不留 lastValue_
         return;
@@ -209,28 +214,28 @@ void IRGenerator::visit(BinaryExpr& node) {
     // 复合赋值：load 旧值 → 运算 → store 回去
     if (node.op == "+=" || node.op == "-=" || node.op == "*="
         || node.op == "/=" || node.op == "%=") {
-        std::string addr = evalAddr(node.lhs);
-        std::string ty = irtypes::llvmType(typeOf(*node.lhs));
+        ll::Value addr = evalAddr(node.lhs);
+        ll::Type ty = irtypes::llvmType(typeOf(*node.lhs));
         bool lSigned = irtypes::isSignedInt(typeOf(*node.lhs));
-        std::string old = ir_.freshReg();
+        ll::Value old = ir_.freshReg();
         ir_.emitLoad(old, ty, addr);
-        std::string r = evalExpr(node.rhs);
+        ll::Value r = evalExpr(node.rhs);
         std::string opc;
         if      (node.op == "+=") opc = "add";
         else if (node.op == "-=") opc = "sub";
         else if (node.op == "*=") opc = "mul";
         else if (node.op == "/=") opc = lSigned ? "sdiv" : "udiv";
         else                      opc = lSigned ? "srem" : "urem";
-        std::string res = ir_.freshReg();
+        ll::Value res = ir_.freshReg();
         ir_.emitBinary(opc, res, ty, old, r);
         ir_.emitStore(ty, res, addr);
         return;
     }
 
-    std::string l = evalExpr(node.lhs);
-    std::string r = evalExpr(node.rhs);
+    ll::Value l = evalExpr(node.lhs);
+    ll::Value r = evalExpr(node.rhs);
     bool lSigned = irtypes::isSignedInt(typeOf(*node.lhs));
-    std::string opTy = irtypes::llvmType(typeOf(*node.lhs));  // 操作数类型
+    ll::Type opTy = irtypes::llvmType(typeOf(*node.lhs));  // 操作数类型
 
     // 算术：+ - * / %
     if (node.op == "+" || node.op == "-" || node.op == "*"
@@ -241,7 +246,7 @@ void IRGenerator::visit(BinaryExpr& node) {
         else if (node.op == "*") opc = "mul";
         else if (node.op == "/") opc = lSigned ? "sdiv" : "udiv";
         else                     opc = lSigned ? "srem" : "urem";
-        std::string res = ir_.freshReg();
+        ll::Value res = ir_.freshReg();
         ir_.emitBinary(opc, res, opTy, l, r);
         lastValue_ = res;
         return;
@@ -257,10 +262,10 @@ void IRGenerator::visit(BinaryExpr& node) {
         else if (node.op == "<=") pred = lSigned ? "sle" : "ule";
         else if (node.op == ">")  pred = lSigned ? "sgt" : "ugt";
         else                      pred = lSigned ? "sge" : "uge";
-        std::string c = ir_.freshReg();
+        ll::Value c = ir_.freshReg();
         ir_.emitIcmp(pred, c, opTy, l, r);
-        std::string z = ir_.freshReg();
-        ir_.emitZext(z, "i1", "i8", c);
+        ll::Value z = ir_.freshReg();
+        ir_.emitZext(z, ll::Type::i1(), ll::Type::i8(), c);
         lastValue_ = z;
         return;
     }
@@ -300,23 +305,20 @@ void IRGenerator::visit(CallExpr& node) {
     auto it = builtinMap.find(origName);
     if (it != builtinMap.end()) llvmName = it->second;
 
-    // ③ 逐参数求值，收集值和类型字符串（拼参数列表用）
-    std::vector<std::string> argVals, argTys;
+    // ③ 逐参数求值，收集 (类型, 值) 对
+    std::vector<std::pair<ll::Type, ll::Value>> args;
     for (auto& arg : node.args) {
-        argVals.push_back(evalExpr(arg));
-        argTys.push_back(irtypes::llvmType(typeOf(*arg)));
+        ll::Value v = evalExpr(arg);
+        args.emplace_back(irtypes::llvmType(typeOf(*arg)), v);
     }
 
     // ④ 发 call：void 返回不接 %r =；否则结果进新寄存器
     // TODO(加固)：参数类型是 i8 而目标函数要 i32 时（printlnInt(bool)），先 zext
     Symbol* sym = symtab_.lookup(origName);
-    std::vector<std::pair<std::string, std::string>> args;
-    for (size_t i = 0; i < argVals.size(); i++)
-        args.emplace_back(argTys[i], argVals[i]);
     if (sym->type.kind == TypeKind::Unit) {
-        ir_.emitCall("", "void", llvmName, args);
+        ir_.emitCallVoid(llvmName, args);
     } else {
-        std::string r = ir_.freshReg();
+        ll::Value r = ir_.freshReg();
         ir_.emitCall(r, irtypes::llvmType(sym->type), llvmName, args);
         lastValue_ = r;
     }
@@ -327,17 +329,17 @@ void IRGenerator::visit(CallExpr& node) {
 // if：条件 i8 → icmp ne 0 转 i1 → 条件跳转；then/else 各自成块、末尾跳进汇合点
 // 带值的 if（let x = if ...）：入口 alloca 槽，两分支 store，汇合点 load
 void IRGenerator::visit(IfExpr& node) {
-    std::string c = evalExpr(node.cond);
-    std::string c1 = ir_.freshReg();
-    ir_.emitIcmp("ne", c1, "i8", c, "0");
+    ll::Value c = evalExpr(node.cond);
+    ll::Value c1 = ir_.freshReg();
+    ir_.emitIcmp("ne", c1, ll::Type::i8(), c, ll::Value::imm("0"));
     std::string thenL = ir_.freshLabel("if.then");
     std::string elseL = ir_.freshLabel("if.else");
     std::string endL = ir_.freshLabel("if.end");
     bool hasElse = node.elseBlock != nullptr;
     // 块的类型是 Unit/Never 时这个 if 不产值（Never = 分支以 return 等收尾）
     bool hasValue = typeOf(node).kind != TypeKind::Unit && typeOf(node).kind != TypeKind::Never;
-    std::string slot;
-    std::string valTy = irtypes::llvmType(typeOf(node));
+    ll::Value slot = ll::Value::reg("");
+    ll::Type valTy = irtypes::llvmType(typeOf(node));
     if (hasValue) {
         slot = ir_.freshReg();
         ir_.emitAlloca(slot, valTy);
@@ -363,7 +365,7 @@ void IRGenerator::visit(IfExpr& node) {
     }
     ir_.label(endL);
     if (hasValue) {
-        std::string v = ir_.freshReg();
+        ll::Value v = ir_.freshReg();
         ir_.emitLoad(v, valTy, slot);
         lastValue_ = v;
     }
