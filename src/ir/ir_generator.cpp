@@ -142,17 +142,9 @@ void IRGenerator::visit(Function& node) {
 // M2 起：以下是待填的桩，注释是该函数的 lowering 步骤
 // ============================================================
 
-// 块：先逐句 lowering，再算尾表达式（单独存在 tailExpr 字段，不在 statements
-// 里）；尾表达式的值留在 lastValue_ 作为整个块的值
-// TODO(M3) 死代码跳过：return/break/continue 之后的语句不可达，不能再发指令
-//   （br/ret 之后当前基本块已终结，继续追加会让 LLVM 报格式错）。做法：
-//   1. 加成员 bool blockSealed_ = false（"当前块已被终结指令封死"）
-//   2. visit(ReturnExpr/BreakExpr/ContinueExpr) 发完终结指令后置 true
-//   3. 本循环里每句之前检查：if (blockSealed_) break;（直接跳过剩余语句
-//      和 tailExpr——反正不可达）
-//   4. 开新块时解封：IfExpr/WhileExpr 等调用 ir_.label(...) 之后
-//      blockSealed_ = false（新块有自己的终结状态）。注意 if 汇合块、
-//      while 的 cond/body/end 都是新块，都要解封
+// 块：逐句 lowering，再算尾表达式（单独存在 tailExpr 字段，不在 statements
+// 里）；尾表达式的值留在 lastValue_ 作为整个块的值。
+// return/break/continue 终结当前块后（blockSealed_），剩余语句不可达，直接跳过
 void IRGenerator::visit(Block& node) {
     for (auto& stmt : node.statements) {
         if (blockSealed_) break;   // 终结指令后的语句不可达，跳过
@@ -456,27 +448,10 @@ void IRGenerator::visit(IfExpr& node) {
     }
 }
 
+// while：三标签结构 cond → body → end。cond 块算条件（i8 转 i1）条件跳
+// body/end；body 块压 loopLabels_（continue→cond、break→end）后翻译，
+// 正常走完才补回 cond 的回边；while 恒为 ()
 void IRGenerator::visit(WhileExpr& node) {
-    // TODO(M3)：三标签结构 cond → body → end
-    //   1. 当前块先无条件跳进 cond：
-    //        ir_.emitBr(condL);
-    //   2. cond 块：算条件（i8）→ 转 i1 → 条件跳 body/end：
-    //        ir_.label(condL);
-    //        ll::Value c  = evalExpr(node.cond);
-    //        ll::Value c1 = ir_.freshReg();
-    //        ir_.emitIcmp("ne", c1, ll::Type::i8(), c, ll::Value::imm("0"));
-    //        ir_.emitBrCond(c1, bodyL, endL);
-    //   3. body 块：压 loopLabels_ → visit body → 弹栈：
-    //        ir_.label(bodyL);
-    //        blockSealed_ = false;              // 新块解封（见 visit(Block)）
-    //        loopLabels_.push_back({condL, endL});   // continue→cond, break→end
-    //        visit(*node.body);
-    //        loopLabels_.pop_back();
-    //   4. 回边：body 正常走完（非发散、未被 break/return 封死）才补：
-    //        if (!blockSealed_ && typeOf(*node.body).kind != TypeKind::Never)
-    //            ir_.emitBr(condL);
-    //   5. 汇合：ir_.label(endL); blockSealed_ = false;
-    //   while 恒为 ()，不写 lastValue_
     std::string condL = ir_.freshLabel("while.cond");
     std::string bodyL = ir_.freshLabel("while.body");
     std::string endL = ir_.freshLabel("while.end");
@@ -500,35 +475,10 @@ void IRGenerator::visit(WhileExpr& node) {
     blockSealed_ = false;
 }
 
+// loop：无条件块的无限循环，body 尾回边跳 body 头（continue 目标也是 body
+// 头）。产值的 loop（类型 = 各 break 值的 LUB，非 ()/Never）在入口 alloca
+// 结果槽并压 loopValueSlots_，带值 break 往槽里 store，汇合块 load 出值
 void IRGenerator::visit(LoopExpr& node) {
-    // TODO(M3)：同 while 但没有 cond 块；continue 目标就是 body 头
-    //   1. 领标签：bodyL = freshLabel("loop.body")、endL = freshLabel("loop.end")
-    //   2. 是否产值：loop 的类型 = 各 break 值的 LUB（语义阶段已算好）：
-    //        bool hasValue = typeOf(node).kind != TypeKind::Unit
-    //                     && typeOf(node).kind != TypeKind::Never;
-    //      产值则：
-    //        slot = ir_.freshReg();
-    //        ir_.emitAlloca(slot, irtypes::llvmType(typeOf(node)));
-    //      并压栈给 BreakExpr 用（需要新成员，见下）：
-    //        loopValueSlots_.push_back(slot);          // 不产值压 reg("") 占位
-    //   3. 进 body：
-    //        ir_.emitBr(bodyL);
-    //        ir_.label(bodyL);
-    //        blockSealed_ = false;
-    //        loopLabels_.push_back({bodyL, endL});     // continue→body 头
-    //        visit(*node.body);
-    //        loopLabels_.pop_back();
-    //        loopValueSlots_.pop_back();
-    //   4. 回边：body 正常走完才补 ir_.emitBr(bodyL)（同 while 第 4 步）
-    //   5. 汇合 + 取值：
-    //        ir_.label(endL); blockSealed_ = false;
-    //        if (hasValue) {
-    //            v = ir_.freshReg();
-    //            ir_.emitLoad(v, irtypes::llvmType(typeOf(node)), slot);
-    //            lastValue_ = v;
-    //        }
-    // 配套：加成员 std::vector<ll::Value> loopValueSlots_;（与 loopLabels_
-    //   平行的栈，while 不产值也压占位值，保持两栈同步）
     std::string bodyL = ir_.freshLabel("loop.body");
     std::string endL = ir_.freshLabel("loop.end");
     bool hasValue = typeOf(node).kind != TypeKind::Unit && typeOf(node).kind != TypeKind::Never;
@@ -557,17 +507,10 @@ void IRGenerator::visit(LoopExpr& node) {
     }
 }
 
+// return：有值 ret <返回类型> <值>；无值时 main 按 C 入口约定 ret i32 0，
+// 其他函数 ret void。ret 终结当前块（置 blockSealed_），return 类型是
+// Never，不留 lastValue_
 void IRGenerator::visit(ReturnExpr& node) {
-    // TODO(M3)：
-    //   1. 有值：v = evalExpr(node.value);
-    //        ir_.emitRet(irtypes::llvmType(currentFnRetType_), v);
-    //      无值：main 里 ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"))
-    //        （main 的 C 入口约定，同 visit(Function) 末尾）；
-    //        其他函数 ir_.emitRetVoid()
-    //      （判断 main：currentFnRetType_ 不够——main 源语言返回 ()。
-    //        可以加成员 bool inMain_，visit(Function) 里设置）
-    //   2. blockSealed_ = true;    // ret 终结当前块，后续语句不可达
-    //   3. 不写 lastValue_：return 的类型是 Never，不产生值
     if (node.value) {
         ll::Value v = evalExpr(node.value);
         ir_.emitRet(irtypes::llvmType(currentFnRetType_), v);
@@ -580,28 +523,20 @@ void IRGenerator::visit(ReturnExpr& node) {
     blockSealed_ = true;
 }
 
+// break：带值时先把值 store 进本层 loop 的结果槽（loopValueSlots_ 栈顶），
+// 再无条件跳到本层循环出口（loopLabels_ 栈顶 second）；终结当前块
 void IRGenerator::visit(BreakExpr& node) {
-    // TODO(M3)：
-    //   1. 带值（node.value 非空，只在 loop 里合法）：
-    //        v = evalExpr(node.value);
-    //        ir_.emitStore(irtypes::llvmType(typeOf(*node.value)), v,
-    //                      loopValueSlots_.back());
-    //   2. ir_.emitBr(loopLabels_.back().second);   // second = break 目标
-    //   3. blockSealed_ = true;
     if (node.value) {
         ll::Value v = evalExpr(node.value);
         ir_.emitStore(irtypes::llvmType(typeOf(*node.value)), v, loopValueSlots_.back());
     }
-    // 跳转和封块与"是否带值"无关，裸 break; 也要执行
     ir_.emitBr(loopLabels_.back().second);
     blockSealed_ = true;
 }
 
+// continue：无条件跳到本层循环的循环头（loopLabels_ 栈顶 first——while
+// 是 cond 块，loop 是 body 块）；终结当前块
 void IRGenerator::visit(ContinueExpr& node) {
-    // TODO(M3)：
-    //   1. ir_.emitBr(loopLabels_.back().first);   // first = continue 目标
-    //      （while 是 cond 块，loop 是 body 块——进循环时压对就行）
-    //   2. blockSealed_ = true;
     ir_.emitBr(loopLabels_.back().first);
     blockSealed_ = true;
 }
