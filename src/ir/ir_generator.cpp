@@ -382,18 +382,19 @@ void IRGenerator::visit(UnaryExpr& node) {
 }
 
 void IRGenerator::visit(CastExpr& node) {
-    // TODO(M3)：as 类型转换
-    //   1. v = evalExpr(node.expr)；srcTy = irtypes::llvmType(typeOf(*node.expr))；
-    //      dstTy = irtypes::llvmType(node.target)
-    //   2. i32→i32（四种整型互转）：空操作，lastValue_ = v 直接透传
-    //      （我们的四种整型在 LLVM 都是 i32，有符号性只在指令上）
-    //   3. i8→i32（bool/char as i32）：res = freshReg();
+    // TODO：as 类型转换。我们的类型在 LLVM 层的宽度只有两档：i32（四种整型）
+    //   和 i8（bool/char），所以只有三种情况：
+    //   1. v = evalExpr(node.expr)；
+    //      src = irtypes::llvmType(typeOf(*node.expr)).kind；
+    //      dst = irtypes::llvmType(node.target).kind
+    //   2. src == dst（四种整型互转全是 i32→i32）：空操作，lastValue_ = v
+    //      直接透传——有符号性只在指令上，不在类型上，所以 u32/i32 互转
+    //      什么都不用做
+    //   3. i8→i32（bool/char as 整型）：res = ir_.freshReg();
     //      ir_.emitZext(res, ll::Type::i8(), ll::Type::i32(), v);
-    //   4. i32→i8（i32 as bool/char）：需要 trunc 指令——ll 库里还没有，
-    //      要先给 ll.h/ll.cpp 加 OpCode::Trunc + emitTrunc
-    //      （照抄 ZExt 的模式：emit 文本是 "trunc i32 %v to i8"），
-    //      加完回来：emitTrunc(res, i32, i8, v)
-    //   5. 其余（引用/数组之间的 as）子集用不到，透传即可
+    //      lastValue_ = res
+    //   4. i32→i8（整型 as char/bool）：trunc 指令已经加好：
+    //      ir_.emitTrunc(res, ll::Type::i32(), ll::Type::i8(), v);
     (void)node;
 }
 
