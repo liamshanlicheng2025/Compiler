@@ -1,0 +1,15 @@
+fn main() {
+    let c = 'A';
+    let n = c as i32;
+    printlnInt(n);
+    let a: i32 = 7;
+    let b = a as u32;
+    let d = b as isize;
+    printlnInt(d as i32);
+    let u: usize = 5;
+    let i = u as i32;
+    printlnInt(i);
+    let f = true;
+    let g = f as i32;
+    printlnInt(g);
+}

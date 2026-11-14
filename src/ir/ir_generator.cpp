@@ -381,21 +381,25 @@ void IRGenerator::visit(UnaryExpr& node) {
     //   注意作左值时（*p = x 的左边）不走这里，走 evalAddr 的 "*" 分支
 }
 
+// as 类型转换：四种整型在 LLVM 都是 i32（有符号性只在指令上），互转是空
+// 操作直接透传；只有跨宽度的 bool/char（i8）↔ 整型（i32）要 zext/trunc
 void IRGenerator::visit(CastExpr& node) {
-    // TODO：as 类型转换。我们的类型在 LLVM 层的宽度只有两档：i32（四种整型）
-    //   和 i8（bool/char），所以只有三种情况：
-    //   1. v = evalExpr(node.expr)；
-    //      src = irtypes::llvmType(typeOf(*node.expr)).kind；
-    //      dst = irtypes::llvmType(node.target).kind
-    //   2. src == dst（四种整型互转全是 i32→i32）：空操作，lastValue_ = v
-    //      直接透传——有符号性只在指令上，不在类型上，所以 u32/i32 互转
-    //      什么都不用做
-    //   3. i8→i32（bool/char as 整型）：res = ir_.freshReg();
-    //      ir_.emitZext(res, ll::Type::i8(), ll::Type::i32(), v);
-    //      lastValue_ = res
-    //   4. i32→i8（整型 as char/bool）：trunc 指令已经加好：
-    //      ir_.emitTrunc(res, ll::Type::i32(), ll::Type::i8(), v);
-    (void)node;
+    ll::Value v = evalExpr(node.expr);
+    auto src = irtypes::llvmType(typeOf(*node.expr)).kind;
+    auto dst = irtypes::llvmType(node.target).kind;
+    if (src == ll::Type::Kind::I8 && dst == ll::Type::Kind::I32) {
+        ll::Value res = ir_.freshReg();
+        ir_.emitZext(res, ll::Type::i8(), ll::Type::i32(), v);
+        lastValue_ = res;
+        return;
+    }
+    if (src == ll::Type::Kind::I32 && dst == ll::Type::Kind::I8) {
+        ll::Value res = ir_.freshReg();
+        ir_.emitTrunc(res, ll::Type::i32(), ll::Type::i8(), v);
+        lastValue_ = res;
+        return;
+    }
+    lastValue_ = v;   // 同宽（含整型互转）和子集用不到的 as：透传
 }
 
 // 函数调用：callee 是 PathExpr；内建名字映射到 builtin.c 的函数；
