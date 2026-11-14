@@ -1,0 +1,14 @@
+fn side(x: i32) -> bool {
+    printlnInt(x);
+    true
+}
+fn main() {
+    let a = false && side(1);
+    let b = true || side(2);
+    let c = true && side(3);
+    let d = false || side(4);
+    if (a) { printlnInt(10); }
+    if (b) { printlnInt(20); }
+    if (c) { printlnInt(30); }
+    if (d) { printlnInt(40); }
+}

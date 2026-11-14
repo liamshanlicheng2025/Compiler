@@ -1,0 +1,19 @@
+fn main() {
+    let a = 10 & 12;
+    let b = 10 | 12;
+    let c = 10 ^ 12;
+    let d = 13 << 2;
+    let neg = 0 - 10;
+    let e = neg >> 2;
+    let t = true & false;
+    let u = true | false;
+    let v = true ^ true;
+    printlnInt(a);
+    printlnInt(b);
+    printlnInt(c);
+    printlnInt(d);
+    printlnInt(e);
+    if (t) { printlnInt(100); }
+    if (u) { printlnInt(200); }
+    if (v) { printlnInt(300); }
+}

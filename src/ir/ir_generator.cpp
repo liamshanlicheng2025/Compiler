@@ -256,6 +256,41 @@ void IRGenerator::visit(BinaryExpr& node) {
         return;
     }
 
+    // 短路逻辑 && / ||：rhs 不能在分流前求值（否则丢失短路语义），
+    // 所以必须在上面 l/r 的 evalExpr 之前分流。三标签结构：rhs 块 +
+    // 常量出口块 + 汇合块；两条流入边各自 store，汇合块只 load
+    if (node.op == "&&" || node.op == "||") {
+        bool isAnd = (node.op == "&&");
+        ll::Value slot = ir_.freshReg();
+        ir_.emitAlloca(slot, ll::Type::i8());
+        ll::Value lhs = evalExpr(node.lhs);   // i8（bool 载体）
+        ll::Value c = ir_.freshReg();
+        ir_.emitIcmp("ne", c, ll::Type::i8(), lhs, ll::Value::imm("0"));
+        std::string rhsL = ir_.freshLabel(isAnd ? "and.rhs" : "or.rhs");
+        std::string constL = ir_.freshLabel(isAnd ? "and.false" : "or.true");
+        std::string endL = ir_.freshLabel(isAnd ? "and.end" : "or.end");
+        // &&：左边为假直接进常量出口（store 0）；||：左边为真进常量出口（store 1）
+        if (isAnd) ir_.emitBrCond(c, rhsL, constL);
+        else       ir_.emitBrCond(c, constL, rhsL);
+        ir_.label(rhsL);
+        blockSealed_ = false;
+        ll::Value rhs = evalExpr(node.rhs);
+        if (!blockSealed_) {   // rhs 里 return/break 收尾时不补
+            ir_.emitStore(ll::Type::i8(), rhs, slot);
+            ir_.emitBr(endL);
+        }
+        ir_.label(constL);
+        blockSealed_ = false;
+        ir_.emitStore(ll::Type::i8(), ll::Value::imm(isAnd ? "0" : "1"), slot);
+        ir_.emitBr(endL);
+        ir_.label(endL);
+        blockSealed_ = false;
+        ll::Value v = ir_.freshReg();
+        ir_.emitLoad(v, ll::Type::i8(), slot);
+        lastValue_ = v;
+        return;
+    }
+
     ll::Value l = evalExpr(node.lhs);
     ll::Value r = evalExpr(node.rhs);
     bool lSigned = irtypes::isSignedInt(typeOf(*node.lhs));
@@ -294,30 +329,21 @@ void IRGenerator::visit(BinaryExpr& node) {
         return;
     }
 
-    // TODO(M3)：短路逻辑 && / ||——不能用 and/or 指令（那会把两边都算出来，
-    //   丢失短路语义）。翻译成嵌套分支（与 IfExpr 同构）。以 a && b 为例：
-    //     1. slot = ir_.freshReg(); ir_.emitAlloca(slot, ll::Type::i8());
-    //        （结果槽，bool 载体 i8）
-    //     2. lhs = evalExpr(node.lhs);                     // i8
-    //        c = ir_.freshReg();
-    //        ir_.emitIcmp("ne", c, ll::Type::i8(), lhs, ll::Value::imm("0"));
-    //     3. 领三个标签：rhsL = freshLabel("and.rhs")、
-    //        falseL = freshLabel("and.false")、endL = freshLabel("and.end")
-    //     4. &&：emitBrCond(c, rhsL, falseL)——左边为假直接进假出口
-    //        ||：emitBrCond(c, trueL, rhsL)——镜像：左边为真直接进真出口
-    //        （|| 的三个标签叫 or.rhs / or.true / or.end，真出口 store 1）
-    //     5. label(rhsL)：rhs = evalExpr(node.rhs);
-    //        emitStore(i8, rhs, slot); emitBr(endL);
-    //     6. label(falseL)：emitStore(i8, imm("0"), slot); emitBr(endL);
-    //        —— && 走到这里说明左边是假，整个表达式就是 false
-    //     7. label(endL)：v = freshReg(); emitLoad(v, i8, slot);
-    //        lastValue_ = v
-    //   要点：两条流入边各自在自己的块里 store，汇合块只 load——
-    //   汇合块的指令是无条件执行的，在汇合块里 store 会把另一边的结果覆盖
-    // TODO(低频)：位运算 & | ^ << >>：l = evalExpr(lhs); r = evalExpr(rhs);
-    //   emitBinary("and"/"or"/"xor"/"shl", ...)；">>" 按 lSigned 选
-    //   "ashr"（有符号）/"lshr"（无符号）。bool 上的 & | ^ 同样是这三条
-    //   （操作数类型 i8）
+    // 位运算：& | ^ << >>（bool 上的 & | ^ 同样走这三条，操作数类型 i8）；
+    // >> 按有符号性选 ashr/lshr
+    if (node.op == "&" || node.op == "|" || node.op == "^"
+        || node.op == "<<" || node.op == ">>") {
+        std::string opc;
+        if      (node.op == "&")  opc = "and";
+        else if (node.op == "|")  opc = "or";
+        else if (node.op == "^")  opc = "xor";
+        else if (node.op == "<<") opc = "shl";
+        else                      opc = lSigned ? "ashr" : "lshr";
+        ll::Value res = ir_.freshReg();
+        ir_.emitBinary(opc, res, opTy, l, r);
+        lastValue_ = res;
+        return;
+    }
 }
 
 void IRGenerator::visit(UnaryExpr& node) {
