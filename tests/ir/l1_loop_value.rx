@@ -1,0 +1,6 @@
+fn main() {
+    let r = loop {
+        break 42;
+    };
+    printlnInt(r);
+}

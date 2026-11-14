@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "ll.h"
 #include "type_map.h"
 #include "semantic/symbol_table.h"
 
@@ -85,6 +86,9 @@ void IRGenerator::visit(StructDef& node) {
 void IRGenerator::visit(Function& node) {
     locals_.clear();
     loopLabels_.clear();
+    loopValueSlots_.clear();
+    blockSealed_ = false;
+    inMain_ = (node.name == "main");
     currentFnRetType_ =
         node.returnType ? *node.returnType : Type{TypeKind::Unit};
 
@@ -112,15 +116,22 @@ void IRGenerator::visit(Function& node) {
         ir_.emitStore(ty, ll::Value::reg("%" + p.name), slot);
         locals_[p.name] = slot;
     }
-    // 函数体：块类型是 Unit 则 ret void，否则尾表达式的值即返回值
-    // TODO(M3)：显式 ReturnExpr 之后的死代码处理
+    // 函数体：块类型是 Unit 则 ret void，否则尾表达式的值即返回值；
+    // body 以 return/break 收尾时块已被终结（blockSealed_），不再补 ret
     visit(*node.body);
-    if (isMain) {
-        ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
-    } else if (typeOf(*node.body).kind == TypeKind::Unit) {
-        ir_.emitRetVoid();
-    } else {
-        ir_.emitRet(irtypes::llvmType(currentFnRetType_), lastValue_);
+    if (!blockSealed_) {
+        if (inMain_) {
+            ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
+        } else if (typeOf(*node.body).kind == TypeKind::Unit) {
+            ir_.emitRetVoid();
+        } else if (typeOf(*node.body).kind == TypeKind::Never) {
+            // 发散函数（如 fn f() -> i32 { loop {}; }）：ret 不可达但要有，
+            // 用该类型的零值兜底
+            ir_.emitRet(irtypes::llvmType(currentFnRetType_),
+                        irtypes::defaultValue(currentFnRetType_));
+        } else {
+            ir_.emitRet(irtypes::llvmType(currentFnRetType_), lastValue_);
+        }
     }
     ir_.endFunction();
     // 旧实现的 blankLine 写在模块区流里：每个函数结尾在模块区多一个空行
@@ -144,9 +155,10 @@ void IRGenerator::visit(Function& node) {
 //      while 的 cond/body/end 都是新块，都要解封
 void IRGenerator::visit(Block& node) {
     for (auto& stmt : node.statements) {
+        if (blockSealed_) break;   // 终结指令后的语句不可达，跳过
         stmt -> accept(*this);
     }
-    if (node.tailExpr) evalExpr(node.tailExpr);
+    if (!blockSealed_ && node.tailExpr) evalExpr(node.tailExpr);
 }
 
 // let：alloca 栈槽 + store 初值 + 登记 locals_（遮蔽 = 同名新槽覆盖）
@@ -416,24 +428,27 @@ void IRGenerator::visit(IfExpr& node) {
     }
     ir_.emitBrCond(c1, thenL, hasElse ? elseL : endL);
     ir_.label(thenL);
+    blockSealed_ = false;          // 每个新标签块都解封
     visit(*node.thenBlock);
-    // 分支以 return/break 收尾（类型 Never）时不 store 也不补 br——
-    // 该块已经有终结指令（依赖 ReturnExpr 等发出 ret/br）
-    if (typeOf(*node.thenBlock).kind != TypeKind::Never) {
+    // 分支以 return/break 收尾（块被封死）时不 store 也不补 br——
+    // 该块已经有终结指令
+    if (!blockSealed_) {
         if (hasValue)
             ir_.emitStore(valTy, lastValue_, slot);
         ir_.emitBr(endL);
     }
     if (hasElse) {
         ir_.label(elseL);
+        blockSealed_ = false;
         visit(*node.elseBlock);
-        if (typeOf(*node.elseBlock).kind != TypeKind::Never) {
+        if (!blockSealed_) {
             if (hasValue)
                 ir_.emitStore(valTy, lastValue_, slot);
             ir_.emitBr(endL);
         }
     }
     ir_.label(endL);
+    blockSealed_ = false;
     if (hasValue) {
         ll::Value v = ir_.freshReg();
         ir_.emitLoad(v, valTy, slot);
@@ -465,7 +480,24 @@ void IRGenerator::visit(WhileExpr& node) {
     std::string condL = ir_.freshLabel("while.cond");
     std::string bodyL = ir_.freshLabel("while.body");
     std::string endL = ir_.freshLabel("while.end");
-
+    ir_.emitBr(condL);
+    ir_.label(condL);
+    ll::Value c = evalExpr(node.cond);
+    ll::Value c1 = ir_.freshReg();
+    ir_.emitIcmp("ne", c1, ll::Type::i8(), c, ll::Value::imm("0"));
+    ir_.emitBrCond(c1, bodyL, endL);
+    ir_.label(bodyL);
+    blockSealed_ = false;
+    loopLabels_.push_back({condL, endL});
+    loopValueSlots_.push_back(ll::Value::reg(""));   // while 不产值，压占位
+    visit(*node.body);
+    loopLabels_.pop_back();
+    loopValueSlots_.pop_back();
+    if (!blockSealed_) {
+        ir_.emitBr(condL);
+    }
+    ir_.label(endL);
+    blockSealed_ = false;
 }
 
 void IRGenerator::visit(LoopExpr& node) {
@@ -497,7 +529,32 @@ void IRGenerator::visit(LoopExpr& node) {
     //        }
     // 配套：加成员 std::vector<ll::Value> loopValueSlots_;（与 loopLabels_
     //   平行的栈，while 不产值也压占位值，保持两栈同步）
-    (void)node;
+    std::string bodyL = ir_.freshLabel("loop.body");
+    std::string endL = ir_.freshLabel("loop.end");
+    bool hasValue = typeOf(node).kind != TypeKind::Unit && typeOf(node).kind != TypeKind::Never;
+    ll::Value slot = ll::Value::reg("");   // 不产值时占位
+    if (hasValue) {
+        slot = ir_.freshReg();
+        ir_.emitAlloca(slot, irtypes::llvmType(typeOf(node)));
+    }
+    loopValueSlots_.push_back(slot);
+    ir_.emitBr(bodyL);
+    ir_.label(bodyL);
+    blockSealed_ = false;
+    loopLabels_.push_back({bodyL, endL});
+    visit(*node.body);
+    loopLabels_.pop_back();
+    loopValueSlots_.pop_back();
+    if (!blockSealed_) {
+        ir_.emitBr(bodyL);   // 回边跳 body 头（loop 没有 cond 块）
+    }
+    ir_.label(endL);
+    blockSealed_ = false;
+    if (hasValue) {
+        ll::Value v = ir_.freshReg();
+        ir_.emitLoad(v, irtypes::llvmType(typeOf(node)), slot);
+        lastValue_ = v;
+    }
 }
 
 void IRGenerator::visit(ReturnExpr& node) {
@@ -511,7 +568,16 @@ void IRGenerator::visit(ReturnExpr& node) {
     //        可以加成员 bool inMain_，visit(Function) 里设置）
     //   2. blockSealed_ = true;    // ret 终结当前块，后续语句不可达
     //   3. 不写 lastValue_：return 的类型是 Never，不产生值
-    (void)node;
+    if (node.value) {
+        ll::Value v = evalExpr(node.value);
+        ir_.emitRet(irtypes::llvmType(currentFnRetType_), v);
+    } else if (inMain_) {
+        // main 的 C 入口约定：裸 return; 也 ret i32 0
+        ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
+    } else {
+        ir_.emitRetVoid();
+    }
+    blockSealed_ = true;
 }
 
 void IRGenerator::visit(BreakExpr& node) {
@@ -522,7 +588,13 @@ void IRGenerator::visit(BreakExpr& node) {
     //                      loopValueSlots_.back());
     //   2. ir_.emitBr(loopLabels_.back().second);   // second = break 目标
     //   3. blockSealed_ = true;
-    (void)node;
+    if (node.value) {
+        ll::Value v = evalExpr(node.value);
+        ir_.emitStore(irtypes::llvmType(typeOf(*node.value)), v, loopValueSlots_.back());
+    }
+    // 跳转和封块与"是否带值"无关，裸 break; 也要执行
+    ir_.emitBr(loopLabels_.back().second);
+    blockSealed_ = true;
 }
 
 void IRGenerator::visit(ContinueExpr& node) {
@@ -530,7 +602,8 @@ void IRGenerator::visit(ContinueExpr& node) {
     //   1. ir_.emitBr(loopLabels_.back().first);   // first = continue 目标
     //      （while 是 cond 块，loop 是 body 块——进循环时压对就行）
     //   2. blockSealed_ = true;
-    (void)node;
+    ir_.emitBr(loopLabels_.back().first);
+    blockSealed_ = true;
 }
 
 // ---- M4：方法 ----

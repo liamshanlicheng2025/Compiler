@@ -84,6 +84,16 @@ private:
     // break/continue 查栈顶决定 br 去哪（嵌套循环天然正确）
     std::vector<std::pair<std::string, std::string>> loopLabels_;
 
+    // 带值 break 的结果槽栈：与 loopLabels_ 平行，进循环时压入
+    // （不产值的循环压 reg("") 占位，保持两栈同步）
+    std::vector<ll::Value> loopValueSlots_;
+
+    // 当前基本块已被终结指令（ret/br）封死：其后语句不可达，visit(Block)
+    // 遇此标志跳过剩余语句；ir_.label() 开新块时解封
+    bool blockSealed_ = false;
+
+    bool inMain_ = false;   // 当前在翻译 main（裸 return; 要 ret i32 0）
+
     Type currentFnRetType_;   // 当前函数返回类型（ReturnExpr 发 ret 时用）
 
     Type typeOf(const Expr& e) const;            // 查 exprTypes 旁表

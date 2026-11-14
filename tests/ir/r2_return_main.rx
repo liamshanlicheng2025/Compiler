@@ -1,0 +1,5 @@
+fn main() {
+    printlnInt(1);
+    return;
+    printlnInt(2);
+}
