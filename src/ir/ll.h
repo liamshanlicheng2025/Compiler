@@ -79,6 +79,7 @@ enum class OpCode {
     And, Or, Xor, Shl, AShr, LShr,
     ICmp,                                   // auxStr = 谓词（eq/ne/slt/...）
     ZExt,                                   // type = 源类型，auxType = 目标类型
+    Trunc,                                  // 同 ZExt（宽整数收窄，如 i32→i8）
     Call,                                   // args 用 (类型, 值) 对
     Ret, RetVoid,
     Br, BrCond,
@@ -152,6 +153,8 @@ public:
     void emitIcmp(const std::string& pred, const Value& result,
               const Type& type, const Value& l, const Value& r);
     void emitZext(const Value& result, const Type& fromTy,
+              const Type& toTy, const Value& v);
+    void emitTrunc(const Value& result, const Type& fromTy,
               const Type& toTy, const Value& v);
     // 有返回值用 emitCall，void 用 emitCallVoid
     void emitCall(const Value& result, const Type& retType,

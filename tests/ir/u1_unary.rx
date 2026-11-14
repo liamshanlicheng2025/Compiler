@@ -1,0 +1,11 @@
+fn main() {
+    let x = -5;
+    let y = -x;
+    let b = true;
+    let c = !b;
+    let d = !c;
+    printlnInt(x);
+    printlnInt(y);
+    if (c) { printlnInt(100); }
+    if (d) { printlnInt(200); }
+}

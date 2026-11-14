@@ -130,6 +130,10 @@ void Instr::emit(std::ostringstream& out) const {
             out << "zext " << type.str() << " " << operands[0].text
                 << " to " << auxType.str();
             break;
+        case OpCode::Trunc:
+            out << "trunc " << type.str() << " " << operands[0].text
+                << " to " << auxType.str();
+            break;
         case OpCode::Call: {
             out << "call " << type.str() << " @" << args[0].second.text << "(";
             for (size_t i = 1; i < args.size(); ++i) {
@@ -314,6 +318,17 @@ void LLBuilder::emitZext(const Value& result, const Type& fromTy,
                      const Type& toTy, const Value& v) {
     Instr i;
     i.op = OpCode::ZExt;
+    i.result = result;
+    i.type = fromTy;
+    i.auxType = toTy;
+    i.operands = {v};
+    append(std::move(i));
+}
+
+void LLBuilder::emitTrunc(const Value& result, const Type& fromTy,
+                     const Type& toTy, const Value& v) {
+    Instr i;
+    i.op = OpCode::Trunc;
     i.result = result;
     i.type = fromTy;
     i.auxType = toTy;

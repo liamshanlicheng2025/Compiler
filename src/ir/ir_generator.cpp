@@ -271,7 +271,7 @@ void IRGenerator::visit(BinaryExpr& node) {
         std::string endL = ir_.freshLabel(isAnd ? "and.end" : "or.end");
         // &&：左边为假直接进常量出口（store 0）；||：左边为真进常量出口（store 1）
         if (isAnd) ir_.emitBrCond(c, rhsL, constL);
-        else       ir_.emitBrCond(c, constL, rhsL);
+        else ir_.emitBrCond(c, constL, rhsL);
         ir_.label(rhsL);
         blockSealed_ = false;
         ll::Value rhs = evalExpr(node.rhs);
@@ -300,7 +300,7 @@ void IRGenerator::visit(BinaryExpr& node) {
     if (node.op == "+" || node.op == "-" || node.op == "*"
         || node.op == "/" || node.op == "%") {
         std::string opc;
-        if      (node.op == "+") opc = "add";
+        if (node.op == "+") opc = "add";
         else if (node.op == "-") opc = "sub";
         else if (node.op == "*") opc = "mul";
         else if (node.op == "/") opc = lSigned ? "sdiv" : "udiv";
@@ -346,20 +346,30 @@ void IRGenerator::visit(BinaryExpr& node) {
     }
 }
 
+// 一元运算：
+//   "-" → sub ty 0, v（用 0 减操作数）
+//   "!" → xor i8 v, 1（bool 载体是 i8，与 1 异或即逻辑非）
 void IRGenerator::visit(UnaryExpr& node) {
-    // TODO(M3/M5)：按 node.op 分派（"-" / "!" / "*" / "&" / "&mut"）
-    //
-    // "-"（M3）：先 v = evalExpr(node.operand)，再
-    //   res = ir_.freshReg();
-    //   ir_.emitBinary("sub", res, irtypes::llvmType(typeOf(node)), v, ...);
-    //   ——即 res = 0 - v：右操作数是 ll::Value::imm("0") 当左、v 当右
-    //   （sub ty 0, v）。lastValue_ = res
-    //
-    // "!"（M3）：bool 载体是 i8，逻辑非 = 与 1 异或：
-    //   res = ir_.freshReg();
-    //   ir_.emitBinary("xor", res, ll::Type::i8(), v, ll::Value::imm("1"));
-    //   lastValue_ = res
-    //
+    // TODO(M5)："&" / "&mut" → lastValue_ = evalAddr(node.operand)
+    //   （地址本身就是引用的值，不产生指令）；
+    //   "*" → ptr = evalExpr(node.operand)（指针值，不是地址），
+    //   res = freshReg(); emitLoad(res, llvmType(typeOf(node)), ptr)。
+    //   作左值时（*p = x 左边）不走这里，走 evalAddr 的 "*" 分支
+    if (node.op == "-") {
+        ll::Value v = evalExpr(node.operand);
+        ll::Value res = ir_.freshReg();
+        ir_.emitBinary("sub", res, irtypes::llvmType(typeOf(node)), ll::Value::imm("0"), v);
+        lastValue_ = res;
+        return;
+    }
+    // "!"：bool 载体是 i8，逻辑非 = 与 1 异或
+    if (node.op == "!") {
+        ll::Value v = evalExpr(node.operand);
+        ll::Value res = ir_.freshReg();
+        ir_.emitBinary("xor", res, ll::Type::i8(), v, ll::Value::imm("1"));
+        lastValue_ = res;
+        return;
+    }
     // "&" / "&mut"（M5）：取地址，不产生任何指令——
     //   lastValue_ = evalAddr(node.operand)（地址本身就是引用的值）
     //
