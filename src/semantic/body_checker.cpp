@@ -1331,6 +1331,14 @@ void BodyChecker::visit(StaticDef& node) {
     // 同 ConstDef：node.value->accept(*this)，与 node.type 比对
     evalExpr(node.value);
     if (!lastType_.equal(node.type)) semaError("static " + node.name + " 初值类型不匹配");
+    // 初值是整数字面量时把编译期值记进符号（IR 阶段发全局变量初值用）
+    long long v;
+    if (ConstEvaluator::evalIntLiteral(node.value, v)) {
+        if (Symbol* s = symtab_.lookup(node.name)) {
+            s->constValue = v;
+            s->hasConstValue = true;
+        }
+    }
 }
 
 // enum/match 课程不要求（助教 CR 确认）：AST 里仍可能有这些节点，

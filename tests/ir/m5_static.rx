@@ -1,0 +1,8 @@
+static mut COUNT: i32 = 5;
+fn bump() { COUNT = COUNT + 1; }
+fn main() {
+    bump();
+    bump();
+    printlnInt(COUNT);
+    printlnInt(COUNT);
+}

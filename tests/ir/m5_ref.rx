@@ -1,0 +1,7 @@
+fn main() {
+    let mut a = 10;
+    let p = &mut a;
+    *p = *p + 5;
+    printlnInt(a);
+    printlnInt(a);
+}

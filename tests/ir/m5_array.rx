@@ -1,0 +1,7 @@
+fn main() {
+    let mut a = [1, 2, 3, 4];
+    a[2] = 10;
+    printlnInt(a[0] + a[2]);
+    let b = [7; 3];
+    printlnInt(b[1] + a[3]);
+}

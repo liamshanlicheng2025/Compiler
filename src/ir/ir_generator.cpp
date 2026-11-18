@@ -31,18 +31,76 @@ ll::Value IRGenerator::evalExpr(const ExprPtr& e) {
 
 // 地址通道：左值表达式（赋值左边、& 取引用）要的是地址，不能 load
 ll::Value IRGenerator::evalAddr(const ExprPtr& e) {
-    if (auto p = std::dynamic_pointer_cast<PathExpr>(e))
-        return locals_.at(p->name);   // 变量的地址 = let 时登记的栈槽
-    // TODO(M5) 另外三种左值：
-    //   FieldExpr（p.x）：base = evalExpr(object)（结构体"值"=地址），
-    //     查字段下标（lookupType(类型名)->structDef->fields），
-    //     p = freshReg(); emitGep(p, struct 类型, base, {imm("0"), imm(下标)});
-    //     返回 p（不 load）
-    //   IndexExpr（a[i]）：base = evalExpr(array)，idx = evalExpr(index)，
-    //     p = freshReg(); emitGep(p, 数组类型, base, {imm("0"), idx});
-    //     返回 p（不 load）
-    //   UnaryExpr "*"：evalExpr(node.operand)——指针值本身就是地址，直接返回
-    return ll::Value::reg("");
+    if (auto p = std::dynamic_pointer_cast<PathExpr>(e)) {
+        auto it = locals_.find(p->name);
+        if (it != locals_.end())
+            return it->second;   // 局部变量的地址 = let 时登记的栈槽
+        // static 全局变量：@name 本身就是地址（赋值的左边只会是变量或 static）
+        return ll::Value::global("@" + p->name);
+    }
+    if (auto p = std::dynamic_pointer_cast<FieldExpr>(e)) {
+        ll::Value base = evalExpr(p->object);   // 结构体的"值"=地址
+        // 对象类型名（自动解引用：Ref 先剥一层），查字段在声明序里的下标
+        Type ot = typeOf(*p->object);
+        std::string tyName = ot.kind == TypeKind::Ref ? ot.elem->name : ot.name;
+        Symbol* ts = symtab_.lookupType(tyName);
+        size_t idx = 0;
+        for (; idx < ts->structDef->fields.size(); ++idx)
+            if (ts->structDef->fields[idx].name == p->field) break;
+        ll::Value ptr = ir_.freshReg();
+        ir_.emitGep(ptr, ll::Type::struct_(tyName), base,
+                    {ll::Value::imm("0"),
+                     ll::Value::imm(std::to_string(idx))});
+        return ptr;
+    }
+    if (auto p = std::dynamic_pointer_cast<IndexExpr>(e)) {
+        ll::Value base = evalExpr(p->array);
+        ll::Value idx = evalExpr(p->index);
+        ll::Value ptr = ir_.freshReg();
+        ir_.emitGep(ptr, irtypes::llvmType(typeOf(*p->array)), base,
+                    {ll::Value::imm("0"), idx});
+        return ptr;
+    }
+    // UnaryExpr "*"：指针值本身就是地址，直接返回
+    if (auto p = std::dynamic_pointer_cast<UnaryExpr>(e))
+        return evalExpr(p->operand);
+    return ll::Value::reg("");   // 其余表达式不可作左值（语义阶段已拦）
+}
+
+// 聚合体逐成员拷贝：dst/src 都是地址。标量 load+store；数组逐元素递归；
+// struct 按声明序逐字段递归（字段类型来自 structDef）
+void IRGenerator::emitCopyAggregate(ll::Value dst, ll::Value src, const Type& ty) {
+    if (ty.kind == TypeKind::Array) {
+        ll::Type cont = irtypes::llvmType(ty);
+        for (size_t i = 0; i < ty.arrayLen; i++) {
+            ll::Value d = ir_.freshReg();
+            ll::Value s = ir_.freshReg();
+            ir_.emitGep(d, cont, dst,
+                        {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+            ir_.emitGep(s, cont, src,
+                        {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+            emitCopyAggregate(d, s, *ty.elem);
+        }
+        return;
+    }
+    if (ty.kind == TypeKind::Named) {
+        Symbol* ts = symtab_.lookupType(ty.name);
+        ll::Type cont = ll::Type::struct_(ty.name);
+        for (size_t i = 0; i < ts->structDef->fields.size(); i++) {
+            ll::Value d = ir_.freshReg();
+            ll::Value s = ir_.freshReg();
+            ir_.emitGep(d, cont, dst,
+                        {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+            ir_.emitGep(s, cont, src,
+                        {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+            emitCopyAggregate(d, s, ts->structDef->fields[i].type);
+        }
+        return;
+    }
+    ll::Type lt = irtypes::llvmType(ty);
+    ll::Value v = ir_.freshReg();
+    ir_.emitLoad(v, lt, src);
+    ir_.emitStore(lt, v, dst);
 }
 
 // ============================================================
@@ -62,12 +120,22 @@ void IRGenerator::visit(Crate& node) {
     for (auto& item : node.items)
         if (auto s = std::dynamic_pointer_cast<StructDef>(item)) visit(*s);
     ir_.raw("");
+    // static 全局变量（有才发，避免多空行）
+    bool anyStatic = false;
+    for (auto& item : node.items)
+        if (auto s = std::dynamic_pointer_cast<StaticDef>(item)) {
+            visit(*s);
+            anyStatic = true;
+        }
+    if (anyStatic) ir_.raw("");
     // 函数定义；impl 里的方法也是普通函数（M4 接入）
     for (auto& item : node.items) {
         if (auto f = std::dynamic_pointer_cast<Function>(item)) {
             visit(*f);
         } else if (auto impl = std::dynamic_pointer_cast<ImplBlock>(item)) {
+            currentImplType_ = impl->typeName;   // 方法名 mangling 用的类型名
             for (auto& m : impl->methods) visit(*m);
+            currentImplType_.clear();
         }
     }
 }
@@ -89,25 +157,39 @@ void IRGenerator::visit(Function& node) {
     loopValueSlots_.clear();
     blockSealed_ = false;
     inMain_ = (node.name == "main");
-    currentFnRetType_ =
-        node.returnType ? *node.returnType : Type{TypeKind::Unit};
+    currentFnRetType_ = node.returnType ? *node.returnType : Type{TypeKind::Unit};
 
-    // TODO(M4)：方法名要 mangling，否则两个 impl 里的同名方法会撞车。
-    //   约定：isMethod 时 LLVM 名 = 类型名_方法名（Point::new → @Point_new）。
-    //   类型名来源：加成员 std::string currentImplType_；visit(Crate) 遍历
-    //   ImplBlock 的方法前先 currentImplType_ = impl->typeName，遍历完清空；
-    //   这里 isMethod 时拼 currentImplType_ + "_" + node.name。
-    //   注意 MethodCallExpr 里要按同一约定拼，两处必须一起改
-    // 调用约定：main 对外是 C 入口，必须 ret i32（模拟器把返回值当退出码），
-    // 源语言的 main 返回 ()，统一 ret i32 0
+    // 方法名 mangling（类型名_方法名，与 MethodCallExpr 同一约定）：impl 块
+    // 里的函数（currentImplType_ 非空）都 mangle，包括没有 self 的关联函数；
+    // isMethod 只决定要不要加 self 参数
     bool isMain = (node.name == "main");
+    std::string llvmName = !currentImplType_.empty()
+        ? currentImplType_ + "_" + node.name : node.name;
+    // 返回聚合体的函数走 sret：LLVM 层 ret void，隐藏第一参数 ptr %sret
+    bool retAggregate = currentFnRetType_.kind == TypeKind::Named
+                     || currentFnRetType_.kind == TypeKind::Array;
     std::vector<std::pair<ll::Type, std::string>> params;
+    if (retAggregate)
+        params.emplace_back(ll::Type::ptr(), "sret");
+    if (node.isMethod) {
+        ll::Type selfTy = node.selfByValue ? ll::Type::struct_(currentImplType_) : ll::Type::ptr();
+        params.emplace_back(selfTy, "self");
+    }
     for (auto& p : node.params)
         params.emplace_back(irtypes::llvmType(p.type), p.name);
-    // TODO(M4)：isMethod 时第一个参数是 self（&self → ptr，按值 self → %struct.X）
-    ir_.beginFunction(isMain ? ll::Type::i32() : irtypes::llvmType(currentFnRetType_),
-                      node.name, params);
-
+    ll::Type llvmRet = isMain ? ll::Type::i32()
+        : retAggregate ? ll::Type::voidT() : irtypes::llvmType(currentFnRetType_);
+    // 调用约定：main 对外是 C 入口，必须 ret i32（模拟器把返回值当退出码），
+    // 源语言的 main 返回 ()，统一 ret i32 0
+    ir_.beginFunction(llvmRet, llvmName, params);
+    sretSlot_ = retAggregate ? ll::Value::reg("%sret") : ll::Value::reg("");
+    if (node.isMethod) {
+        ll::Type selfTy = node.selfByValue ? ll::Type::struct_(currentImplType_) : ll::Type::ptr();
+        ll::Value slot = ll::Value::reg("%self.addr");
+        ir_.emitAlloca(slot, selfTy);
+        ir_.emitStore(selfTy, ll::Value::reg("%self"), slot);
+        locals_["self"] = slot;
+    }
     // 参数落槽：传入的 SSA 值 %p 不可写，和 let 一样给栈槽，统一走 load/store
     for (auto& p : node.params) {
         ll::Type ty = irtypes::llvmType(p.type);
@@ -122,6 +204,10 @@ void IRGenerator::visit(Function& node) {
     if (!blockSealed_) {
         if (inMain_) {
             ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
+        } else if (retAggregate) {
+            // sret：把尾表达式的聚合体（值=地址）拷贝进隐藏参数槽
+            emitCopyAggregate(sretSlot_, lastValue_, currentFnRetType_);
+            ir_.emitRetVoid();
         } else if (typeOf(*node.body).kind == TypeKind::Unit) {
             ir_.emitRetVoid();
         } else if (typeOf(*node.body).kind == TypeKind::Never) {
@@ -153,9 +239,18 @@ void IRGenerator::visit(Block& node) {
     if (!blockSealed_ && node.tailExpr) evalExpr(node.tailExpr);
 }
 
-// let：alloca 栈槽 + store 初值 + 登记 locals_（遮蔽 = 同名新槽覆盖）
+// let：alloca 栈槽 + store 初值 + 登记 locals_（遮蔽 = 同名新槽覆盖）。
+// 聚合体（struct/数组）的"值"= 地址：init 求值得到的是地址，整个拷贝进新槽
+// （拷贝而非别名：数组是 Copy 语义，let b = a 后改 b 不能影响 a）
 void IRGenerator::visit(LetStmt& node) {
     Type ty = node.type ? *node.type : typeOf(*node.init);
+    if (ty.kind == TypeKind::Named || ty.kind == TypeKind::Array) {
+        ll::Value slot = ll::Value::reg("%" + node.name + ".addr");
+        ir_.emitAlloca(slot, irtypes::llvmType(ty));
+        if (node.init) emitCopyAggregate(slot, evalExpr(node.init), ty);
+        locals_[node.name] = slot;
+        return;
+    }
     ll::Value slot = ll::Value::reg("%" + node.name + ".addr");
     ir_.emitAlloca(slot, irtypes::llvmType(ty));
     if (node.init) {
@@ -198,15 +293,29 @@ void IRGenerator::visit(Literal& node) {
 // 关联常量 Type::N → ConstDef 上的 constValue。左值场景走 evalAddr，不经这里
 void IRGenerator::visit(PathExpr& node) {
     if (locals_.find(node.name) != locals_.end()) {
+        ll::Value slot = locals_.find(node.name)->second;
+        TypeKind k = typeOf(node).kind;
+        // 聚合体（struct/数组）的"值"= 地址：直接给栈槽，不 load
+        if (k == TypeKind::Named || k == TypeKind::Array) {
+            lastValue_ = slot;
+            return;
+        }
         ll::Value p = ir_.freshReg();
-        ir_.emitLoad(p, irtypes::llvmType(typeOf(node)),
-                     locals_.find(node.name)->second);
+        ir_.emitLoad(p, irtypes::llvmType(typeOf(node)), slot);
         lastValue_ = p;
         return;
     }
     Symbol* sym = symtab_.lookup(node.name);
     if (sym && sym -> kind == SymbolKind::Const && sym -> hasConstValue) {
         lastValue_ = ll::Value::imm(std::to_string(sym -> constValue));
+        return;
+    }
+    // static 全局变量：@name 本身就是地址，值通道 load 出内容
+    if (sym && sym->kind == SymbolKind::Static) {
+        ll::Value p = ir_.freshReg();
+        ir_.emitLoad(p, irtypes::llvmType(typeOf(node)),
+                     ll::Value::global("@" + node.name));
+        lastValue_ = p;
         return;
     }
     auto pos = node.name.find("::");
@@ -229,9 +338,14 @@ void IRGenerator::visit(BinaryExpr& node) {
     // 赋值类先分流：lhs 走 evalAddr（不 load），rhs 走 evalExpr
     if (node.op == "=") {
         ll::Value addr = evalAddr(node.lhs);
+        Type lt = typeOf(*node.lhs);
+        // 聚合体整体赋值：逐成员拷贝（rhs 求值结果是地址）
+        if (lt.kind == TypeKind::Named || lt.kind == TypeKind::Array) {
+            emitCopyAggregate(addr, evalExpr(node.rhs), lt);
+            return;
+        }
         ll::Value val = evalExpr(node.rhs);
-        ll::Type ty = irtypes::llvmType(typeOf(*node.lhs));
-        ir_.emitStore(ty, val, addr);
+        ir_.emitStore(irtypes::llvmType(lt), val, addr);
         // 赋值表达式的值是 ()，不留 lastValue_
         return;
     }
@@ -349,12 +463,8 @@ void IRGenerator::visit(BinaryExpr& node) {
 // 一元运算：
 //   "-" → sub ty 0, v（用 0 减操作数）
 //   "!" → xor i8 v, 1（bool 载体是 i8，与 1 异或即逻辑非）
+//   "&"/"&mut" → 取地址（不产生指令）；  "*" → 对指针值 load
 void IRGenerator::visit(UnaryExpr& node) {
-    // TODO(M5)："&" / "&mut" → lastValue_ = evalAddr(node.operand)
-    //   （地址本身就是引用的值，不产生指令）；
-    //   "*" → ptr = evalExpr(node.operand)（指针值，不是地址），
-    //   res = freshReg(); emitLoad(res, llvmType(typeOf(node)), ptr)。
-    //   作左值时（*p = x 左边）不走这里，走 evalAddr 的 "*" 分支
     if (node.op == "-") {
         ll::Value v = evalExpr(node.operand);
         ll::Value res = ir_.freshReg();
@@ -370,15 +480,17 @@ void IRGenerator::visit(UnaryExpr& node) {
         lastValue_ = res;
         return;
     }
-    // "&" / "&mut"（M5）：取地址，不产生任何指令——
-    //   lastValue_ = evalAddr(node.operand)（地址本身就是引用的值）
-    //
-    // "*"（M5）：解引用 = 对指针值 load：
-    //   ptr = evalExpr(node.operand)（指针值，不是地址！）
-    //   res = ir_.freshReg();
-    //   ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), ptr);
-    //   lastValue_ = res
-    //   注意作左值时（*p = x 的左边）不走这里，走 evalAddr 的 "*" 分支
+    // "&" / "&mut"：取地址，不产生任何指令——地址本身就是引用的值
+    if (node.op == "&" || node.op == "&mut") {
+        lastValue_ = evalAddr(node.operand);
+    }
+    // "*"：解引用 = 对指针值 load（作左值时不走这里，走 evalAddr 的 "*" 分支）
+    if (node.op == "*") {
+        ll::Value ptr = evalExpr(node.operand);
+        ll::Value res = ir_.freshReg();
+        ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), ptr);
+        lastValue_ = res;
+    }
 }
 
 // as 类型转换：四种整型在 LLVM 都是 i32（有符号性只在指令上），互转是空
@@ -420,6 +532,18 @@ void IRGenerator::visit(CallExpr& node) {
     auto it = builtinMap.find(origName);
     if (it != builtinMap.end()) llvmName = it->second;
 
+    // 关联函数调用 Point::new(...)：路径带 "::" → mangling 成 类型名_函数名，
+    // 返回类型从 implMethods 里查（符号表里没有 "Point::new" 这个名字）
+    std::shared_ptr<Function> assocFn;
+    auto pos = origName.find("::");
+    if (pos != std::string::npos) {
+        std::string tyName = origName.substr(0, pos);
+        std::string fnName = origName.substr(pos + 2);
+        llvmName = tyName + "_" + fnName;
+        for (auto& m : symtab_.implMethods[tyName])
+            if (m->name == fnName) { assocFn = m; break; }
+    }
+
     // ③ 逐参数求值，收集 (类型, 值) 对
     std::vector<std::pair<ll::Type, ll::Value>> args;
     for (auto& arg : node.args) {
@@ -429,12 +553,29 @@ void IRGenerator::visit(CallExpr& node) {
 
     // ④ 发 call：void 返回不接 %r =；否则结果进新寄存器
     // TODO(加固)：参数类型是 i8 而目标函数要 i32 时（printlnInt(bool)），先 zext
-    Symbol* sym = symtab_.lookup(origName);
-    if (sym->type.kind == TypeKind::Unit) {
+    // 返回类型：关联函数从 implMethods 查到的 Function 取，普通函数查符号表
+    Type retTy{TypeKind::Unit};
+    if (assocFn) {
+        if (assocFn->returnType) retTy = *assocFn->returnType;
+    } else {
+        Symbol* sym = symtab_.lookup(origName);
+        retTy = sym->type;
+    }
+    // sret：返回聚合体时调用方 alloca 槽位，地址作第一个实参，call 变 void；
+    // 聚合体的"值"= 这个槽的地址
+    if (retTy.kind == TypeKind::Named || retTy.kind == TypeKind::Array) {
+        ll::Value slot = ir_.freshReg();
+        ir_.emitAlloca(slot, irtypes::llvmType(retTy));
+        args.insert(args.begin(), {ll::Type::ptr(), slot});
+        ir_.emitCallVoid(llvmName, args);
+        lastValue_ = slot;
+        return;
+    }
+    if (retTy.kind == TypeKind::Unit) {
         ir_.emitCallVoid(llvmName, args);
     } else {
         ll::Value r = ir_.freshReg();
-        ir_.emitCall(r, irtypes::llvmType(sym->type), llvmName, args);
+        ir_.emitCall(r, irtypes::llvmType(retTy), llvmName, args);
         lastValue_ = r;
     }
 }
@@ -554,7 +695,14 @@ void IRGenerator::visit(LoopExpr& node) {
 void IRGenerator::visit(ReturnExpr& node) {
     if (node.value) {
         ll::Value v = evalExpr(node.value);
-        ir_.emitRet(irtypes::llvmType(currentFnRetType_), v);
+        if (currentFnRetType_.kind == TypeKind::Named
+            || currentFnRetType_.kind == TypeKind::Array) {
+            // sret：聚合体（值=地址）拷贝进隐藏参数槽，ret void
+            emitCopyAggregate(sretSlot_, v, currentFnRetType_);
+            ir_.emitRetVoid();
+        } else {
+            ir_.emitRet(irtypes::llvmType(currentFnRetType_), v);
+        }
     } else if (inMain_) {
         // main 的 C 入口约定：裸 return; 也 ret i32 0
         ir_.emitRet(ll::Type::i32(), ll::Value::imm("0"));
@@ -589,95 +737,179 @@ void IRGenerator::visit(ImplBlock& node) {
     (void)node;
 }
 
+// 方法调用 = 普通函数调用 + self 作第一个参数；函数名 mangling 成
+// 类型名_方法名（与 visit(Function) 定义处同一约定）。
+// 接收者类型名从语义类型取（Ref 剥一层），方法在 implMethods 里按名字查；
+// self 实参：&self/&mut self 传地址（左值走 evalAddr，临时值本来就是地址），
+// 按值 self 传整个结构体
+// TODO(如遇到)：内建方法（Vec 的 push/len 等）不在 implMethods 里，
+//   要按 (类型名, 方法名) 查内建表映射到 builtin.c 的函数
 void IRGenerator::visit(MethodCallExpr& node) {
-    // TODO(M4/M5)：obj.method(args...)
-    //   1. 接收者类型名：rt = typeOf(*node.receiver)；
-    //      rt.kind == Named 则类型名 = rt.name；是 Ref 则剥一层（*rt.elem）
-    //      再取 name（方法按值类型注册，引用只是 receiver 的形态）
-    //   2. 查方法：遍历 symtab_.implMethods[类型名]，找 m->name == node.method
-    //      的 Function，拿到返回类型和 self 形态（m->selfByValue / selfMut）
-    //   3. self 实参（LLVM 参数表的第一个）：
-    //      - &self / &mut self：evalAddr(node.receiver)——地址即引用值
-    //      - 按值 self：结构体按值传参会 load 整个结构体（%struct.X byval），
-    //        测试点里少见，先按 evalExpr 透传、遇到再处理
-    //      - 接收者是临时值（如 Point::new().norm()）时 evalAddr 不支持：
-    //        先 evalExpr 把结构体地址拿到（本来就是地址），直接用
-    //   4. 其余参数：照 visit(CallExpr) 第 ③ 步，逐参数 evalExpr 收集
-    //      (irtypes::llvmType(typeOf(*arg)), v) 对
-    //   5. 发 call：函数名按 mangling 约定 类型名_方法名（与 visit(Function)
-    //      的 M4 注释对应，两处一起改）；m->returnType 是 Unit 用 emitCallVoid，
-    //      否则 emitCall + lastValue_ = 结果
-    //   内建方法特例：Vec 的 push/remove/len、Box::new、字符串方法等不在
-    //   implMethods 里，要在第 2 步之前先按 (类型名, 方法名) 查内建表，
-    //   映射到 builtin.c 的函数（如 vec_push），遇到 rx 测试点再补
-    (void)node;
+    // ① 接收者的语义类型（ast 的 Type，不是 ll 类型！）：Ref 剥一层取类型名
+    Type rt = typeOf(*node.receiver);
+    std::string typeName = (rt.kind == TypeKind::Ref) ? rt.elem->name : rt.name;
+    // ② 在 implMethods[类型名] 里按名字找方法
+    std::shared_ptr<Function> method;
+    for (auto& m : symtab_.implMethods[typeName])
+        if (m->name == node.method) {
+            method = m;
+            break;
+        }
+    std::vector<std::pair<ll::Type, ll::Value>> args;
+    // ③ self 实参（第一个参数）
+    if (!method->selfByValue) {
+        // &self / &mut self：传地址。左值接收者走 evalAddr；临时值
+        // （Point::new().norm()）不是左值，但聚合体的"值"本来就是地址
+        bool isLvalue = std::dynamic_pointer_cast<PathExpr>(node.receiver)
+                     || std::dynamic_pointer_cast<FieldExpr>(node.receiver)
+                     || std::dynamic_pointer_cast<IndexExpr>(node.receiver)
+                     || std::dynamic_pointer_cast<UnaryExpr>(node.receiver);
+        args.push_back({ll::Type::ptr(),
+                        isLvalue ? evalAddr(node.receiver)
+                                 : evalExpr(node.receiver)});
+    } else {
+        // 按值 self：整个结构体传值
+        args.push_back({irtypes::llvmType(rt), evalExpr(node.receiver)});
+    }
+    for (auto& arg : node.args) {
+        ll::Value v = evalExpr(arg);
+        args.emplace_back(irtypes::llvmType(typeOf(*arg)), v);
+    }
+    std::string llvmName = typeName + "_" + node.method;
+    // ⑤ 发 call：返回聚合体走 sret（alloca 槽位作第一实参，值=槽地址）
+    Type retTy = method->returnType ? *method->returnType : Type{TypeKind::Unit};
+    if (retTy.kind == TypeKind::Named || retTy.kind == TypeKind::Array) {
+        ll::Value slot = ir_.freshReg();
+        ir_.emitAlloca(slot, irtypes::llvmType(retTy));
+        args.insert(args.begin(), {ll::Type::ptr(), slot});
+        ir_.emitCallVoid(llvmName, args);
+        lastValue_ = slot;
+        return;
+    }
+    bool isVoid = retTy.kind == TypeKind::Unit;
+    if (isVoid) {
+        ir_.emitCallVoid(llvmName, args);
+    } else {
+        ll::Value r = ir_.freshReg();
+        ir_.emitCall(r, irtypes::llvmType(retTy), llvmName, args);
+        lastValue_ = r;
+    }
 }
 
 // ---- M5：复合类型 ----
 
+// 结构体字面量 Point { x: 1, y: 2 }：alloca 整个结构体的槽位，
+// 逐字段 GEP（下标 = 声明序）+ store 填初值；地址即值
 void IRGenerator::visit(StructLiteralExpr& node) {
-    // TODO(M5)：Point { x: 1, y: 2 }
-    //   约定：聚合体（struct/数组）的"值"统一用它的地址（ptr）表示
-    //   1. slot = ir_.freshReg();
-    //      ir_.emitAlloca(slot, ll::Type::struct_(node.name));
-    //   2. 字段下标表：Symbol* ts = symtab_.lookupType(node.name);
-    //      ts->structDef->fields 的声明顺序就是内存布局顺序
-    //   3. 逐字段（node.fields 是 (字段名, 初值) 对）：
-    //        在 fields 里查字段名得下标 i；
-    //        v = evalExpr(初值)；
-    //        p = ir_.freshReg();
-    //        ir_.emitGep(p, ll::Type::struct_(node.name), slot,
-    //                    {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
-    //        ir_.emitStore(irtypes::llvmType(字段类型), v, p);
-    //   4. lastValue_ = slot;    // 地址即值
-    (void)node;
+    ll::Value slot = ir_.freshReg();
+    ir_.emitAlloca(slot, ll::Type::struct_(node.name));
+    // 字段下标表：structDef->fields 的声明顺序就是内存布局顺序
+    Symbol* ts = symtab_.lookupType(node.name);
+    for (auto& field : node.fields) {
+        for (size_t i = 0; i < ts->structDef->fields.size(); i++) {
+            if (field.first == ts->structDef->fields[i].name) {
+                ll::Value v = evalExpr(field.second);
+                ll::Value p = ir_.freshReg();
+                ir_.emitGep(p, ll::Type::struct_(node.name), slot,
+                            {ll::Value::imm("0"),
+                             ll::Value::imm(std::to_string(i))});
+                ir_.emitStore(irtypes::llvmType(ts->structDef->fields[i].type),
+                              v, p);
+                break;
+            }
+        }
+    }
+    lastValue_ = slot;
 }
 
+// 字段访问的值通道（p.x 当右值用）：evalAddr 的逻辑 + 最后一步 load；
+// 字段本身是聚合体时按约定返回地址（不 load）。
+// 左值通道（p.x = v、&p.x）走 evalAddr 的 FieldExpr 分支
 void IRGenerator::visit(FieldExpr& node) {
-    // TODO(M5)：值通道（p.x 当右值用）
-    //   1. base = evalExpr(node.object);          // 结构体的"值"=地址
-    //   2. 字段下标：typeOf(*node.object) 取类型名（Ref 先剥一层），
-    //      symtab_.lookupType(类型名)->structDef->fields 查 node.field 的下标 i
-    //   3. p = ir_.freshReg();
-    //      ir_.emitGep(p, ll::Type::struct_(类型名), base,
-    //                  {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
-    //   4. res = ir_.freshReg();
-    //      ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), p);
-    //      lastValue_ = res;
-    //   左值通道（p.x = v、&p.x）不走这里——在 evalAddr 的 FieldExpr 分支，
-    //   只做 1-3 步返回 p（不 load）
-    (void)node;
+    ll::Value base = evalExpr(node.object);   // 结构体的"值"=地址
+    Type rt = typeOf(*node.object);
+    std::string typeName = (rt.kind == TypeKind::Ref) ? rt.elem->name : rt.name;
+    Symbol* ts = symtab_.lookupType(typeName);
+    size_t index = 0;
+    for (; index < ts->structDef->fields.size(); index++)
+        if (ts->structDef->fields[index].name == node.field) break;
+    ll::Value p = ir_.freshReg();
+    ir_.emitGep(p, ll::Type::struct_(typeName), base,
+                {ll::Value::imm("0"), ll::Value::imm(std::to_string(index))});
+    TypeKind k = typeOf(node).kind;
+    if (k == TypeKind::Named || k == TypeKind::Array) {
+        lastValue_ = p;   // 聚合体字段的"值"= 地址
+        return;
+    }
+    ll::Value res = ir_.freshReg();
+    ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), p);
+    lastValue_ = res;
 }
 
+// 数组字面量 [1, 2, 3] / [0; 5]：alloca 整个数组的槽位，逐元素 GEP + store；
+// 重复形式 [v; N] 的 v 只求值一次，N 取语义阶段定好的 arrayLen；
+// 元素是聚合体时逐成员拷贝（值 = 地址，不能直接 store）
 void IRGenerator::visit(ArrayExpr& node) {
-    // TODO(M5)：[1, 2, 3] 或 [0; 5]；数组的"值"= 地址（同 struct 约定）
-    //   1. contTy = irtypes::llvmType(typeOf(node));   // Array(n, 元素类型)
-    //      slot = ir_.freshReg(); ir_.emitAlloca(slot, contTy);
-    //   2. 列举形式（node.repeatValue 为空指针）：
-    //      对 node.elements 里第 i 个 e：
-    //        v = evalExpr(e); p = ir_.freshReg();
-    //        ir_.emitGep(p, contTy, slot,
-    //                    {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
-    //        ir_.emitStore(元素类型, v, p);
-    //   3. 重复形式 [v; N]：v = evalExpr(node.repeatValue)（只算一次！）；
-    //      N 是编译期常量（语义阶段已查过）；循环 N 次发 gep + store。
-    //      N 很大时展开太长再考虑改运行时循环，测试点规模内直接展开
-    //   4. lastValue_ = slot;
-    (void)node;
+    Type arrTy = typeOf(node);
+    ll::Type contTy = irtypes::llvmType(arrTy);   // Array(n, 元素类型)
+    ll::Value slot = ir_.freshReg();
+    ir_.emitAlloca(slot, contTy);
+    bool elemAggregate = arrTy.elem->kind == TypeKind::Named
+                      || arrTy.elem->kind == TypeKind::Array;
+    if (!node.repeatValue) {
+        // 列举形式
+        for (size_t i = 0; i < node.elements.size(); i++) {
+            ll::Value p = ir_.freshReg();
+            ir_.emitGep(p, contTy, slot,
+                        {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+            if (elemAggregate) {
+                emitCopyAggregate(p, evalExpr(node.elements[i]), *arrTy.elem);
+            } else {
+                ll::Value v = evalExpr(node.elements[i]);
+                ir_.emitStore(irtypes::llvmType(typeOf(*node.elements[i])), v, p);
+            }
+        }
+    } else {
+        // 重复形式 [v; N]：v 只算一次
+        if (elemAggregate) {
+            ll::Value src = evalExpr(node.repeatValue);
+            for (size_t i = 0; i < arrTy.arrayLen; i++) {
+                ll::Value p = ir_.freshReg();
+                ir_.emitGep(p, contTy, slot,
+                            {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+                emitCopyAggregate(p, src, *arrTy.elem);
+            }
+        } else {
+            ll::Value v = evalExpr(node.repeatValue);
+            ll::Type elemTy = irtypes::llvmType(*arrTy.elem);
+            for (size_t i = 0; i < arrTy.arrayLen; i++) {
+                ll::Value p = ir_.freshReg();
+                ir_.emitGep(p, contTy, slot,
+                            {ll::Value::imm("0"), ll::Value::imm(std::to_string(i))});
+                ir_.emitStore(elemTy, v, p);
+            }
+        }
+    }
+    lastValue_ = slot;
 }
 
+// 下标访问的值通道（a[i] 当右值用）：gep 算元素地址 + load；
+// 元素本身是聚合体时按约定返回地址（不 load），二维数组 a[i][j] 赖此嵌套。
+// 左值通道（a[i] = v）走 evalAddr 的 IndexExpr 分支
 void IRGenerator::visit(IndexExpr& node) {
-    // TODO(M5)：值通道（a[i] 当右值用）
-    //   1. base = evalExpr(node.array);              // 数组的"值"=地址
-    //   2. idx = evalExpr(node.index);               // i32
-    //   3. contTy = irtypes::llvmType(typeOf(*node.array));
-    //      p = ir_.freshReg();
-    //      ir_.emitGep(p, contTy, base, {ll::Value::imm("0"), idx});
-    //   4. res = ir_.freshReg();
-    //      ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), p);
-    //      lastValue_ = res;
-    //   左值通道（a[i] = v）在 evalAddr 的 IndexExpr 分支：只做 1-3 步
-    (void)node;
+    ll::Value base = evalExpr(node.array);
+    ll::Value idx = evalExpr(node.index);
+    ll::Type contTy = irtypes::llvmType(typeOf(*node.array));
+    ll::Value p = ir_.freshReg();
+    ir_.emitGep(p, contTy, base, {ll::Value::imm("0"), idx});
+    TypeKind k = typeOf(node).kind;
+    if (k == TypeKind::Named || k == TypeKind::Array) {
+        lastValue_ = p;   // 聚合体元素的"值"= 地址
+        return;
+    }
+    ll::Value res = ir_.freshReg();
+    ir_.emitLoad(res, irtypes::llvmType(typeOf(node)), p);
+    lastValue_ = res;
 }
 
 // ---- 不 codegen 的条目 ----
@@ -688,17 +920,15 @@ void IRGenerator::visit(ConstDef& node) {
     (void)node;
 }
 
+// static 全局静态量：模块区发全局变量，初值是编译期常量
+// （ConstEvaluator 已算好，存在符号表的 Symbol 上）；
+// 全局名 @name 本身就是地址——值通道（PathExpr）load，左值通道直接用
 void IRGenerator::visit(StaticDef& node) {
-    // TODO(M5 后期，测试点少)：static COUNT: i32 = 0;
-    //   1. 模块区发全局变量（raw 顶格行）：
-    //        ir_.raw("@" + node.name + " = global "
-    //                + irtypes::llvmType(node.type).str() + " " + 初值文本);
-    //      初值文本：符号表里该 static 的 Symbol 上有 hasConstValue/constValue
-    //      （ConstEvaluator 已算好），to_string 即可
-    //   2. 使用处配合：PathExpr 查到 SymbolKind::Static 的符号时，
-    //      全局名 @name 本身就是地址——值通道 emitLoad(res, ty,
-    //      ll::Value::global("@" + name))；左值通道直接用 global 当地址
-    (void)node;
+    Symbol* sym = symtab_.lookup(node.name);
+    long long init = (sym && sym->hasConstValue) ? sym->constValue : 0;
+    ir_.raw("@" + node.name + " = global "
+            + irtypes::llvmType(node.type).str() + " "
+            + std::to_string(init));
 }
 
 void IRGenerator::visit(MacroStmt& node) {

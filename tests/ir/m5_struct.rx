@@ -1,0 +1,7 @@
+struct Point { x: i32, y: i32 }
+fn main() {
+    let mut p = Point { y: 4, x: 3 };
+    p.x = 10;
+    printlnInt(p.x + p.y);
+    printlnInt(p.x * p.y);
+}

@@ -75,7 +75,7 @@ private:
     // 最近一个表达式 lower 出的值：寄存器（%5）/ 立即数（42）/ 全局名
     // 传递模式与 BodyChecker::lastType_ 相同：用完立刻取走
     ll::Value lastValue_ = ll::Value::imm("");
-
+    std::string currentImplType_;
     // 局部变量地址表：变量名 → alloca 栈槽指针（%x.addr）
     // let 遮蔽 = 同名新槽覆盖旧槽（与语义阶段的遮蔽语义一致）
     std::unordered_map<std::string, ll::Value> locals_;
@@ -96,7 +96,14 @@ private:
 
     Type currentFnRetType_;   // 当前函数返回类型（ReturnExpr 发 ret 时用）
 
+    // sret：函数返回聚合体（struct/数组）时，改用隐藏指针参数——调用方
+    // 先 alloca 好槽位，把地址作第一个实参传入，被调方往里面拷贝、ret void。
+    // 非聚合体返回时为空占位（reg("")）
+    ll::Value sretSlot_ = ll::Value::reg("");
+
     Type typeOf(const Expr& e) const;            // 查 exprTypes 旁表
     ll::Value evalExpr(const ExprPtr& e);        // visit 子表达式并取走 lastValue_
     ll::Value evalAddr(const ExprPtr& e);        // 求左值表达式的地址（不 load）
+    // 聚合体逐成员拷贝：dst/src 都是地址，按语义类型递归
+    void emitCopyAggregate(ll::Value dst, ll::Value src, const Type& ty);
 };
