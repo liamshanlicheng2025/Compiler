@@ -1805,6 +1805,53 @@ void IRGenerator::visit(MethodCallExpr& node) {
         lastValue_ = evalExpr(node.receiver);
         return;
     }
+    // clone 先行分流：克隆语义由【结果类型】决定，且接收者只求值一次。
+    // 纯类型层面剥链找宿主——宿主有用户定义的 clone 方法时不走这里，
+    // 落到下面的正常调用路径（Inner::clone 这类自定义实现优先）
+    if (node.method == "clone") {
+        Type host = rt;
+        while (host.kind == TypeKind::Ref || isBoxType(host)) host = *host.elem;
+        bool userClone = false;
+        if (host.kind == TypeKind::Named && !isVecType(host))
+            for (auto& m : symtab_.implMethods[host.name])
+                if (m->name == "clone") { userClone = true; break; }
+        if (!userClone && !isVecType(host)) {
+            Type resT = typeOf(node);
+            if (resT.kind == TypeKind::Ref) {
+                // 宿主没有 clone 方法：&T.clone() 克隆引用本身（拷贝指针）
+                lastValue_ = evalExpr(node.receiver);
+                return;
+            }
+            if (isBoxType(resT)) {
+                // 克隆盒子：只剥接收者的 Ref 层拿到 Box 本体的值（堆指针），
+                // 深拷贝内容装新盒——不能再剥 Box 层（会把内容指针当盒子）
+                ll::Value boxVal;
+                Type t = rt;
+                if (t.kind == TypeKind::Ref) {
+                    ll::Value addr = evalExpr(node.receiver);
+                    t = *t.elem;
+                    while (t.kind == TypeKind::Ref) {
+                        ll::Value nv = ir_.freshReg();
+                        ir_.emitLoad(nv, ll::Type::ptr(), addr);
+                        addr = nv;
+                        t = *t.elem;
+                    }
+                    boxVal = ir_.freshReg();
+                    ir_.emitLoad(boxVal, ll::Type::ptr(), addr);
+                } else {
+                    boxVal = evalExpr(node.receiver);   // Box 本体：值=堆指针
+                }
+                ll::Value np = emitAlloc(ll::Value::imm(std::to_string(sizeOfType(*resT.elem))));
+                cloneInto(np, boxVal, *resT.elem);
+                lastValue_ = np;
+                return;
+            }
+            // struct/数组：derive(Clone) 深拷贝
+            auto [hostT, selfAddr] = peelReceiver(node.receiver);
+            lastValue_ = emitCloneValue(selfAddr, hostT);
+            return;
+        }
+    }
     // ① 剥 Ref/Box 链，拿 (宿主类型, 宿主地址)
     auto [hostT, selfAddr] = peelReceiver(node.receiver);
     // ② Vec 内建方法
@@ -1826,41 +1873,6 @@ void IRGenerator::visit(MethodCallExpr& node) {
             method = m;
             break;
         }
-    // ⑤ clone 兜底：derive(Clone) 合成 / 引用克隆 / 经引用克隆容器
-    if (!method && node.method == "clone") {
-        Type resT = typeOf(node);
-        if (resT.kind == TypeKind::Ref) {
-            // 宿主类型没有 clone 方法时，&T.clone() 克隆引用本身（拷贝指针）
-            lastValue_ = evalExpr(node.receiver);
-            return;
-        }
-        if (isBoxType(resT)) {
-            // 克隆盒子（view.clone()，view: &Box<T>）：剥接收者的 Ref 链到
-            // Box 存储，load 出堆指针，深拷贝内容装新盒
-            ll::Value boxVal;
-            Type t = rt;
-            if (t.kind == TypeKind::Ref) {
-                ll::Value addr = evalExpr(node.receiver);
-                t = *t.elem;
-                while (t.kind == TypeKind::Ref) {
-                    ll::Value nv = ir_.freshReg();
-                    ir_.emitLoad(nv, ll::Type::ptr(), addr);
-                    addr = nv;
-                    t = *t.elem;
-                }
-                boxVal = ir_.freshReg();
-                ir_.emitLoad(boxVal, ll::Type::ptr(), addr);
-            } else {
-                boxVal = selfAddr;   // b.clone()：peel 后的盒子堆指针
-            }
-            ll::Value np = emitAlloc(ll::Value::imm(std::to_string(sizeOfType(*resT.elem))));
-            cloneInto(np, boxVal, *resT.elem);
-            lastValue_ = np;
-            return;
-        }
-        lastValue_ = emitCloneValue(selfAddr, hostT);
-        return;
-    }
     if (!method) return;   // 语义阶段已拦，防御
     std::vector<std::pair<ll::Type, ll::Value>> args;
     // ⑤ self 实参（第一个参数）：&self/&mut self/按值 self 对聚合体都传地址
