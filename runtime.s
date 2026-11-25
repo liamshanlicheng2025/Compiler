@@ -76,16 +76,7 @@ println:
 	.p2align	2
 	.type	rx_alloc,@function
 rx_alloc:
-	addi	a0, a0, 7
-	lui	a1, %hi(heap_off)
-	lw	a2, %lo(heap_off)(a1)
-	andi	a3, a0, -8
-	lui	a0, %hi(heap)
-	addi	a0, a0, %lo(heap)
-	add	a0, a0, a2
-	add	a2, a2, a3
-	sw	a2, %lo(heap_off)(a1)
-	jalr	zero, 0(ra)
+	tail	malloc
 .Lfunc_end5:
 	.size	rx_alloc, .Lfunc_end5-rx_alloc
 
@@ -110,17 +101,6 @@ rx_alloc:
 	.asciz	"%s\n"
 	.size	.L.str.3, 4
 
-	.type	heap,@object
-	.local	heap
-	.comm	heap,67108864,1
-	.type	heap_off,@object
-	.section	.sbss,"aw",@nobits
-	.p2align	2
-heap_off:
-	.word	0
-	.size	heap_off, 4
-
 	.ident	"Ubuntu clang version 15.0.7"
 	.section	".note.GNU-stack","",@progbits
 	.addrsig
-	.addrsig_sym heap

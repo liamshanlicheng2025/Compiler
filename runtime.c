@@ -12,13 +12,7 @@ int  getInt(void)      { int v = 0; scanf("%d", &v); return v; }
 void print(const char* s)   { printf("%s", s); }
 void println(const char* s) { printf("%s\n", s); }
 
-// Box/Vec 的堆分配：bump allocator（只增不减——测试程序没有 drop 语义，
-// 64MB 静态堆对评测规模足够）。8 字节对齐，与 i64/指针的自然对齐一致
-static char heap[64 * 1024 * 1024];
-static unsigned long heap_off = 0;
-void* rx_alloc(int n) {
-    n = (n + 7) & ~7;
-    void* p = heap + heap_off;
-    heap_off += (unsigned)n;
-    return p;
-}
+// Box/Vec 的堆分配：直接用模拟器 libc 的 malloc（REIMU 保证 16 字节对齐）。
+// 不用静态大数组：REIMU 汇编器不认 .comm，且 .zero 上限 1MB
+void* malloc(unsigned long n);
+void* rx_alloc(int n) { return malloc((unsigned long)n); }
