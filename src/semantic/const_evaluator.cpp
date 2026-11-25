@@ -235,9 +235,19 @@ bool ConstEvaluator::evalConstExpr(const ExprPtr& e, long long& out) {
         // 归一化后查 cache_：顶层 const 是裸名，关联常量是限定名 "Config::N"，
         // impl 初值里的 "Self::X" 由 normalizePath 按 currentSelfType_ 改写
         auto it = cache_.find(normalizePath(p -> name));
-        if (it == cache_.end()) return false;
-        out = it -> second;
-        return true;
+        if (it != cache_.end()) {
+            out = it -> second;
+            return true;
+        }
+        // cache_ 是实例级的（evaluateAll 的实例和 BodyChecker 的 constEval_
+        // 不是同一个），但 evaluateAll 同时也把值写进了符号表，兜底查符号表
+        if (Symbol* s = symtab_.lookup(normalizePath(p -> name))) {
+            if (s -> kind == SymbolKind::Const && s -> hasConstValue) {
+                out = s -> constValue;
+                return true;
+            }
+        }
+        return false;
     }
     if (auto* b = dynamic_cast<BinaryExpr*>(e.get())) {
         long long l, r;

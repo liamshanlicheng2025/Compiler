@@ -52,7 +52,7 @@ struct Value {
 
 // 类型：枚举 kind + 负载。codegen 关心的是 kind 和 size()（字节数）
 struct Type {
-    enum class Kind { Void, I1, I8, I32, F32, F64, Ptr, Array, Struct } kind = Kind::Void;
+    enum class Kind { Void, I1, I8, I32, I64, F32, F64, Ptr, Array, Struct } kind = Kind::Void;
     int arrayLen = 0;                  // Array：元素个数
     std::shared_ptr<Type> elem;        // Array：元素类型
     std::string structName;            // Struct：名字（布局表的键）
@@ -62,6 +62,7 @@ struct Type {
     static Type i1()  { Type t; t.kind = Kind::I1;  return t; }
     static Type i8()  { Type t; t.kind = Kind::I8;  return t; }
     static Type i32() { Type t; t.kind = Kind::I32; return t; }
+    static Type i64() { Type t; t.kind = Kind::I64; return t; }
     static Type f32() { Type t; t.kind = Kind::F32; return t; }
     static Type f64() { Type t; t.kind = Kind::F64; return t; }
     static Type ptr() { Type t; t.kind = Kind::Ptr; return t; }
@@ -79,6 +80,7 @@ enum class OpCode {
     And, Or, Xor, Shl, AShr, LShr,
     ICmp,                                   // auxStr = 谓词（eq/ne/slt/...）
     ZExt,                                   // type = 源类型，auxType = 目标类型
+    SExt,                                   // 同 ZExt（有符号扩宽，如 i32→i64）
     Trunc,                                  // 同 ZExt（宽整数收窄，如 i32→i8）
     Call,                                   // args 用 (类型, 值) 对
     Ret, RetVoid,
@@ -153,6 +155,8 @@ public:
     void emitIcmp(const std::string& pred, const Value& result,
               const Type& type, const Value& l, const Value& r);
     void emitZext(const Value& result, const Type& fromTy,
+              const Type& toTy, const Value& v);
+    void emitSext(const Value& result, const Type& fromTy,
               const Type& toTy, const Value& v);
     void emitTrunc(const Value& result, const Type& fromTy,
               const Type& toTy, const Value& v);

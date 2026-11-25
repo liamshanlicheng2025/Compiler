@@ -171,6 +171,7 @@ void BodyChecker::visit(Function& node) {
     resolveSelfType(currentFnRetType_);
     checkTypeResolvable(currentFnRetType_);
     constEval_.resolveArrayLens(currentFnRetType_);   // fn make_table(n) -> [[i32; n]; n] 之类要拦
+    if (node.returnType) *node.returnType = currentFnRetType_;   // 写回 AST
     symtab_.enterScope();
     if (node.isMethod){
         Type inner;
@@ -193,6 +194,7 @@ void BodyChecker::visit(Function& node) {
         resolveSelfType(pt);
         checkTypeResolvable(pt);
         constEval_.resolveArrayLens(pt);              // 参数里的数组长度同样要解析
+        p.type = pt;                                  // 写回 AST：IR 阶段要读 arrayLen
         Symbol sym{SymbolKind::Variable, p.name, pt, p.isMut};
         if (!symtab_.insert(sym)) semaError("重复的参数名：" + p.name);
     }
@@ -285,6 +287,7 @@ void BodyChecker::visit(LetStmt& node) {
             resolveSelfType(ann);
             checkTypeResolvable(ann);
             constEval_.resolveArrayLens(ann);         // 标注里的数组长度（[i32; ARR] 等）
+            *node.type = ann;                         // 写回 AST：IR 阶段要读 arrayLen
             if (!coercible(initType, ann))
                 semaError("let " + node.name + " 类型不匹配：标注 "
                           + ann.toString() + "，初值 " + initType.toString());
@@ -1229,6 +1232,12 @@ void BodyChecker::visit(ArrayExpr& node) {
         size_t len = 0;
         if (auto* lit = dynamic_cast<Literal*>(node.repeatCount.get()))
             len = static_cast<size_t>(std::stoull(lit->text));
+        // 一般常量表达式（[X; MAXN + 1]）：编译期求值
+        if (len == 0) {
+            long long cv;
+            if (constEval_.evalConstExpr(node.repeatCount, cv) && cv > 0)
+                len = static_cast<size_t>(cv);
+        }
         // 次数是 const 名（[1; N]）时的三道检查：
         //   1. 名字必须解析到 const（局部变量 → 拒）
         //   2. 该 const 必须是 usize 类型（i32 常量也拒）
@@ -1404,6 +1413,7 @@ void BodyChecker::visit(ItemStmt& node) {
         if (!symtab_.insert(sym)) semaError("重复定义：" + sym.name);
     } else if (auto st = std::dynamic_pointer_cast<StructDef>(node.item)) {
         // 块内 struct 定义：注册类型符号进当前作用域
+        for (auto& f : st->fields) constEval_.resolveArrayLens(f.type);
         Symbol sym;
         sym.kind = SymbolKind::StructType;
         sym.name = st->name;
@@ -1413,8 +1423,11 @@ void BodyChecker::visit(ItemStmt& node) {
     lastDiverges_ = false;
 }
 
-// 顶层不会出现这些，防御性留空
-void BodyChecker::visit(StructDef&) {}
+// struct 字段类型里的数组长度（[i32; MAXN + 1]）要解析成编译期常量——
+// IR 阶段按 arrayLen 定 LLVM 数组类型，不解析会落成 [0 x T]
+void BodyChecker::visit(StructDef& node) {
+    for (auto& f : node.fields) constEval_.resolveArrayLens(f.type);
+}
 void BodyChecker::visit(ImplBlock& node) {
     // impl 里的方法也是 Function，要逐个检查函数体
     currentImplType_ = node.typeName;

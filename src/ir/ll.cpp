@@ -35,6 +35,7 @@ int Type::size() const {
         case Kind::I32:
         case Kind::F32:
         case Kind::Ptr:    return 4;
+        case Kind::I64:
         case Kind::F64:    return 8;
         case Kind::Array:  return arrayLen * (elem ? elem->size() : 0);
         case Kind::Struct: return structBytes;   // 可能是 -1（未定，查布局表）
@@ -49,6 +50,7 @@ std::string Type::str() const {
         case Kind::I1:     return "i1";
         case Kind::I8:     return "i8";
         case Kind::I32:    return "i32";
+        case Kind::I64:    return "i64";
         case Kind::F32:    return "float";
         case Kind::F64:    return "double";
         case Kind::Ptr:    return "ptr";
@@ -128,6 +130,10 @@ void Instr::emit(std::ostringstream& out) const {
             break;
         case OpCode::ZExt:
             out << "zext " << type.str() << " " << operands[0].text
+                << " to " << auxType.str();
+            break;
+        case OpCode::SExt:
+            out << "sext " << type.str() << " " << operands[0].text
                 << " to " << auxType.str();
             break;
         case OpCode::Trunc:
@@ -318,6 +324,17 @@ void LLBuilder::emitZext(const Value& result, const Type& fromTy,
                      const Type& toTy, const Value& v) {
     Instr i;
     i.op = OpCode::ZExt;
+    i.result = result;
+    i.type = fromTy;
+    i.auxType = toTy;
+    i.operands = {v};
+    append(std::move(i));
+}
+
+void LLBuilder::emitSext(const Value& result, const Type& fromTy,
+                     const Type& toTy, const Value& v) {
+    Instr i;
+    i.op = OpCode::SExt;
     i.result = result;
     i.type = fromTy;
     i.auxType = toTy;

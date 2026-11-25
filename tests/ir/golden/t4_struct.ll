@@ -5,8 +5,8 @@ declare void @printlnInt(i32)
 declare i32 @getInt()
 declare void @exit(i32)
 
-%struct.Point = type { i32, i32 }
 %struct.Line = type { %struct.Point, %struct.Point }
+%struct.Point = type { i32, i32 }
 
 
 define i32 @main() {

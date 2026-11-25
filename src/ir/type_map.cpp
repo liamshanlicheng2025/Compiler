@@ -6,9 +6,10 @@ ll::Type llvmType(const Type& t) {
     switch (t.kind) {
         case TypeKind::I32:
         case TypeKind::U32:
-        case TypeKind::Isize:
-        case TypeKind::Usize:
         case TypeKind::IntLit:  return ll::Type::i32();
+        // usize/isize 按 64 位（参考实现的 overflow 测试点以 64 位语义为准）
+        case TypeKind::Isize:
+        case TypeKind::Usize:   return ll::Type::i64();
         case TypeKind::Bool:
         case TypeKind::Char:    return ll::Type::i8();
         case TypeKind::F32:     return ll::Type::f32();

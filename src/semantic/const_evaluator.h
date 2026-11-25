@@ -49,6 +49,10 @@ public:
     // 统一预求值入口：收集顶层 const → 三色 DFS 查环 + 求值 + 缓存
     void evaluateAll(const CratePtr& crate);
 
+    // 递归求值常量表达式（AST 版），求不出返回 false。
+    // 数组重复次数 [X; MAXN + 1] 之类的一般常量表达式也走这里
+    bool evalConstExpr(const ExprPtr& e, long long& out);
+
 private:
     SymbolTable& symtab_;
     // 已求出的常量值：名字 → 值（DFS 黑节点的结果，避免重复求值）。
@@ -71,9 +75,6 @@ private:
     // 三色 DFS 求值：查依赖环 + 依赖后序求值 + 写 cache_ 和符号表
     long long evalConst(const std::string& name,
                         std::unordered_map<std::string, int>& state);
-
-    // 递归求值常量表达式（AST 版），求不出返回 false
-    bool evalConstExpr(const ExprPtr& e, long long& out);
 
     // 收集表达式里引用的顶层 const 名（建依赖图用）
     void collectDeps(const ExprPtr& e, std::vector<std::string>& out);
