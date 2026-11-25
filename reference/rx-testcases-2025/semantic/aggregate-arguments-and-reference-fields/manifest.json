@@ -1,0 +1,20 @@
+[
+  {
+    "source": "acc-by-value-aggregates-remain-independent-across-calls-and-entire-array-assignment.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "By-value aggregates remain independent across calls and entire-array assignment."
+  },
+  {
+    "source": "rej-immutable-struct-field-assignment.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Immutable struct field assignment."
+  },
+  {
+    "source": "rej-by-value-array-parameter-checks-its-fixed-length.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "By-value array parameter checks its fixed length."
+  }
+]

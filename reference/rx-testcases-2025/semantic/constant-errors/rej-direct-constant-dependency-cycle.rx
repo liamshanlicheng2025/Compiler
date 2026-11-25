@@ -1,0 +1,4 @@
+use rx::core::*;
+
+const A: i32 = A;
+fn main() {}

@@ -1,0 +1,49 @@
+use rx::core::*;
+
+#[derive(Clone, Copy)]
+struct State {
+    x: i32,
+    y: i32,
+    z: i32,
+    flag: bool,
+}
+fn update(mut s: State, k: i32, bias: i32) -> State {
+    let invariant = bias * 9 + 17;
+    let common = s.x * 3 + s.y * 5;
+    let duplicate = s.x * 3 + s.y * 5;
+    let unused = s.z * 12345 + k * 77;
+    let neutral = (k & 0) + 0;
+    if 4 * 7 == 28 {
+        s.x = common + invariant + neutral;
+    } else {
+        s.x = unused;
+    }
+    if s.flag {
+        s.y = duplicate - invariant;
+    } else {
+        s.y = duplicate + invariant;
+    }
+    s.z = s.z ^ (s.x + s.y);
+    s.flag = (s.z & 1) == 0;
+    s
+}
+fn main() {
+    let rounds = get_i32();
+    let seed = get_i32();
+    let bias = get_i32();
+    let mut s = State {
+        x: seed,
+        y: seed + 1,
+        z: seed + 2,
+        flag: true,
+    };
+    let mut i = 0;
+    while i < rounds {
+        s = update(s, i, bias);
+        i += 1;
+    }
+    println_i32(s.x);
+    println_i32(s.y);
+    println_i32(s.z);
+    println_i32(s.flag as i32);
+}

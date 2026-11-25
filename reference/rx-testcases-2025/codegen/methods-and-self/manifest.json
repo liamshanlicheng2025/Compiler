@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-receiver-auto-borrows-and-repeated-box-reference-dereferences.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Receiver auto-borrows and repeated Box/reference dereferences.",
+    "io": [
+      {
+        "input": "acc-receiver-auto-borrows-and-repeated-box-reference-dereferences.default.in",
+        "output": "acc-receiver-auto-borrows-and-repeated-box-reference-dereferences.default.out"
+      }
+    ]
+  }
+]

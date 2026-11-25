@@ -1,0 +1,1 @@
+/* Even inline /* nested */ comments work */

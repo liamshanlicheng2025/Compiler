@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-copy-stays-independent-deep-clone-and-structural-equality-ignore-padding-and-addresses.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Copy stays independent; deep clone and structural equality ignore padding and addresses.",
+    "io": [
+      {
+        "input": "acc-copy-stays-independent-deep-clone-and-structural-equality-ignore-padding-and-addresses.default.in",
+        "output": "acc-copy-stays-independent-deep-clone-and-structural-equality-ignore-padding-and-addresses.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-unique-shared-reference-clone-for-non-clone-target-array-clone-and-scalar-clone.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Unique shared-reference clone for non-Clone target, array clone, and scalar clone.",
+    "io": [
+      {
+        "input": "acc-unique-shared-reference-clone-for-non-clone-target-array-clone-and-scalar-clone.default.in",
+        "output": "acc-unique-shared-reference-clone-for-non-clone-target-array-clone-and-scalar-clone.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-container-dot-clone-precedes-dereference-and-keeps-storage-independent.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Dot clone selects Box and Vec before dereferencing, including shared receivers and deep nested storage.",
+    "io": [
+      {
+        "input": null,
+        "output": "acc-container-dot-clone-precedes-dereference-and-keeps-storage-independent.default.out"
+      }
+    ]
+  }
+]

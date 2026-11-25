@@ -504,6 +504,7 @@ void BodyChecker::visit(PathExpr& node) {
             if (currentImplType_.empty())
                 semaError("Self 只能在 impl 块内使用");
             head = currentImplType_;
+            node.name = head + node.name.substr(node.name.find("::"));   // 写回供 IR 用
         }
         Symbol* s = symtab_.lookupType(head);
         if (!s || (s->kind != SymbolKind::StructType && s->kind != SymbolKind::EnumType))
@@ -776,8 +777,11 @@ void BodyChecker::visit(CallExpr& node) {
             lastDiverges_ = false;
             return;
         }
-        // Self::method()：当前 impl 目标类型
-        if (typeName == "Self") typeName = currentImplType_;
+        // Self::method()：当前 impl 目标类型；写回 callee 名供 IR mangling 用
+        if (typeName == "Self") {
+            typeName = currentImplType_;
+            callee->name = typeName + "::" + fnName;
+        }
         // 内建容器关联函数：Vec::<T>::new() / Vec::<T>::clone(&v)、
         // Box::<T>::new(v) / Box::<T>::clone(&b)
         if (typeName == "Vec" || typeName == "Box") {
@@ -1168,6 +1172,7 @@ void BodyChecker::visit(StructLiteralExpr& node) {
         if (currentImplType_.empty())
             semaError("Self 只能在 impl 块内使用");
         name = currentImplType_;
+        node.name = name;   // 写回，IR 阶段直接拿到具体类型名
     }
     Symbol* sym = symtab_.lookupType(name);
     if (!sym || sym->kind != SymbolKind::StructType)

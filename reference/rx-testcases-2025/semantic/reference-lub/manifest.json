@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-both-source-orders-exercise-adjustment-of-earlier-and-later-results.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Both source orders exercise adjustment of earlier and later results."
+  },
+  {
+    "source": "rej-with-a-fixed-target-an-incompatible-reference-is-a-required-error.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "With a fixed target an incompatible reference is a required error."
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-explicit-unit-result-and-early-completion.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Explicit unit result and early completion."
+  },
+  {
+    "source": "rej-an-executable-needs-a-top-level-main.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An executable needs a top-level main."
+  },
+  {
+    "source": "rej-main-cannot-have-value-parameters.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Main cannot have value parameters."
+  },
+  {
+    "source": "rej-main-must-return-unit.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Main must return unit."
+  },
+  {
+    "source": "rej-main-cannot-have-generic-parameters.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Main cannot have generic parameters."
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-both-source-orders-exercise-adjustment-of-earlier-and-later-results.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Both source orders exercise adjustment of earlier and later results.",
+    "io": [
+      {
+        "input": "acc-both-source-orders-exercise-adjustment-of-earlier-and-later-results.default.in",
+        "output": "acc-both-source-orders-exercise-adjustment-of-earlier-and-later-results.default.out"
+      }
+    ]
+  }
+]

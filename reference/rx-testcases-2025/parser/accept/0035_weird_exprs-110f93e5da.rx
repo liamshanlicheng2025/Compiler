@@ -1,0 +1,1 @@
+let _b = swap(&mut _y, &mut _z) == swap(&mut _y, &mut _z);

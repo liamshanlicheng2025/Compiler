@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-recursive-main-resumes-its-caller.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Source main is an ordinary recursive unit function; every recursive return resumes its caller."
+  }
+]

@@ -1,0 +1,36 @@
+use rx::core::*;
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+struct Pair {
+    flag: bool,
+    x: i32,
+}
+#[derive(Clone, PartialEq, Eq)]
+struct Owned {
+    p: Box<Pair>,
+    values: Vec<i32>,
+}
+fn main() {
+    let a = Pair { flag: true, x: 4 };
+    let mut b = a;
+    b.x = 9;
+    println_i32(a.x);
+    println_i32((a != b) as i32);
+    let c = Pair::clone(&a);
+    println_i32((a == c) as i32);
+    let mut v = Vec::<i32>::new();
+    v.push(5);
+    v.push(6);
+    let original = Owned {
+        p: Box::<Pair>::new(a),
+        values: v,
+    };
+    let mut cloned = original.clone();
+    println_i32((original == cloned) as i32);
+    cloned.p.x = 20;
+    cloned.values[0] = 99;
+    println_i32(original.p.x);
+    println_i32(original.values[0]);
+    println_i32((original != cloned) as i32);
+    println_i32(([a, c] == [c, a]) as i32);
+}

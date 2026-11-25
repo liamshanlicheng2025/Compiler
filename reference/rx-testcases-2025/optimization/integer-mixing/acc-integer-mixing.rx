@@ -1,0 +1,26 @@
+use rx::core::*;
+
+fn mix(mut x: u32, key: u32) -> u32 {
+    x ^= x >> 16u32;
+    x *= 2146121005u32;
+    x ^= x >> 15u32;
+    x *= 2221713035u32;
+    x ^= x >> 16u32;
+    x + key
+}
+fn main() {
+    let rounds = get_i32();
+    let mut a = get_i32() as u32;
+    let mut b = get_i32() as u32;
+    let mut i = 0;
+    while i < rounds {
+        a = mix(a, b);
+        b = ((b << 7u32) | (b >> 25u32)) ^ a;
+        if (a & 7u32) == 0u32 {
+            b += 2654435769u32;
+        }
+        i += 1;
+    }
+    println_i32(a as i32);
+    println_i32(b as i32);
+}

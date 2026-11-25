@@ -1,0 +1,21 @@
+use rx::core::*;
+
+fn write(target: &mut i32) {
+    *target += 1;
+}
+fn update(mut values: Vec<&mut i32>) {
+    *values[0] = 2;
+    *values[0] += 3;
+    let explicit = &mut *values[0];
+    *explicit += 4;
+    let inferred: &mut i32 = values[0];
+    *inferred += 5;
+    write(values[0]);
+}
+fn main() {
+    let mut value = 1;
+    let mut values = Vec::<&mut i32>::new();
+    values.push(&mut value);
+    update(values);
+    println_i32(value);
+}

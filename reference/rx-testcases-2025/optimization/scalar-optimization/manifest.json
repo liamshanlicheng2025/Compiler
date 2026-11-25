@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-scalar-optimization.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Aggregate scalar replacement, inlining, redundant expressions, dead computations and invariant arithmetic.",
+    "io": [
+      {
+        "input": "acc-scalar-optimization.small.in",
+        "output": "acc-scalar-optimization.small.out"
+      },
+      {
+        "input": "acc-scalar-optimization.large.in",
+        "output": "acc-scalar-optimization.large.out"
+      },
+      {
+        "input": "acc-scalar-optimization.large-variant.in",
+        "output": "acc-scalar-optimization.large-variant.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,58 @@
+use rx::core::*;
+
+#[derive(Clone, PartialEq, Eq)]
+struct Node {
+    key: i32,
+    children: Vec<Box<Node>>,
+}
+impl Node {
+    fn leaf(key: i32) -> Self {
+        Self {
+            key: key,
+            children: Vec::<Box<Node>>::new(),
+        }
+    }
+    fn total(&self) -> i32 {
+        let mut sum = self.key;
+        let mut i = 0usize;
+        while i < self.children.len() {
+            sum += self.children[i].total();
+            i += 1usize;
+        }
+        sum
+    }
+    fn alter(&mut self, delta: i32) {
+        self.key += delta;
+        let mut i = 0usize;
+        while i < self.children.len() {
+            self.children[i].alter(delta + 1);
+            i += 1usize;
+        }
+    }
+}
+fn build(depth: i32, seed: i32) -> Node {
+    let mut n = Node::leaf(seed);
+    if depth > 0 {
+        n.children
+            .push(Box::<Node>::new(build(depth - 1, seed * 2)));
+        n.children
+            .push(Box::<Node>::new(build(depth - 1, seed * 2 + 1)));
+    }
+    n
+}
+fn main() {
+    let depth = get_i32();
+    let seed = get_i32();
+    let root = build(depth, seed);
+    let mut copy = Node::clone(&root);
+    println_i32((root == copy) as i32);
+    copy.alter(1);
+    println_i32(root.total());
+    println_i32(copy.total());
+    println_i32((root != copy) as i32);
+    if copy.children.len() > 0usize {
+        let removed = copy.children.remove(0);
+        println_i32(removed.total());
+        println_i32(copy.total());
+    }
+}

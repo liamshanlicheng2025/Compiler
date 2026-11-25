@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn main() {
+    let x = 1;
+    let p: &mut i32 = &x;
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-continue-rechecks-the-condition-and-inner-breaks-leave-only-the-inner-loop.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Continue rechecks the condition and inner breaks leave only the inner loop.",
+    "io": [
+      {
+        "input": "acc-continue-rechecks-the-condition-and-inner-breaks-leave-only-the-inner-loop.default.in",
+        "output": "acc-continue-rechecks-the-condition-and-inner-breaks-leave-only-the-inner-loop.default.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,39 @@
+use rx::core::*;
+
+fn main() {
+    let n = get_i32() as usize;
+    let mut prime = Vec::<bool>::new();
+    let mut i = 0usize;
+    while i <= n {
+        prime.push(true);
+        i += 1usize;
+    }
+    prime[0] = false;
+    prime[1] = false;
+    i = 2usize;
+    while i * i <= n {
+        if prime[i] {
+            let mut j = i * i;
+            while j <= n {
+                prime[j] = false;
+                j += i;
+            }
+        }
+        i += 1usize;
+    }
+    let mut count = 0;
+    let mut sum = 0i32;
+    let mut hash = 2166136261u32;
+    i = 2usize;
+    while i <= n {
+        if prime[i] {
+            count += 1;
+            sum += i as i32;
+            hash = (hash ^ (i as u32)) * 16777619u32;
+        }
+        i += 1usize;
+    }
+    println_i32(count);
+    println_i32(sum);
+    println_i32(hash as i32);
+}

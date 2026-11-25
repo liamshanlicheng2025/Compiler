@@ -1,0 +1,24 @@
+use rx::core::*;
+
+fn main() {
+    let mut x = 100;
+    x += 7;
+    x -= &2;
+    x *= 3;
+    x /= &5;
+    x %= 17;
+    x |= 16;
+    x &= &30;
+    x ^= 3;
+    x <<= &2u32;
+    x >>= 1usize;
+    println_i32(x);
+    let p = &mut x;
+    *p += 5;
+    println_i32(*p);
+    let mut b = true;
+    b &= &false;
+    b |= true;
+    b ^= &true;
+    println_i32(b as i32);
+}

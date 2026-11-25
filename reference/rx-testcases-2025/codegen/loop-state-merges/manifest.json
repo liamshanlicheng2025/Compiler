@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-rotations-swaps-and-multiple-loop-edges.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Eight live scalar values rotate across nested loops, conditional swaps, two continue edges and early exit.",
+    "io": [
+      {
+        "input": "acc-rotations-swaps-and-multiple-loop-edges.zero.in",
+        "output": "acc-rotations-swaps-and-multiple-loop-edges.zero.out"
+      },
+      {
+        "input": "acc-rotations-swaps-and-multiple-loop-edges.single.in",
+        "output": "acc-rotations-swaps-and-multiple-loop-edges.single.out"
+      },
+      {
+        "input": "acc-rotations-swaps-and-multiple-loop-edges.all-edges.in",
+        "output": "acc-rotations-swaps-and-multiple-loop-edges.all-edges.out"
+      },
+      {
+        "input": "acc-rotations-swaps-and-multiple-loop-edges.early-exit.in",
+        "output": "acc-rotations-swaps-and-multiple-loop-edges.early-exit.out"
+      }
+    ]
+  }
+]

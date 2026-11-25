@@ -1,0 +1,55 @@
+use rx::core::*;
+
+fn next(state: &mut u32) -> u32 {
+    *state ^= *state << 13u32;
+    *state ^= *state >> 17u32;
+    *state ^= *state << 5u32;
+    *state
+}
+
+fn checksum(a: &Vec<i32>) -> i32 {
+    let mut hash = 2166136261u32;
+    let mut i = 0usize;
+    while i < a.len() {
+        hash = (hash ^ (a[i] as u32)) * 16777619u32;
+        i += 1usize;
+    }
+    hash as i32
+}
+
+fn main() {
+    let n = get_i32() as usize;
+    let rounds = get_i32();
+    let mut seed = get_i32() as u32;
+    let mut a = Vec::<i32>::new();
+    let mut b = Vec::<i32>::new();
+    let mut p = 0usize;
+    while p < n * n {
+        a.push((next(&mut seed) % 1000u32) as i32);
+        b.push(0);
+        p += 1usize;
+    }
+    let mut t = 0;
+    while t < rounds {
+        let mut i = 0usize;
+        while i < n {
+            let mut j = 0usize;
+            while j < n {
+                let p = i * n + j;
+                if i == 0usize || j == 0usize || i + 1usize == n || j + 1usize == n {
+                    b[p] = a[p];
+                } else {
+                    b[p] = (a[p] * 4 + a[p - 1usize] + a[p + 1usize] + a[p - n] + a[p + n]) / 8;
+                }
+                j += 1usize;
+            }
+            i += 1usize;
+        }
+        let old = a;
+        a = b;
+        b = old;
+        t += 1;
+    }
+    println_i32(checksum(&a));
+    println_i32(a[(n / 2usize) * n + n / 2usize]);
+}

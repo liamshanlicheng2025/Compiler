@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn main() {
+    let n = 2usize;
+    let a = [1; n];
+}

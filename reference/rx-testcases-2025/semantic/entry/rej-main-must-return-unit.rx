@@ -1,0 +1,5 @@
+use rx::core::*;
+
+fn main() -> i32 {
+    0
+}

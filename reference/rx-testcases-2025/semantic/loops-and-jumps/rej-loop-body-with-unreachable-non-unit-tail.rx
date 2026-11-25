@@ -1,0 +1,8 @@
+use rx::core::*;
+
+fn main() {
+    loop {
+        return;
+        42
+    }
+}

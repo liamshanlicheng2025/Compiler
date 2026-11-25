@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-all-ten-compound-operators-plus-boolean-assignments.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "All ten compound operators plus boolean assignments."
+  },
+  {
+    "source": "rej-compound-destination-must-be-mutable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Compound destination must be mutable."
+  },
+  {
+    "source": "rej-an-explicit-mismatched-suffix-cannot-coerce.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An explicit mismatched suffix cannot coerce."
+  },
+  {
+    "source": "rej-reference-destinations-are-not-implicitly-dereferenced.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Reference destinations are not implicitly dereferenced."
+  },
+  {
+    "source": "rej-a-literal-is-not-an-assignment-place.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A literal is not an assignment place."
+  }
+]

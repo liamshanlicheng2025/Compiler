@@ -1,0 +1,74 @@
+[
+  {
+    "source": "acc-copy-stays-independent-deep-clone-and-structural-equality-ignore-padding-and-addresses.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Copy stays independent; deep clone and structural equality ignore padding and addresses."
+  },
+  {
+    "source": "acc-unique-shared-reference-clone-for-non-clone-target-array-clone-and-scalar-clone.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Unique shared-reference clone for non-Clone target, array clone, and scalar clone."
+  },
+  {
+    "source": "rej-copy-must-explicitly-request-clone.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Copy must explicitly request Clone."
+  },
+  {
+    "source": "rej-eq-must-explicitly-request-partialeq.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Eq must explicitly request PartialEq."
+  },
+  {
+    "source": "rej-box-fields-cannot-derive-copy.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Box fields cannot derive Copy."
+  },
+  {
+    "source": "rej-mutable-references-cannot-derive-clone.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Mutable references cannot derive Clone."
+  },
+  {
+    "source": "rej-repeated-derive-entry.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Repeated derive entry."
+  },
+  {
+    "source": "rej-repeated-derive-across-attributes.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Repeated derive across attributes."
+  },
+  {
+    "source": "rej-same-type-equality-requires-partialeq.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Same-type equality requires PartialEq."
+  },
+  {
+    "source": "rej-clone-must-be-available.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Clone must be available."
+  },
+  {
+    "source": "rej-every-field-must-support-the-requested-derive.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Every field must support the requested derive."
+  },
+  {
+    "source": "acc-container-dot-clone-precedes-dereference-and-keeps-storage-independent.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Dot clone selects Box and Vec before dereferencing, including shared receivers and deep nested storage."
+  }
+]

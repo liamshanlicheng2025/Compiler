@@ -1,0 +1,41 @@
+[
+  {
+    "source": "acc-shared-reference-operands-produce-scalar-values.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Shared reference operands produce scalar values."
+  },
+  {
+    "source": "acc-reference-comparisons-inspect-targets-including-asymmetric-ordering-coercion.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Reference comparisons inspect targets, including asymmetric ordering coercion."
+  },
+  {
+    "source": "rej-arithmetic-supports-only-one-shared-reference-layer.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Arithmetic supports only one shared-reference layer."
+  },
+  {
+    "source": "rej-mutable-reference-unary-arithmetic-unsupported.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Mutable-reference unary arithmetic unsupported."
+  },
+  {
+    "source": "rej-ordering-cannot-coerce-a-mutable-left-operand-to-match-a-shared-right-operand.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Ordering cannot coerce a mutable left operand to match a shared right operand.",
+    "metadata": {
+      "rust_reference": "skip"
+    }
+  },
+  {
+    "source": "rej-ordering-does-not-mix-a-value-and-a-reference.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Ordering does not mix a value and a reference."
+  }
+]

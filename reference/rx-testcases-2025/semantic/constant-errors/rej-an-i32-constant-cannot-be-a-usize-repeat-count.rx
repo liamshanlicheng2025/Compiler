@@ -1,0 +1,6 @@
+use rx::core::*;
+
+const N: i32 = 2;
+fn main() {
+    let a = [1; N];
+}

@@ -1,0 +1,26 @@
+use rx::core::*;
+
+struct Counter {
+    value: i32,
+}
+impl Counter {
+    fn increment(&mut self) {
+        self.value += 1;
+    }
+}
+fn increment(value: &mut i32) {
+    *value += 1;
+}
+fn update(values: &mut Vec<&mut Counter>) {
+    values[0].value = 2;
+    values[0].increment();
+    increment(&mut values[0].value);
+}
+fn main() {
+    let mut counter = Counter { value: 1 };
+    let mut values = Vec::<&mut Counter>::new();
+    values.push(&mut counter);
+    let reference = &mut values;
+    update(reference);
+    println_i32(values[0].value);
+}

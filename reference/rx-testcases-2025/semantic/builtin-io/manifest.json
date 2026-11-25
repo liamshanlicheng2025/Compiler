@@ -1,0 +1,38 @@
+[
+  {
+    "source": "acc-no-separators-added-by-printint-signed-minimum-and-maximum-i-o.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "No separators added by print_i32; signed minimum and maximum I/O."
+  },
+  {
+    "source": "acc-normal-early-main-return.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Normal early main return."
+  },
+  {
+    "source": "rej-getint-has-no-arguments.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "get_i32 has no arguments."
+  },
+  {
+    "source": "rej-missing-builtin-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Missing builtin argument."
+  },
+  {
+    "source": "rej-i-o-requires-i32-with-no-implicit-integer-conversion.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "I/O requires i32, with no implicit integer conversion."
+  },
+  {
+    "source": "rej-unit-result-cannot-be-used-as-i32.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unit result cannot be used as i32."
+  }
+]

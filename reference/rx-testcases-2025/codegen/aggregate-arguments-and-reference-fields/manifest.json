@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-by-value-aggregates-remain-independent-across-calls-and-entire-array-assignment.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "By-value aggregates remain independent across calls and entire-array assignment.",
+    "io": [
+      {
+        "input": "acc-by-value-aggregates-remain-independent-across-calls-and-entire-array-assignment.default.in",
+        "output": "acc-by-value-aggregates-remain-independent-across-calls-and-entire-array-assignment.default.out"
+      }
+    ]
+  }
+]

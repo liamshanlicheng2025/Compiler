@@ -1,0 +1,11 @@
+use rx::core::*;
+
+struct S {
+    Vec: i32,
+}
+impl S {
+    const Box: i32 = 2;
+}
+fn main() {
+    let Vec = S { Vec: S::Box };
+}

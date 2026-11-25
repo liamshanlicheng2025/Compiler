@@ -1,0 +1,38 @@
+use rx::core::*;
+
+struct Record {
+    data: [i32; 2],
+    flag: bool,
+}
+fn mark(value: i32) -> i32 {
+    println_i32(value);
+    value
+}
+fn make_array(seed: i32) -> [i32; 2] {
+    println_i32(100 + seed);
+    [seed, seed + 1]
+}
+fn make_vec(seed: i32) -> Vec<i32> {
+    println_i32(200 + seed);
+    let mut values = Vec::<i32>::new();
+    values.push(seed);
+    values.push(seed + 1);
+    values
+}
+fn make_record(seed: i32) -> Record {
+    println_i32(300 + seed);
+    Record { data: [seed, seed + 1], flag: true }
+}
+fn main() {
+    Vec::<i32>::new().push(mark(10));
+    println_i32(make_vec(20).remove(1));
+    make_array(30)[0] = mark(11);
+    let element = &mut make_array(40)[1];
+    let field = &mut make_record(50).data[0];
+    let other = make_array(60);
+    println_i32(other[1]);
+    *element += 2;
+    *field += 3;
+    println_i32(*element);
+    println_i32(*field);
+}

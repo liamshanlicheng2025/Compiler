@@ -1,0 +1,23 @@
+use rx::core::*;
+
+fn array(values: [&mut Vec<i32>; 1]) {
+    values[0][0] = 2;
+    values[0].push(3);
+}
+fn boxed(values: Box<&mut Vec<&mut i32>>) {
+    *values[0] = 4;
+    let target: &mut i32 = values[0];
+    *target += 1;
+}
+fn main() {
+    let mut integers = Vec::<i32>::new();
+    integers.push(1);
+    array([&mut integers]);
+    println_i32(integers[0]);
+    println_i32(integers[1]);
+    let mut value = 1;
+    let mut references = Vec::<&mut i32>::new();
+    references.push(&mut value);
+    boxed(Box::<&mut Vec<&mut i32>>::new(&mut references));
+    println_i32(*references[0]);
+}

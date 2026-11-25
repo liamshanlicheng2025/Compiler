@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-external-i-o-calls-and-internal-calling-conventions-preserve-live-state.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Twelve runtime arguments preserve evaluation order and live state across external calls, recursion and aggregate returns."
+  },
+  {
+    "source": "rej-too-few-ordinary-arguments.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Too few ordinary arguments."
+  },
+  {
+    "source": "rej-too-many-ordinary-arguments.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Too many ordinary arguments."
+  },
+  {
+    "source": "rej-wrong-ordinary-argument-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Wrong ordinary argument type."
+  }
+]

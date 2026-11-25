@@ -1,0 +1,20 @@
+[
+  {
+    "source": "acc-array-lengths-compare-by-value-associated-constants-do-not-reserve-unqualified-locals.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Array lengths compare by value; associated constants do not reserve unqualified locals."
+  },
+  {
+    "source": "rej-constant-dependency-cycle.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Constant dependency cycle."
+  },
+  {
+    "source": "rej-array-length-must-have-usize-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Array length must have usize type."
+  }
+]

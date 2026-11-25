@@ -1,0 +1,21 @@
+use rx::core::*;
+
+fn read(x: &i32) -> i32 {
+    *x
+}
+fn write(x: &mut i32) {
+    *x += 5;
+}
+fn main() {
+    let mut b = Box::<Box<i32>>::new(Box::<i32>::new(7));
+    println_i32(read(&b));
+    write(&mut b);
+    println_i32(read(&b));
+    let r: &i32 = &b;
+    println_i32(*r);
+    let mut x = 3;
+    let p = &mut x;
+    println_i32(read(p));
+    write(p);
+    println_i32(*p);
+}

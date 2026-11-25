@@ -1,0 +1,62 @@
+[
+  {
+    "source": "acc-continue-rechecks-the-condition-and-inner-breaks-leave-only-the-inner-loop.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Continue rechecks the condition and inner breaks leave only the inner loop."
+  },
+  {
+    "source": "rej-break-outside-a-loop.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Break outside a loop."
+  },
+  {
+    "source": "rej-continue-outside-a-loop.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Continue outside a loop."
+  },
+  {
+    "source": "rej-a-while-cannot-accept-a-break-value.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A while cannot accept a break value."
+  },
+  {
+    "source": "rej-while-body-must-be-unit.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "While body must be unit."
+  },
+  {
+    "source": "rej-loop-body-must-be-unit.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Loop body must be unit."
+  },
+  {
+    "source": "rej-a-jump-in-a-while-condition-cannot-target-that-while.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A jump in a while condition cannot target that while."
+  },
+  {
+    "source": "rej-a-condition-cannot-jump-to-an-outer-loop.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A condition cannot jump to an outer loop."
+  },
+  {
+    "source": "acc-divergent-loop-body-without-tail.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Divergent loop body without a tail expression has never type and is compatible with unit."
+  },
+  {
+    "source": "rej-loop-body-with-unreachable-non-unit-tail.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Loop body with an unreachable non-unit tail expression must be rejected."
+  }
+]

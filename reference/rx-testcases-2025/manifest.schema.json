@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rx compiler testcase manifest, version 1",
+  "description": "An array of testcase entries, each with exactly one source file. Runtime input and expected output are paired inside io.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "$ref": "#/$defs/testcase"
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "File path relative to the directory containing this manifest. Both .rx and .rs sources are supported."
+    },
+    "io": {
+      "type": "object",
+      "required": [
+        "input",
+        "output"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "input": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/path"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Stdin file for this execution. Null means empty stdin."
+        },
+        "output": {
+          "$ref": "#/$defs/path",
+          "description": "Expected stdout file for this execution. Use an empty file if the program prints nothing."
+        }
+      }
+    },
+    "testcase": {
+      "type": "object",
+      "required": [
+        "source",
+        "stage",
+        "compilation_success"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/path",
+          "description": "Exactly one source file for this testcase. Put additional sources in separate testcase objects."
+        },
+        "stage": {
+          "enum": [
+            "lex",
+            "parse",
+            "semantic",
+            "codegen",
+            "optimization"
+          ]
+        },
+        "compilation_success": {
+          "type": "boolean",
+          "description": "Whether this source must be accepted through the selected stage. False requires normal rejection, not a crash or timeout."
+        },
+        "io": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/io"
+          },
+          "description": "Paired runtime fixtures. Required for codegen and optimization cases, which must compile successfully. Optional and unused for lex, parse, and semantic."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional test purpose or reason for expected rejection."
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Optional authoring information, such as existing lexer snapshots or upstream provenance. Not used for grading.",
+          "additionalProperties": true
+        }
+      },
+      "if": {
+        "properties": {
+          "stage": {
+            "enum": [
+              "codegen",
+              "optimization"
+            ]
+          }
+        },
+        "required": [
+          "stage"
+        ]
+      },
+      "then": {
+        "properties": {
+          "compilation_success": {
+            "const": true
+          }
+        },
+        "required": [
+          "io"
+        ]
+      }
+    }
+  }
+}

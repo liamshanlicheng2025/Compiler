@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn f(x: i32) {}
+fn main() {
+    f(1, 2);
+}

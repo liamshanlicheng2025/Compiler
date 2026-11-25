@@ -1,0 +1,8 @@
+[
+  {
+    "source": "acc-recursive-quicksort.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Recursive quicksort over dynamic input."
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "source": "acc-parenthesized-struct-impl.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Parenthesized struct impl."
+  },
+  {
+    "source": "rej-impl-target-must-be-a-user-struct.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Impl target must be a user struct."
+  },
+  {
+    "source": "rej-no-array-inherent-impl.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "No array inherent impl."
+  },
+  {
+    "source": "rej-no-container-inherent-impl.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "No container inherent impl."
+  },
+  {
+    "source": "rej-a-reference-is-not-a-struct-impl-target.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A reference is not a struct impl target."
+  },
+  {
+    "source": "rej-missing-concrete-box-type-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Missing concrete Box type argument."
+  },
+  {
+    "source": "rej-box-requires-exactly-one-concrete-type-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Box requires exactly one concrete type argument."
+  },
+  {
+    "source": "rej-vec-requires-exactly-one-concrete-type-argument.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Vec requires exactly one concrete type argument."
+  },
+  {
+    "source": "rej-primitives-take-no-type-arguments.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Primitives take no type arguments."
+  },
+  {
+    "source": "rej-structs-have-no-type-parameters.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Structs have no type parameters."
+  },
+  {
+    "source": "rej-functions-have-no-type-parameters.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Functions have no type parameters."
+  },
+  {
+    "source": "rej-method-segments-have-no-type-parameters.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Method segments have no type parameters."
+  }
+]

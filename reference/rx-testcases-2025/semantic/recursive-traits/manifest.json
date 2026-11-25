@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-self-in-fields-and-recursive-derived-operations-over-vec-children.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Self in fields and recursive derived operations over Vec children."
+  },
+  {
+    "source": "rej-a-recursive-vec-field-cannot-derive-copy.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A recursive Vec field cannot derive Copy."
+  }
+]

@@ -1,0 +1,9 @@
+use rx::core::*;
+
+struct S {
+    x: i32,
+}
+impl &S {
+    fn f(&self) {}
+}
+fn main() {}

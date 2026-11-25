@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-prime-sieve.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Boolean heap layout, strided stores and integer induction in the sieve of Eratosthenes.",
+    "io": [
+      {
+        "input": "acc-prime-sieve.small.in",
+        "output": "acc-prime-sieve.small.out"
+      },
+      {
+        "input": "acc-prime-sieve.large.in",
+        "output": "acc-prime-sieve.large.out"
+      },
+      {
+        "input": "acc-prime-sieve.large-variant.in",
+        "output": "acc-prime-sieve.large-variant.out"
+      }
+    ]
+  }
+]

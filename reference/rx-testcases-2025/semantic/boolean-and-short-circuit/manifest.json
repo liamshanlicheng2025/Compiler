@@ -1,0 +1,32 @@
+[
+  {
+    "source": "acc-observable-evaluation-of-each-logical-form.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Observable evaluation of each logical form."
+  },
+  {
+    "source": "rej-no-integer-truthiness.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "No integer truthiness."
+  },
+  {
+    "source": "rej-lazy-operators-require-bool.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Lazy operators require bool."
+  },
+  {
+    "source": "rej-lazy-operators-have-no-reference-variants.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Lazy operators have no reference variants."
+  },
+  {
+    "source": "rej-bitwise-operand-types-must-match.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Bitwise operand types must match."
+  }
+]

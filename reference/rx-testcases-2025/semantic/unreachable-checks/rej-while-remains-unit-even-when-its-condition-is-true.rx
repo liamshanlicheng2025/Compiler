@@ -1,0 +1,6 @@
+use rx::core::*;
+
+fn f() -> i32 {
+    while true {}
+}
+fn main() {}

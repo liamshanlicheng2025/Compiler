@@ -1,0 +1,250 @@
+use rx::core::*;
+
+// Both recursive results and every original argument remain observable.
+fn visit(depth: i32,
+    x0: u32,
+    x1: u32,
+    x2: u32,
+    x3: u32,
+    x4: u32,
+    x5: u32,
+    x6: u32,
+    x7: u32,
+    x8: u32,
+    x9: u32,
+    x10: u32,
+    x11: u32,
+    x12: u32,
+    x13: u32,
+    x14: u32,
+    x15: u32,
+    x16: u32,
+    x17: u32,
+    x18: u32,
+    x19: u32,
+    x20: u32,
+    x21: u32,
+    x22: u32,
+    x23: u32,
+    x24: u32,
+    x25: u32,
+    x26: u32,
+    x27: u32,
+    x28: u32,
+    x29: u32,
+    x30: u32,
+    x31: u32,
+) -> u32 {
+    if depth <= 0 {
+        return x0 * 1u32
+        + x1 * 3u32
+        + x2 * 5u32
+        + x3 * 7u32
+        + x4 * 9u32
+        + x5 * 11u32
+        + x6 * 13u32
+        + x7 * 15u32
+        + x8 * 17u32
+        + x9 * 19u32
+        + x10 * 21u32
+        + x11 * 23u32
+        + x12 * 25u32
+        + x13 * 27u32
+        + x14 * 29u32
+        + x15 * 31u32
+        + x16 * 33u32
+        + x17 * 35u32
+        + x18 * 37u32
+        + x19 * 39u32
+        + x20 * 41u32
+        + x21 * 43u32
+        + x22 * 45u32
+        + x23 * 47u32
+        + x24 * 49u32
+        + x25 * 51u32
+        + x26 * 53u32
+        + x27 * 55u32
+        + x28 * 57u32
+        + x29 * 59u32
+        + x30 * 61u32
+        + x31 * 63u32;
+    }
+    let left = visit(depth - 1,
+        (x1 ^ x7) + 3u32 * (depth as u32),
+        (x2 ^ x8) + 20u32 * (depth as u32),
+        (x3 ^ x9) + 37u32 * (depth as u32),
+        (x4 ^ x10) + 54u32 * (depth as u32),
+        (x5 ^ x11) + 71u32 * (depth as u32),
+        (x6 ^ x12) + 88u32 * (depth as u32),
+        (x7 ^ x13) + 105u32 * (depth as u32),
+        (x8 ^ x14) + 122u32 * (depth as u32),
+        (x9 ^ x15) + 139u32 * (depth as u32),
+        (x10 ^ x16) + 156u32 * (depth as u32),
+        (x11 ^ x17) + 173u32 * (depth as u32),
+        (x12 ^ x18) + 190u32 * (depth as u32),
+        (x13 ^ x19) + 207u32 * (depth as u32),
+        (x14 ^ x20) + 224u32 * (depth as u32),
+        (x15 ^ x21) + 241u32 * (depth as u32),
+        (x16 ^ x22) + 258u32 * (depth as u32),
+        (x17 ^ x23) + 275u32 * (depth as u32),
+        (x18 ^ x24) + 292u32 * (depth as u32),
+        (x19 ^ x25) + 309u32 * (depth as u32),
+        (x20 ^ x26) + 326u32 * (depth as u32),
+        (x21 ^ x27) + 343u32 * (depth as u32),
+        (x22 ^ x28) + 360u32 * (depth as u32),
+        (x23 ^ x29) + 377u32 * (depth as u32),
+        (x24 ^ x30) + 394u32 * (depth as u32),
+        (x25 ^ x31) + 411u32 * (depth as u32),
+        (x26 ^ x0) + 428u32 * (depth as u32),
+        (x27 ^ x1) + 445u32 * (depth as u32),
+        (x28 ^ x2) + 462u32 * (depth as u32),
+        (x29 ^ x3) + 479u32 * (depth as u32),
+        (x30 ^ x4) + 496u32 * (depth as u32),
+        (x31 ^ x5) + 513u32 * (depth as u32),
+        (x0 ^ x6) + 530u32 * (depth as u32),
+    );
+    let right = visit(depth - 1,
+        x11 + (left ^ x0) * 1u32,
+        x12 + (left ^ x1) * 3u32,
+        x13 + (left ^ x2) * 5u32,
+        x14 + (left ^ x3) * 7u32,
+        x15 + (left ^ x4) * 9u32,
+        x16 + (left ^ x5) * 11u32,
+        x17 + (left ^ x6) * 13u32,
+        x18 + (left ^ x7) * 15u32,
+        x19 + (left ^ x8) * 17u32,
+        x20 + (left ^ x9) * 19u32,
+        x21 + (left ^ x10) * 21u32,
+        x22 + (left ^ x11) * 23u32,
+        x23 + (left ^ x12) * 25u32,
+        x24 + (left ^ x13) * 27u32,
+        x25 + (left ^ x14) * 29u32,
+        x26 + (left ^ x15) * 31u32,
+        x27 + (left ^ x16) * 33u32,
+        x28 + (left ^ x17) * 35u32,
+        x29 + (left ^ x18) * 37u32,
+        x30 + (left ^ x19) * 39u32,
+        x31 + (left ^ x20) * 41u32,
+        x0 + (left ^ x21) * 43u32,
+        x1 + (left ^ x22) * 45u32,
+        x2 + (left ^ x23) * 47u32,
+        x3 + (left ^ x24) * 49u32,
+        x4 + (left ^ x25) * 51u32,
+        x5 + (left ^ x26) * 53u32,
+        x6 + (left ^ x27) * 55u32,
+        x7 + (left ^ x28) * 57u32,
+        x8 + (left ^ x29) * 59u32,
+        x9 + (left ^ x30) * 61u32,
+        x10 + (left ^ x31) * 63u32,
+    );
+    left * 33u32 + right * 65599u32
+        + x0 * 1u32
+        + x1 * 3u32
+        + x2 * 5u32
+        + x3 * 7u32
+        + x4 * 9u32
+        + x5 * 11u32
+        + x6 * 13u32
+        + x7 * 15u32
+        + x8 * 17u32
+        + x9 * 19u32
+        + x10 * 21u32
+        + x11 * 23u32
+        + x12 * 25u32
+        + x13 * 27u32
+        + x14 * 29u32
+        + x15 * 31u32
+        + x16 * 33u32
+        + x17 * 35u32
+        + x18 * 37u32
+        + x19 * 39u32
+        + x20 * 41u32
+        + x21 * 43u32
+        + x22 * 45u32
+        + x23 * 47u32
+        + x24 * 49u32
+        + x25 * 51u32
+        + x26 * 53u32
+        + x27 * 55u32
+        + x28 * 57u32
+        + x29 * 59u32
+        + x30 * 61u32
+        + x31 * 63u32
+}
+fn main() {
+    let depth = get_i32();
+    let rounds = get_i32();
+    let mut hash = get_i32() as u32;
+    let x0 = get_i32() as u32;
+    let x1 = get_i32() as u32;
+    let x2 = get_i32() as u32;
+    let x3 = get_i32() as u32;
+    let x4 = get_i32() as u32;
+    let x5 = get_i32() as u32;
+    let x6 = get_i32() as u32;
+    let x7 = get_i32() as u32;
+    let x8 = get_i32() as u32;
+    let x9 = get_i32() as u32;
+    let x10 = get_i32() as u32;
+    let x11 = get_i32() as u32;
+    let x12 = get_i32() as u32;
+    let x13 = get_i32() as u32;
+    let x14 = get_i32() as u32;
+    let x15 = get_i32() as u32;
+    let x16 = get_i32() as u32;
+    let x17 = get_i32() as u32;
+    let x18 = get_i32() as u32;
+    let x19 = get_i32() as u32;
+    let x20 = get_i32() as u32;
+    let x21 = get_i32() as u32;
+    let x22 = get_i32() as u32;
+    let x23 = get_i32() as u32;
+    let x24 = get_i32() as u32;
+    let x25 = get_i32() as u32;
+    let x26 = get_i32() as u32;
+    let x27 = get_i32() as u32;
+    let x28 = get_i32() as u32;
+    let x29 = get_i32() as u32;
+    let x30 = get_i32() as u32;
+    let x31 = get_i32() as u32;
+    let mut iteration = 0;
+    while iteration < rounds {
+        let value = visit(depth,
+            x0 ^ (hash + (iteration as u32) * 1u32),
+            x1 ^ (hash + (iteration as u32) * 3u32),
+            x2 ^ (hash + (iteration as u32) * 5u32),
+            x3 ^ (hash + (iteration as u32) * 7u32),
+            x4 ^ (hash + (iteration as u32) * 9u32),
+            x5 ^ (hash + (iteration as u32) * 11u32),
+            x6 ^ (hash + (iteration as u32) * 13u32),
+            x7 ^ (hash + (iteration as u32) * 15u32),
+            x8 ^ (hash + (iteration as u32) * 17u32),
+            x9 ^ (hash + (iteration as u32) * 19u32),
+            x10 ^ (hash + (iteration as u32) * 21u32),
+            x11 ^ (hash + (iteration as u32) * 23u32),
+            x12 ^ (hash + (iteration as u32) * 25u32),
+            x13 ^ (hash + (iteration as u32) * 27u32),
+            x14 ^ (hash + (iteration as u32) * 29u32),
+            x15 ^ (hash + (iteration as u32) * 31u32),
+            x16 ^ (hash + (iteration as u32) * 33u32),
+            x17 ^ (hash + (iteration as u32) * 35u32),
+            x18 ^ (hash + (iteration as u32) * 37u32),
+            x19 ^ (hash + (iteration as u32) * 39u32),
+            x20 ^ (hash + (iteration as u32) * 41u32),
+            x21 ^ (hash + (iteration as u32) * 43u32),
+            x22 ^ (hash + (iteration as u32) * 45u32),
+            x23 ^ (hash + (iteration as u32) * 47u32),
+            x24 ^ (hash + (iteration as u32) * 49u32),
+            x25 ^ (hash + (iteration as u32) * 51u32),
+            x26 ^ (hash + (iteration as u32) * 53u32),
+            x27 ^ (hash + (iteration as u32) * 55u32),
+            x28 ^ (hash + (iteration as u32) * 57u32),
+            x29 ^ (hash + (iteration as u32) * 59u32),
+            x30 ^ (hash + (iteration as u32) * 61u32),
+            x31 ^ (hash + (iteration as u32) * 63u32),
+        );
+        hash = (hash ^ value) * 16777619u32;
+        iteration += 1;
+    }
+    println_i32(hash as i32);
+}

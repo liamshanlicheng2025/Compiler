@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-ordinary-assignment-is-right-first-compound-operand-relative-order-is-not-tested.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Ordinary assignment is right-first; compound operand relative order is not tested."
+  },
+  {
+    "source": "rej-ordinary-assignment-requires-a-place.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Ordinary assignment requires a place."
+  },
+  {
+    "source": "rej-an-arithmetic-result-is-not-a-place.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An arithmetic result is not a place."
+  },
+  {
+    "source": "acc-mutable-container-temporaries-and-extended-aggregate-borrows.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Mutable Vec and array temporaries evaluate once; returned array and struct storage stays live across statements."
+  }
+]

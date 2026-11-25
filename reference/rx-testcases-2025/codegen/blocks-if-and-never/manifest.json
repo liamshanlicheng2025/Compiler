@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-both-parser-representations-of-tails-and-return-as-never.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Both parser representations of tails and return-as-never.",
+    "io": [
+      {
+        "input": "acc-both-parser-representations-of-tails-and-return-as-never.negative.in",
+        "output": "acc-both-parser-representations-of-tails-and-return-as-never.negative.out"
+      },
+      {
+        "input": "acc-both-parser-representations-of-tails-and-return-as-never.zero.in",
+        "output": "acc-both-parser-representations-of-tails-and-return-as-never.zero.out"
+      },
+      {
+        "input": "acc-both-parser-representations-of-tails-and-return-as-never.positive.in",
+        "output": "acc-both-parser-representations-of-tails-and-return-as-never.positive.out"
+      }
+    ]
+  }
+]

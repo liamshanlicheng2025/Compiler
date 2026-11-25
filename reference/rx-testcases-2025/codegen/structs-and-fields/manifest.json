@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-bool-padding-cannot-corrupt-neighboring-fields-or-by-value-copies.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Bool padding cannot corrupt neighboring fields or by-value copies.",
+    "io": [
+      {
+        "input": "acc-bool-padding-cannot-corrupt-neighboring-fields-or-by-value-copies.default.in",
+        "output": "acc-bool-padding-cannot-corrupt-neighboring-fields-or-by-value-copies.default.out"
+      }
+    ]
+  }
+]

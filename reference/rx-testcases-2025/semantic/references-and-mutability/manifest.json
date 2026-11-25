@@ -1,0 +1,44 @@
+[
+  {
+    "source": "acc-an-immutable-binding-of-mut-still-writes-its-target-reborrows-end-before-parent-reuse.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "An immutable binding of &mut still writes its target; reborrows end before parent reuse."
+  },
+  {
+    "source": "rej-a-named-immutable-local-cannot-be-mutably-borrowed.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A named immutable local cannot be mutably borrowed."
+  },
+  {
+    "source": "rej-shared-dereference-is-not-mutable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shared dereference is not mutable."
+  },
+  {
+    "source": "rej-a-shared-outer-layer-prevents-mutable-access.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A shared outer layer prevents mutable access."
+  },
+  {
+    "source": "rej-rebinding-an-immutable-reference-binding-is-invalid.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Rebinding an immutable reference binding is invalid."
+  },
+  {
+    "source": "rej-scalar-values-cannot-be-dereferenced.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Scalar values cannot be dereferenced."
+  },
+  {
+    "source": "rej-shared-reference-cannot-become-mutable.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Shared reference cannot become mutable."
+  }
+]

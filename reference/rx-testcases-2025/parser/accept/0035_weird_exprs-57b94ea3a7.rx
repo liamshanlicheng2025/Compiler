@@ -1,0 +1,1 @@
+fn p() -> bool { true }

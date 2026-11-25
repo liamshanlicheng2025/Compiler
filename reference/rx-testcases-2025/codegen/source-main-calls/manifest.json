@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-recursive-main-resumes-its-caller.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Source main is an ordinary recursive unit function; every recursive return resumes its caller.",
+    "io": [
+      {
+        "input": "acc-recursive-main-resumes-its-caller.leaf.in",
+        "output": "acc-recursive-main-resumes-its-caller.leaf.out"
+      },
+      {
+        "input": "acc-recursive-main-resumes-its-caller.single.in",
+        "output": "acc-recursive-main-resumes-its-caller.single.out"
+      },
+      {
+        "input": "acc-recursive-main-resumes-its-caller.nested.in",
+        "output": "acc-recursive-main-resumes-its-caller.nested.out"
+      }
+    ]
+  }
+]

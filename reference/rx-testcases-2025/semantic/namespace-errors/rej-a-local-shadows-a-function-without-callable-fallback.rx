@@ -1,0 +1,7 @@
+use rx::core::*;
+
+fn f() {}
+fn main() {
+    let f = 1;
+    f();
+}

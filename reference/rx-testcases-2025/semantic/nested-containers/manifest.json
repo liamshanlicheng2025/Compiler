@@ -1,0 +1,20 @@
+[
+  {
+    "source": "acc-no-clone-dot-call-has-competing-candidates.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "No clone dot call has competing candidates."
+  },
+  {
+    "source": "rej-vec-cannot-coerce-into-an-array-or-slice.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Vec cannot coerce into an array or slice."
+  },
+  {
+    "source": "rej-nested-element-types-must-match.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Nested element types must match."
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "source": "acc-forward-constant-reference-and-negation.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Forward constant reference and negation."
+  },
+  {
+    "source": "rej-direct-constant-dependency-cycle.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Direct constant dependency cycle."
+  },
+  {
+    "source": "rej-indirect-constant-cycle.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Indirect constant cycle."
+  },
+  {
+    "source": "rej-associated-constant-cycle.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Associated constant cycle."
+  },
+  {
+    "source": "rej-a-constant-path-must-resolve-to-a-constant.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "A constant path must resolve to a constant."
+  },
+  {
+    "source": "rej-repeat-length-cannot-name-a-local.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Repeat length cannot name a local."
+  },
+  {
+    "source": "rej-an-i32-constant-cannot-be-a-usize-repeat-count.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "An i32 constant cannot be a usize repeat count."
+  },
+  {
+    "source": "rej-array-length-must-be-usize.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Array length must be usize."
+  },
+  {
+    "source": "rej-unsigned-constant-negation-is-invalid.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unsigned constant negation is invalid."
+  },
+  {
+    "source": "rej-constant-initializer-must-match-declared-type.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Constant initializer must match declared type."
+  }
+]

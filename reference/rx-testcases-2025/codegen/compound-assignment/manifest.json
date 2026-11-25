@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-all-ten-compound-operators-plus-boolean-assignments.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "All ten compound operators plus boolean assignments.",
+    "io": [
+      {
+        "input": "acc-all-ten-compound-operators-plus-boolean-assignments.default.in",
+        "output": "acc-all-ten-compound-operators-plus-boolean-assignments.default.out"
+      }
+    ]
+  }
+]

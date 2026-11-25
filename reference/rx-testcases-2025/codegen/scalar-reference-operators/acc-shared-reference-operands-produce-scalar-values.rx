@@ -1,0 +1,19 @@
+use rx::core::*;
+
+fn main() {
+    let a = 13;
+    let b = 3;
+    println_i32(&a + &b);
+    println_i32(a - &b);
+    println_i32(&a * b);
+    println_i32(&a / &b);
+    println_i32(&a % &b);
+    println_i32(&a & &b);
+    println_i32(&a | &b);
+    println_i32(&a ^ &b);
+    println_i32(-&a);
+    println_i32(!&a);
+    println_i32(&a << &b);
+    println_i32(&a >> &b);
+    println_i32((&true ^ &false) as i32);
+}

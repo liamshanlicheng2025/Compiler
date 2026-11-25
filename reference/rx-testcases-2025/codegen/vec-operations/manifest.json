@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-cross-several-growth-boundaries-remove-first-middle-and-last-while-preserving-order.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Cross several growth boundaries; remove first, middle and last while preserving order.",
+    "io": [
+      {
+        "input": "acc-cross-several-growth-boundaries-remove-first-middle-and-last-while-preserving-order.default.in",
+        "output": "acc-cross-several-growth-boundaries-remove-first-middle-and-last-while-preserving-order.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-vec-apis-do-not-require-clone-or-copy-emptying-and-refilling-stays-valid.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Vec APIs require no Clone or Copy; is_empty tracks construction, partial removal, emptying and refill.",
+    "io": [
+      {
+        "input": "acc-vec-apis-do-not-require-clone-or-copy-emptying-and-refilling-stays-valid.default.in",
+        "output": "acc-vec-apis-do-not-require-clone-or-copy-emptying-and-refilling-stays-valid.default.out"
+      }
+    ]
+  }
+]

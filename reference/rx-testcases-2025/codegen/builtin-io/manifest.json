@@ -1,0 +1,26 @@
+[
+  {
+    "source": "acc-no-separators-added-by-printint-signed-minimum-and-maximum-i-o.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "No separators added by print_i32; signed minimum and maximum I/O.",
+    "io": [
+      {
+        "input": "acc-no-separators-added-by-printint-signed-minimum-and-maximum-i-o.default.in",
+        "output": "acc-no-separators-added-by-printint-signed-minimum-and-maximum-i-o.default.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-normal-early-main-return.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Normal early main return.",
+    "io": [
+      {
+        "input": "acc-normal-early-main-return.default.in",
+        "output": "acc-normal-early-main-return.default.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+use rx::core::*;
+
+struct Counter {
+    value: i32,
+}
+impl Counter {
+    fn read(&self) -> i32 {
+        self.value
+    }
+}
+fn read(value: &i32) -> i32 {
+    *value
+}
+fn inspect(values: Vec<&mut Counter>) {
+    let shared: &Counter = values[0];
+    println_i32(shared.value);
+    let explicit = &*values[0];
+    println_i32(explicit.value);
+    println_i32(values[0].read());
+    println_i32(read(&values[0].value));
+}
+fn inspect_integer(values: Vec<&mut i32>) {
+    let shared: &i32 = values[0];
+    println_i32(*shared);
+    println_i32(read(values[0]));
+}
+fn main() {
+    let mut counter = Counter { value: 7 };
+    let mut counters = Vec::<&mut Counter>::new();
+    counters.push(&mut counter);
+    inspect(counters);
+    let mut value = 8;
+    let mut values = Vec::<&mut i32>::new();
+    values.push(&mut value);
+    inspect_integer(values);
+}

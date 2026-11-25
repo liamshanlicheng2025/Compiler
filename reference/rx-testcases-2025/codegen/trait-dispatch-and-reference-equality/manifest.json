@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-generated-clones-bypass-dot-lookup-same-type-mutable-reference-equality-borrows-operands.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Generated clones bypass dot lookup; same-type mutable-reference equality borrows operands.",
+    "io": [
+      {
+        "input": "acc-generated-clones-bypass-dot-lookup-same-type-mutable-reference-equality-borrows-operands.default.in",
+        "output": "acc-generated-clones-bypass-dot-lookup-same-type-mutable-reference-equality-borrows-operands.default.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,5 @@
+use rx::core::*;
+
+fn main() {
+    let v: Vec<i32, bool> = Vec::<i32>::new();
+}

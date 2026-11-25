@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-clone-mutate-remove-tree.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Recursive Box/Vec tree with deep clone and removal.",
+    "io": [
+      {
+        "input": "acc-clone-mutate-remove-tree.leaf.in",
+        "output": "acc-clone-mutate-remove-tree.leaf.out"
+      },
+      {
+        "input": "acc-clone-mutate-remove-tree.balanced.in",
+        "output": "acc-clone-mutate-remove-tree.balanced.out"
+      },
+      {
+        "input": "acc-clone-mutate-remove-tree.negative.in",
+        "output": "acc-clone-mutate-remove-tree.negative.out"
+      }
+    ]
+  }
+]

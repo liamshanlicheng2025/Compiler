@@ -1,0 +1,44 @@
+[
+  {
+    "source": "acc-literal-boundaries-and-bool-casts.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Literal boundaries and bool casts."
+  },
+  {
+    "source": "acc-every-integer-cast-preserves-all-32-bits.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Every integer cast preserves all 32 bits."
+  },
+  {
+    "source": "acc-operator-precedence-and-left-association.rx",
+    "stage": "semantic",
+    "compilation_success": true,
+    "description": "Operator precedence and left association."
+  },
+  {
+    "source": "rej-integer-to-bool-cast-is-unsupported.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Integer-to-bool cast is unsupported."
+  },
+  {
+    "source": "rej-reference-to-integer-cast-is-unsupported.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Reference-to-integer cast is unsupported."
+  },
+  {
+    "source": "rej-signed-integer-types-remain-distinct.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Signed integer types remain distinct."
+  },
+  {
+    "source": "rej-unsigned-integer-types-remain-distinct.rx",
+    "stage": "semantic",
+    "compilation_success": false,
+    "description": "Unsigned integer types remain distinct."
+  }
+]

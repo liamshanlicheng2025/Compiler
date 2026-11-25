@@ -133,4 +133,54 @@ private:
     void emitCopyAggregate(ll::Value dst, ll::Value src, const Type& ty);
     // 实参按形参类型收窄/扩宽（字面量→i64 形参、bool→i32 内建函数等）
     ll::Value coerceArg(ll::Value v, const Type& srcT, const Type& dstT);
+    // 剥引用：v 是 t 的值，t 每包一层 Ref 就 load 一次，直到非引用标量。
+    // 用于算术/比较/位运算的操作数（Rx 允许 &a + &b 直接运算）
+    std::pair<ll::Value, Type> loadThroughRefs(ll::Value v, const Type& t);
+    // 移位量处理：扩宽/收窄到 LHS 位宽（一律按无符号），再 and 上
+    // （位宽-1）做计数掩码——Rx 的移位对计数取模，LLVM 里超界移位是 poison
+    ll::Value normalizeShiftCount(ll::Value v, const Type& cntT, ll::Type lhsTy);
+
+    // ---- Vec/Box 内建容器 ----
+    // 表示法：Box<T> = 堆指针（标量 ptr，值=指向内容的指针）；
+    //         Vec<T> = 聚合体 %struct.Vec{ ptr data, i32 len, i32 cap }（值=地址）
+    // 聚合体约定（值=地址）：(Named 且非 Box) || Array——Box 是标量，不在其列
+    static bool isAggT(const Type& t);
+    int sizeOfType(const Type& t);    // rv32 ilp32 布局的字节数（struct 按对齐排）
+    int alignOfType(const Type& t);
+    // 纯位数据（内部不含 Box/Vec）：clone/拷贝可直接 memcpy，不用递归
+    bool isPlainData(const Type& t);
+    ll::Value emitAlloc(ll::Value bytes);            // call ptr @rx_alloc(i32)
+    void emitMemcpy(ll::Value dst, ll::Value src, ll::Value bytes);
+    // clone 语义的拷贝：dst/src 都是地址；Box 字段换新盒子、Vec 字段换新缓冲
+    void cloneInto(ll::Value dst, ll::Value src, const Type& t);
+    // clone 按"值"约定进出：标量恒等，Box 装新盒，聚合体新槽
+    ll::Value emitCloneValue(ll::Value v, const Type& t);
+    // 结构相等：a/b 按"值"约定（聚合体=地址、Box=堆指针），返回 i8 0/1
+    ll::Value emitEquality(ll::Value a, ll::Value b, const Type& t);
+    // 接收者解析：剥 Ref/Box 链到方法宿主类型，返回 (宿主类型, 宿主地址)。
+    // 第一层 Ref/Box 的"值"就是目标地址；再往里每剥一层多 load 一次
+    std::pair<Type, ll::Value> peelReceiver(const ExprPtr& receiver);
+    // Vec 内建操作：fn ∈ {push, len, is_empty, remove}；selfAddr = Vec 结构体
+    // 地址；args 为 self 之后的实参表达式。结果留 lastValue_
+    void emitVecMethod(const std::string& fn, ll::Value selfAddr, const Type& elemT,
+                       std::vector<ExprPtr>& args);
+    ll::Value emitVecNew();                                // 新空 Vec（值=地址）
+    ll::Value emitVecClone(ll::Value vecAddr, const Type& elemT);
+    ll::Value vecField(ll::Value vecAddr, int i);          // data/len/cap 字段指针
+    // 结构相等的地址版：pa/pb 是两块存储的地址
+    ll::Value emitEqualityAt(ll::Value pa, ll::Value pb, const Type& t);
+    // 下标/字段的地址计算（值通道 = 地址 + load；左值通道直接用）：
+    // 自动剥基表达式的 Ref/Box 链（boxed[0]、r[0][1]、b.value 等）
+    ll::Value indexElementAddr(const ExprPtr& arrayE, const ExprPtr& indexE);
+    ll::Value fieldElementAddr(const ExprPtr& objE, const std::string& field);
+    // clone/结构相等的函数化：含 Box/Vec 的复合类型可能递归（Vec<Self>），
+    // 内联展开会无限递归——改成生成模块级辅助函数 @rx.clone.<m> / @rx.eq.<m>，
+    // 用到时排队，visit(Crate) 末尾统一补发定义
+    std::string typeMangle(const Type& t);
+    void ensureCloneFn(const Type& t);
+    void ensureEqFn(const Type& t);
+    void emitVecCloneInto(ll::Value dst, ll::Value src, const Type& elemT);
+    void emitSyntheticFns();   // 排空两个队列，补发定义
+    std::vector<Type> cloneQueue_, eqQueue_;
+    std::unordered_set<std::string> cloneDone_, eqDone_;
 };

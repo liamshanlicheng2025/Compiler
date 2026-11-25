@@ -1,0 +1,14 @@
+use rx::core::*;
+
+struct Holder<'a> {
+    value: &'a mut i32,
+}
+fn update(values: Vec<Holder<'_>>) {
+    *values[0].value = 2;
+}
+fn main() {
+    let mut value = 1;
+    let mut values = Vec::<Holder<'_>>::new();
+    values.push(Holder { value: &mut value });
+    update(values);
+}

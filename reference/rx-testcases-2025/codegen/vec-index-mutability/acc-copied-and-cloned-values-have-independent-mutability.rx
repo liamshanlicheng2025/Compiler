@@ -1,0 +1,22 @@
+use rx::core::*;
+
+fn copy_value(values: Vec<i32>) {
+    let mut copied = values[0];
+    copied += 1;
+    println_i32(copied);
+    println_i32(values[0]);
+}
+fn clone_value(values: Vec<Box<i32>>) {
+    let mut copied = Box::<i32>::clone(&values[0]);
+    *copied = 9;
+    println_i32(*copied);
+    println_i32(*values[0]);
+}
+fn main() {
+    let mut integers = Vec::<i32>::new();
+    integers.push(1);
+    copy_value(integers);
+    let mut boxes = Vec::<Box<i32>>::new();
+    boxes.push(Box::<i32>::new(2));
+    clone_value(boxes);
+}

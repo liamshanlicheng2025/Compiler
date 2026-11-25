@@ -1,0 +1,6 @@
+use rx::core::*;
+
+struct Bad {
+    next: Bad,
+}
+fn main() {}

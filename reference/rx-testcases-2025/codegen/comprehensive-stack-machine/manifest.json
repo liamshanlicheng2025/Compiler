@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-integer-stack-machine.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Execute integer bytecode with stack effects and conditional control flow.",
+    "io": [
+      {
+        "input": "acc-integer-stack-machine.arithmetic.in",
+        "output": "acc-integer-stack-machine.arithmetic.out"
+      },
+      {
+        "input": "acc-integer-stack-machine.branch-taken.in",
+        "output": "acc-integer-stack-machine.branch-taken.out"
+      },
+      {
+        "input": "acc-integer-stack-machine.branch-not-taken.in",
+        "output": "acc-integer-stack-machine.branch-not-taken.out"
+      }
+    ]
+  }
+]

@@ -1,0 +1,6 @@
+use rx::core::*;
+
+impl [i32; 2] {
+    fn f(&self) {}
+}
+fn main() {}

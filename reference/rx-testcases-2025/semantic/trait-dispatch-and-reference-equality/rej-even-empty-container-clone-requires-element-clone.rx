@@ -1,0 +1,9 @@
+use rx::core::*;
+
+struct Opaque {
+    x: i32,
+}
+fn main() {
+    let v = Vec::<Opaque>::new();
+    let b = Vec::<Opaque>::clone(&v);
+}

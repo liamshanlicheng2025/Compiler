@@ -1,0 +1,126 @@
+[
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of i32 shifts.",
+    "io": [
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.zero.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.zero.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.sign.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.sign.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.width.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.width.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.large.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.large.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.negative.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-i32-shifts.negative.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of u32 shifts.",
+    "io": [
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.zero.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.zero.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.sign.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.sign.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.width.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.width.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.large.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.large.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.negative.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-u32-shifts.negative.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of isize shifts.",
+    "io": [
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.zero.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.zero.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.sign.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.sign.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.width.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.width.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.large.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.large.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.negative.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-isize-shifts.negative.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Masked dynamic counts and signedness of usize shifts.",
+    "io": [
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.zero.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.zero.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.sign.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.sign.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.width.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.width.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.large.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.large.out"
+      },
+      {
+        "input": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.negative.in",
+        "output": "acc-masked-dynamic-counts-and-signedness-of-usize-shifts.negative.out"
+      }
+    ]
+  },
+  {
+    "source": "acc-constant-folded-shifts-also-mask-the-count.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "Constant-folded shifts also mask the count.",
+    "io": [
+      {
+        "input": "acc-constant-folded-shifts-also-mask-the-count.default.in",
+        "output": "acc-constant-folded-shifts-also-mask-the-count.default.out"
+      }
+    ]
+  }
+]

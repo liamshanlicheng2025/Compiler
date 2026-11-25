@@ -1,0 +1,22 @@
+[
+  {
+    "source": "acc-merge-sort.rx",
+    "stage": "optimization",
+    "compilation_success": true,
+    "description": "Recursive merge sort of runtime-generated signed integers with a reused scratch buffer.",
+    "io": [
+      {
+        "input": "acc-merge-sort.small.in",
+        "output": "acc-merge-sort.small.out"
+      },
+      {
+        "input": "acc-merge-sort.large.in",
+        "output": "acc-merge-sort.large.out"
+      },
+      {
+        "input": "acc-merge-sort.large-variant.in",
+        "output": "acc-merge-sort.large-variant.out"
+      }
+    ]
+  }
+]

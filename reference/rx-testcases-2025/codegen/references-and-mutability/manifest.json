@@ -1,0 +1,14 @@
+[
+  {
+    "source": "acc-an-immutable-binding-of-mut-still-writes-its-target-reborrows-end-before-parent-reuse.rx",
+    "stage": "codegen",
+    "compilation_success": true,
+    "description": "An immutable binding of &mut still writes its target; reborrows end before parent reuse.",
+    "io": [
+      {
+        "input": "acc-an-immutable-binding-of-mut-still-writes-its-target-reborrows-end-before-parent-reuse.default.in",
+        "output": "acc-an-immutable-binding-of-mut-still-writes-its-target-reborrows-end-before-parent-reuse.default.out"
+      }
+    ]
+  }
+]

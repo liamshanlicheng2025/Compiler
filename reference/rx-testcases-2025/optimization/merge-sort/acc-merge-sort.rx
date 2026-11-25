@@ -1,0 +1,61 @@
+use rx::core::*;
+
+fn next(state: &mut u32) -> u32 {
+    *state ^= *state << 13u32;
+    *state ^= *state >> 17u32;
+    *state ^= *state << 5u32;
+    *state
+}
+
+fn checksum(a: &Vec<i32>) -> i32 {
+    let mut hash = 2166136261u32;
+    let mut i = 0usize;
+    while i < a.len() {
+        hash = (hash ^ (a[i] as u32)) * 16777619u32;
+        i += 1usize;
+    }
+    hash as i32
+}
+
+fn merge(a: &mut Vec<i32>, scratch: &mut Vec<i32>, lo: usize, hi: usize) {
+    if hi - lo < 2usize {
+        return;
+    }
+    let mid = lo + (hi - lo) / 2usize;
+    merge(a, scratch, lo, mid);
+    merge(a, scratch, mid, hi);
+    let mut left = lo;
+    let mut right = mid;
+    let mut out = lo;
+    while out < hi {
+        if left < mid && (right == hi || a[left] <= a[right]) {
+            scratch[out] = a[left];
+            left += 1usize;
+        } else {
+            scratch[out] = a[right];
+            right += 1usize;
+        }
+        out += 1usize;
+    }
+    out = lo;
+    while out < hi {
+        a[out] = scratch[out];
+        out += 1usize;
+    }
+}
+fn main() {
+    let n = get_i32() as usize;
+    let mut seed = get_i32() as u32;
+    let mut a = Vec::<i32>::new();
+    let mut scratch = Vec::<i32>::new();
+    let mut i = 0usize;
+    while i < n {
+        a.push(next(&mut seed) as i32);
+        scratch.push(0);
+        i += 1usize;
+    }
+    merge(&mut a, &mut scratch, 0, n);
+    println_i32(checksum(&a));
+    println_i32(a[0]);
+    println_i32(a[n - 1usize]);
+}
